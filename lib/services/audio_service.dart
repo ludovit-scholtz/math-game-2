@@ -1,5 +1,13 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class AudioSettings {
+  const AudioSettings({required this.muted, required this.volume});
+
+  final bool muted;
+  final double volume;
+}
 
 /// Plays short sound effects for correct / incorrect answers and game over.
 ///
@@ -8,14 +16,53 @@ import 'package:flutter/foundation.dart';
 class AudioService {
   AudioService() {
     _player.setReleaseMode(ReleaseMode.stop);
+    _applyVolume();
+    loadSettings().then((_) => _applyVolume());
   }
 
+  static const String _mutedKey = 'audio_muted_v1';
+  static const String _volumeKey = 'audio_volume_v1';
+
   final AudioPlayer _player = AudioPlayer();
-  bool muted = false;
+  static bool _muted = false;
+  static double _volume = 1.0;
+
+  static AudioSettings get currentSettings =>
+      AudioSettings(muted: _muted, volume: _volume);
+
+  static Future<AudioSettings> loadSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    _muted = prefs.getBool(_mutedKey) ?? false;
+    _volume = _clampVolume(prefs.getDouble(_volumeKey) ?? 1.0);
+    return currentSettings;
+  }
+
+  static Future<AudioSettings> saveSettings({
+    required bool muted,
+    required double volume,
+  }) async {
+    _muted = muted;
+    _volume = _clampVolume(volume);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_mutedKey, _muted);
+    await prefs.setDouble(_volumeKey, _volume);
+    return currentSettings;
+  }
+
+  static double _clampVolume(double value) => value.clamp(0.0, 1.0).toDouble();
+
+  Future<void> _applyVolume() async {
+    try {
+      await _player.setVolume(_muted ? 0.0 : _volume);
+    } catch (e) {
+      debugPrint('AudioService: could not set volume ($e)');
+    }
+  }
 
   Future<void> _play(String asset) async {
-    if (muted) return;
+    if (_muted || _volume <= 0) return;
     try {
+      await _applyVolume();
       await _player.stop();
       await _player.play(AssetSource(asset));
     } catch (e) {

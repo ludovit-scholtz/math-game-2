@@ -83,6 +83,11 @@ class AppStrings {
       'coins': 'Coins',
       'shop': 'Shop',
       'customize': 'Customize buttons',
+      'settings': 'Settings',
+      'sound': 'Sound',
+      'muteSound': 'Mute sound',
+      'unmuteSound': 'Unmute sound',
+      'volume': 'Volume',
       'documentation': 'Guide',
       'buy': 'Buy',
       'notEnoughCoins': 'Not enough coins yet!',
@@ -156,6 +161,11 @@ class AppStrings {
       'coins': 'Mince',
       'shop': 'Obchod',
       'customize': 'Upraviť tlačidlá',
+      'settings': 'Nastavenia',
+      'sound': 'Zvuk',
+      'muteSound': 'Vypnúť zvuk',
+      'unmuteSound': 'Zapnúť zvuk',
+      'volume': 'Hlasitosť',
       'documentation': 'Návod',
       'buy': 'Kúpiť',
       'notEnoughCoins': 'Zatiaľ nemáš dosť mincí!',
@@ -229,6 +239,11 @@ class AppStrings {
       'coins': 'Mince',
       'shop': 'Obchod',
       'customize': 'Upravit tlačítka',
+      'settings': 'Nastavení',
+      'sound': 'Zvuk',
+      'muteSound': 'Vypnout zvuk',
+      'unmuteSound': 'Zapnout zvuk',
+      'volume': 'Hlasitost',
       'documentation': 'Návod',
       'buy': 'Koupit',
       'notEnoughCoins': 'Zatím nemáš dost mincí!',
@@ -302,6 +317,11 @@ class AppStrings {
       'coins': 'Монеты',
       'shop': 'Магазин',
       'customize': 'Настроить кнопки',
+      'settings': 'Настройки',
+      'sound': 'Звук',
+      'muteSound': 'Выключить звук',
+      'unmuteSound': 'Включить звук',
+      'volume': 'Громкость',
       'documentation': 'Руководство',
       'buy': 'Купить',
       'notEnoughCoins': 'Пока не хватает монет!',
@@ -376,6 +396,11 @@ class AppStrings {
       'coins': 'Münzen',
       'shop': 'Shop',
       'customize': 'Tasten anpassen',
+      'settings': 'Einstellungen',
+      'sound': 'Ton',
+      'muteSound': 'Ton stummschalten',
+      'unmuteSound': 'Ton einschalten',
+      'volume': 'Lautstärke',
       'documentation': 'Anleitung',
       'buy': 'Kaufen',
       'notEnoughCoins': 'Noch nicht genug Münzen!',
@@ -448,6 +473,11 @@ class AppStrings {
       'coins': '金币',
       'shop': '商店',
       'customize': '自定义按钮',
+      'settings': '设置',
+      'sound': '声音',
+      'muteSound': '静音',
+      'unmuteSound': '打开声音',
+      'volume': '音量',
       'documentation': '指南',
       'buy': '购买',
       'notEnoughCoins': '金币还不够！',
@@ -506,6 +536,11 @@ class AppStrings {
   String get coins => _text('coins');
   String get shop => _text('shop');
   String get customize => _text('customize');
+  String get settings => _text('settings');
+  String get sound => _text('sound');
+  String get muteSound => _text('muteSound');
+  String get unmuteSound => _text('unmuteSound');
+  String get volume => _text('volume');
   String get documentation => _text('documentation');
   String get buy => _text('buy');
   String get notEnoughCoins => _text('notEnoughCoins');
