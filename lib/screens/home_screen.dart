@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_strings.dart';
 import '../models/game_config.dart';
 import '../models/operation_type.dart';
 import '../theme.dart';
@@ -16,8 +17,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController _nameController =
-      TextEditingController(text: 'Player');
+  final TextEditingController _nameController = TextEditingController();
 
   ChallengeDuration _duration = ChallengeDuration.oneMinute;
   final Set<OperationType> _operations = {
@@ -42,8 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _startGame() {
+    final strings = context.strings;
     final name = _nameController.text.trim().isEmpty
-        ? 'Player'
+        ? strings.player
         : _nameController.text.trim();
     final config = GameConfig(
       playerName: name,
@@ -57,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = context.strings;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -66,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               const SizedBox(height: 8),
               Text(
-                '🧮 Math Masters',
+                '🧮 ${strings.appName}',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
@@ -75,31 +77,31 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 4),
               Text(
-                'Practise +, −, × and ÷ under 100 and beat your best score!',
+                strings.homeSubtitle,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 24),
               _SectionCard(
-                title: 'Your name',
+                title: strings.yourName,
                 child: TextField(
                   controller: _nameController,
                   textCapitalization: TextCapitalization.words,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Enter your name',
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    hintText: strings.enterYourName,
                   ),
                 ),
               ),
               const SizedBox(height: 16),
               _SectionCard(
-                title: 'Challenge length',
+                title: strings.challengeLength,
                 child: Wrap(
                   spacing: 10,
                   children: ChallengeDuration.values.map((d) {
                     final selected = d == _duration;
                     return ChoiceChip(
-                      label: Text(d.label),
+                      label: Text(strings.durationLabel(d)),
                       selected: selected,
                       onSelected: (_) => setState(() => _duration = d),
                     );
@@ -108,14 +110,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 16),
               _SectionCard(
-                title: 'Operations to practise',
+                title: strings.operationsToPractise,
                 child: Wrap(
                   spacing: 10,
                   runSpacing: 10,
                   children: OperationType.values.map((op) {
                     final selected = _operations.contains(op);
                     return FilterChip(
-                      label: Text('${op.symbol}  ${op.label}'),
+                      label: Text('${op.symbol}  ${strings.operationLabel(op)}'),
                       selected: selected,
                       onSelected: (_) => _toggleOperation(op),
                     );
@@ -126,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ElevatedButton.icon(
                 onPressed: _startGame,
                 icon: const Icon(Icons.play_arrow_rounded, size: 28),
-                label: const Text('Start'),
+                label: Text(strings.start),
               ),
               const SizedBox(height: 12),
               OutlinedButton.icon(
@@ -138,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
                 icon: const Icon(Icons.emoji_events_outlined),
-                label: const Text('Leaderboard'),
+                label: Text(strings.leaderboard),
               ),
               const SizedBox(height: 20),
               const _ScoringHelp(),
@@ -187,6 +189,7 @@ class _ScoringHelp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = context.strings;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -198,17 +201,17 @@ class _ScoringHelp extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'How scoring works',
+            strings.howScoringWorks,
             style: Theme.of(context)
                 .textTheme
                 .titleSmall
                 ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          const Text('⚡ Answer in under 1 second: 3 points'),
-          const Text('⏱️ Between 1 and 10 seconds: faster = more points'),
-          const Text('🐢 Slower than 10 seconds or wrong: −1 point'),
-          const Text('🔁 Missed questions come back so you can master them'),
+          Text(strings.scoreFast),
+          Text(strings.scoreMedium),
+          Text(strings.scoreSlow),
+          Text(strings.scoreRepeat),
         ],
       ),
     );
