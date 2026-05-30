@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'l10n/app_strings.dart';
+import 'services/audio_service.dart';
 import 'screens/home_screen.dart';
 import 'theme.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await AudioService.loadSettings();
   runApp(const MathGameApp());
 }
 

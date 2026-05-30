@@ -24,6 +24,7 @@ void main() {
     expect(find.textContaining('Math Master'), findsOneWidget);
     expect(find.text('Start'), findsOneWidget);
     expect(find.text('Leaderboard'), findsOneWidget);
+    expect(find.text('Settings'), findsOneWidget);
 
     // All four operations are offered.
     expect(find.textContaining('Add'), findsOneWidget);

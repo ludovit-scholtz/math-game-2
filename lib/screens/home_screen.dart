@@ -14,6 +14,7 @@ import 'game_screen.dart';
 import 'history_screen.dart';
 import 'player_select_screen.dart';
 import 'results_screen.dart';
+import 'settings_screen.dart';
 import 'shop_screen.dart';
 
 /// The first screen: pick (or switch) the player, a challenge length and which
@@ -147,6 +148,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _openSettings() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const SettingsScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final strings = context.strings;
@@ -260,6 +267,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: Text(strings.history),
                 ),
               ],
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: _openSettings,
+                icon: const Icon(Icons.settings_rounded),
+                label: Text(strings.settings),
+              ),
               const SizedBox(height: 12),
               OutlinedButton.icon(
                 onPressed: _openDocs,
