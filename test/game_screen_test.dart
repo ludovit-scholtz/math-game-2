@@ -41,4 +41,33 @@ void main() {
     // ends.
     await tester.pumpWidget(const SizedBox());
   });
+
+  testWidgets('game screen fits a landscape tablet without overflow', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(2048, 1536);
+    tester.view.devicePixelRatio = 2.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final config = GameConfig(
+      playerName: 'Tester',
+      duration: ChallengeDuration.oneMinute,
+      operations: {OperationType.addition},
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppStrings.localizationsDelegates,
+        supportedLocales: AppStrings.supportedLocales,
+        home: GameScreen(config: config),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.byType(AnswerCard), findsNWidgets(6));
+    expect(tester.takeException(), isNull);
+
+    await tester.pumpWidget(const SizedBox());
+  });
 }

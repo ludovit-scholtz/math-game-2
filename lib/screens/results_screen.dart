@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../l10n/app_strings.dart';
 import '../logic/coins.dart';
 import '../models/game_config.dart';
 import '../models/score_entry.dart';
+import '../services/audio_service.dart';
 import '../services/coin_service.dart';
 import '../services/leaderboard_service.dart';
 import '../theme.dart';
@@ -34,6 +37,7 @@ class ResultsScreen extends StatefulWidget {
 class _ResultsScreenState extends State<ResultsScreen> {
   final LeaderboardService _service = LeaderboardService();
   final CoinService _coinService = CoinService();
+  final AudioService _audio = AudioService();
   List<GameTypeLeaderboard> _boards = [];
   bool _loading = true;
   int? _highlightDate;
@@ -83,10 +87,19 @@ class _ResultsScreenState extends State<ResultsScreen> {
       history = await _service.load();
     }
     if (!mounted) return;
+    if (_newRecord) {
+      unawaited(_audio.playFireworks());
+    }
     setState(() {
       _boards = LeaderboardService.buildLeaderboards(history);
       _loading = false;
     });
+  }
+
+  @override
+  void dispose() {
+    _audio.dispose();
+    super.dispose();
   }
 
   @override

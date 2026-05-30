@@ -46,7 +46,7 @@ class AnswerCard extends StatelessWidget {
         break;
     }
 
-    final borderRadius = BorderRadius.circular(20);
+    final borderRadius = BorderRadius.circular(AppTheme.buttonRadius);
     return AnimatedScale(
       scale: state == CardState.idle ? 1.0 : 1.04,
       duration: const Duration(milliseconds: 150),

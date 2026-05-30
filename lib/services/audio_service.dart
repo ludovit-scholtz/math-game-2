@@ -51,18 +51,20 @@ class AudioService {
 
   static double _clampVolume(double value) => value.clamp(0.0, 1.0).toDouble();
 
-  Future<void> _applyVolume() async {
+  Future<void> _applyVolume([double multiplier = 1.0]) async {
     try {
-      await _player.setVolume(_muted ? 0.0 : _volume);
+      await _player.setVolume(
+        _muted ? 0.0 : _clampVolume(_volume * multiplier),
+      );
     } catch (e) {
       debugPrint('AudioService: could not set volume ($e)');
     }
   }
 
-  Future<void> _play(String asset) async {
+  Future<void> _play(String asset, {double volumeMultiplier = 1.0}) async {
     if (_muted || _volume <= 0) return;
     try {
-      await _applyVolume();
+      await _applyVolume(volumeMultiplier);
       await _player.stop();
       await _player.play(AssetSource(asset));
     } catch (e) {
@@ -75,6 +77,11 @@ class AudioService {
   Future<void> playIncorrect() => _play('sounds/incorrect.wav');
 
   Future<void> playGameOver() => _play('sounds/gameover.wav');
+
+  Future<void> playFireworks() => _play(
+        'sounds/fireworks.wav',
+        volumeMultiplier: 0.8,
+      );
 
   Future<void> dispose() async {
     await _player.dispose();
