@@ -57,7 +57,7 @@ jobs:
         run: flutter pub get
 
       - name: Generate platform folders
-        run: flutter create --platforms=android,ios,web --org com.mathmasters .
+        run: flutter create --platforms=android,ios,web --org com.mathmasters --project-name math_game_2 .
 
       - name: Build APK (release)
         run: flutter build apk --release
@@ -97,7 +97,7 @@ jobs:
         run: flutter pub get
 
       - name: Generate platform folders
-        run: flutter create --platforms=web --org com.mathmasters .
+        run: flutter create --platforms=web --org com.mathmasters --project-name math_game_2 .
 
       - name: Build web
         run: flutter build web --release
