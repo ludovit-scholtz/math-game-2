@@ -8,10 +8,10 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
+      const MaterialApp(
         localizationsDelegates: AppStrings.localizationsDelegates,
         supportedLocales: AppStrings.supportedLocales,
-        home: const HomeScreen(),
+        home: HomeScreen(),
       ),
     );
     await tester.pumpAndSettle();
@@ -31,11 +31,11 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        locale: const Locale('de'),
+      const MaterialApp(
+        locale: Locale('de'),
         localizationsDelegates: AppStrings.localizationsDelegates,
         supportedLocales: AppStrings.supportedLocales,
-        home: const HomeScreen(),
+        home: HomeScreen(),
       ),
     );
     await tester.pumpAndSettle();

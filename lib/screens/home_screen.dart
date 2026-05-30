@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   controller: _nameController,
                   textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     hintText: strings.enterYourName,
                   ),
                 ),

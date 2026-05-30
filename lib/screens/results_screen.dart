@@ -154,7 +154,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
         children: [
           Text(
             strings.greatJob,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
