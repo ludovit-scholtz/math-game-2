@@ -1,4 +1,4 @@
-# 🧮 Math Masters
+# 🧮 Math Master
 
 A fun, kid-friendly math game that helps **2nd-grade** students practise the four
 basic operations — addition, subtraction, multiplication and division — with all

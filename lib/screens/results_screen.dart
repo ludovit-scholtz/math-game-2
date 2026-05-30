@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_strings.dart';
 import '../models/game_config.dart';
 import '../models/score_entry.dart';
 import '../services/leaderboard_service.dart';
@@ -31,19 +32,23 @@ class _ResultsScreenState extends State<ResultsScreen> {
   List<ScoreEntry> _entries = [];
   bool _loading = true;
   int? _highlightDate;
+  bool _initialized = false;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    _initialized = true;
     _initBoard();
   }
 
   Future<void> _initBoard() async {
+    final strings = context.strings;
     if (widget.finalScore != null && widget.finishedConfig != null) {
       final entry = ScoreEntry(
         name: widget.finishedConfig!.playerName,
         score: widget.finalScore!,
-        durationLabel: widget.finishedConfig!.duration.label,
+        durationLabel: strings.durationLabel(widget.finishedConfig!.duration),
         dateMillis: DateTime.now().millisecondsSinceEpoch,
       );
       _highlightDate = entry.dateMillis;
@@ -66,9 +71,10 @@ class _ResultsScreenState extends State<ResultsScreen> {
   @override
   Widget build(BuildContext context) {
     final isResult = widget.finalScore != null;
+    final strings = context.strings;
     return Scaffold(
       appBar: AppBar(
-        title: Text(isResult ? 'Game Over' : 'Leaderboard'),
+        title: Text(isResult ? strings.gameOver : strings.leaderboard),
         backgroundColor: AppTheme.primary,
         foregroundColor: Colors.white,
       ),
@@ -80,8 +86,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
               child: _loading
                   ? const Center(child: CircularProgressIndicator())
                   : _entries.isEmpty
-                      ? const Center(
-                          child: Text('No scores yet. Be the first!'),
+                      ? Center(
+                          child: Text(strings.noScoresYet),
                         )
                       : ListView.builder(
                           padding: const EdgeInsets.all(16),
@@ -107,7 +113,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                       onPressed: () => Navigator.of(context)
                           .popUntil((route) => route.isFirst),
                       icon: const Icon(Icons.home_rounded),
-                      label: const Text('Home'),
+                      label: Text(strings.home),
                     ),
                   ),
                   if (isResult) const SizedBox(width: 12),
@@ -116,7 +122,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                       child: ElevatedButton.icon(
                         onPressed: () => Navigator.of(context).pop(),
                         icon: const Icon(Icons.refresh_rounded),
-                        label: const Text('Play again'),
+                        label: Text(strings.playAgain),
                       ),
                     ),
                 ],
@@ -129,6 +135,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
   }
 
   Widget _buildSummary(BuildContext context) {
+    final strings = context.strings;
     final correct = widget.correctCount ?? 0;
     final answered = widget.answeredCount ?? 0;
     final accuracy =
@@ -145,9 +152,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
       ),
       child: Column(
         children: [
-          const Text(
-            '🎉 Great job!',
-            style: TextStyle(
+          Text(
+            strings.greatJob,
+            style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -155,7 +162,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Score: ${widget.finalScore}',
+            strings.scoreLabel(widget.finalScore ?? 0),
             style: const TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.bold,
@@ -164,7 +171,11 @@ class _ResultsScreenState extends State<ResultsScreen> {
           ),
           const SizedBox(height: 4),
           Text(
-            'Correct: $correct / $answered  •  Accuracy: $accuracy%',
+            strings.correctAccuracyLabel(
+              correct: correct,
+              answered: answered,
+              accuracy: accuracy,
+            ),
             style: const TextStyle(color: Colors.white),
           ),
         ],
