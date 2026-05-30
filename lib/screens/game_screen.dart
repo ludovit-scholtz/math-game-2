@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../l10n/app_strings.dart';
 import '../logic/game_controller.dart';
@@ -39,6 +40,12 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     super.initState();
+    // The game only renders correctly in portrait, so lock the orientation
+    // while this screen is on top.
+    SystemChrome.setPreferredOrientations(const [
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     _controller = GameController(operations: widget.config.operations);
     _remainingSeconds = widget.config.duration.seconds;
     _question = _controller.nextQuestion();
@@ -126,6 +133,8 @@ class _GameScreenState extends State<GameScreen> {
   void dispose() {
     _timer?.cancel();
     _audio.dispose();
+    // Restore the ability to rotate once the player leaves the game.
+    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     super.dispose();
   }
 

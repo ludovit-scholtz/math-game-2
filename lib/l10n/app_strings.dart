@@ -59,6 +59,20 @@ class AppStrings {
       'score': 'Score: {score}',
       'correctAccuracy':
           'Correct: {correct} / {answered}  •  Accuracy: {accuracy}%',
+      'choosePlayer': 'Choose player',
+      'noPlayersYet': 'No players yet. Add one below.',
+      'newPlayer': 'New player',
+      'addPlayer': 'Add player',
+      'changePlayer': 'Change player',
+      'language': 'Language',
+      'history': 'History',
+      'faults': 'Faults',
+      'gamesPlayed': 'Games played',
+      'bestScore': 'Best score',
+      'noHistoryYet': 'No games played yet.',
+      'statistics': 'Statistics',
+      'tapToPlay': 'Tap a name to play as that player.',
+      'playAs': 'Playing as',
       'duration1': '1 min',
       'duration2': '2 min',
       'duration5': '5 min',
@@ -95,6 +109,20 @@ class AppStrings {
       'score': 'Skóre: {score}',
       'correctAccuracy':
           'Správne: {correct} / {answered}  •  Presnosť: {accuracy}%',
+      'choosePlayer': 'Vyber hráča',
+      'noPlayersYet': 'Zatiaľ žiadni hráči. Pridaj jedného nižšie.',
+      'newPlayer': 'Nový hráč',
+      'addPlayer': 'Pridať hráča',
+      'changePlayer': 'Zmeniť hráča',
+      'language': 'Jazyk',
+      'history': 'História',
+      'faults': 'Chyby',
+      'gamesPlayed': 'Odohraté hry',
+      'bestScore': 'Najlepšie skóre',
+      'noHistoryYet': 'Zatiaľ žiadne odohraté hry.',
+      'statistics': 'Štatistiky',
+      'tapToPlay': 'Klikni na meno a hraj ako tento hráč.',
+      'playAs': 'Hráš ako',
       'duration1': '1 min',
       'duration2': '2 min',
       'duration5': '5 min',
@@ -131,6 +159,20 @@ class AppStrings {
       'score': 'Skóre: {score}',
       'correctAccuracy':
           'Správně: {correct} / {answered}  •  Přesnost: {accuracy}%',
+      'choosePlayer': 'Vyber hráče',
+      'noPlayersYet': 'Zatím žádní hráči. Přidej jednoho níže.',
+      'newPlayer': 'Nový hráč',
+      'addPlayer': 'Přidat hráče',
+      'changePlayer': 'Změnit hráče',
+      'language': 'Jazyk',
+      'history': 'Historie',
+      'faults': 'Chyby',
+      'gamesPlayed': 'Odehrané hry',
+      'bestScore': 'Nejlepší skóre',
+      'noHistoryYet': 'Zatím žádné odehrané hry.',
+      'statistics': 'Statistiky',
+      'tapToPlay': 'Klikni na jméno a hraj jako tento hráč.',
+      'playAs': 'Hraješ jako',
       'duration1': '1 min',
       'duration2': '2 min',
       'duration5': '5 min',
@@ -167,6 +209,20 @@ class AppStrings {
       'score': 'Счёт: {score}',
       'correctAccuracy':
           'Верно: {correct} / {answered}  •  Точность: {accuracy}%',
+      'choosePlayer': 'Выбери игрока',
+      'noPlayersYet': 'Пока нет игроков. Добавь нового ниже.',
+      'newPlayer': 'Новый игрок',
+      'addPlayer': 'Добавить игрока',
+      'changePlayer': 'Сменить игрока',
+      'language': 'Язык',
+      'history': 'История',
+      'faults': 'Ошибки',
+      'gamesPlayed': 'Сыграно игр',
+      'bestScore': 'Лучший счёт',
+      'noHistoryYet': 'Пока нет сыгранных игр.',
+      'statistics': 'Статистика',
+      'tapToPlay': 'Нажми на имя, чтобы играть за этого игрока.',
+      'playAs': 'Играешь как',
       'duration1': '1 мин',
       'duration2': '2 мин',
       'duration5': '5 мин',
@@ -204,6 +260,20 @@ class AppStrings {
       'score': 'Punktzahl: {score}',
       'correctAccuracy':
           'Richtig: {correct} / {answered}  •  Genauigkeit: {accuracy}%',
+      'choosePlayer': 'Spieler wählen',
+      'noPlayersYet': 'Noch keine Spieler. Füge unten einen hinzu.',
+      'newPlayer': 'Neuer Spieler',
+      'addPlayer': 'Spieler hinzufügen',
+      'changePlayer': 'Spieler wechseln',
+      'language': 'Sprache',
+      'history': 'Verlauf',
+      'faults': 'Fehler',
+      'gamesPlayed': 'Gespielte Spiele',
+      'bestScore': 'Bestwert',
+      'noHistoryYet': 'Noch keine Spiele gespielt.',
+      'statistics': 'Statistik',
+      'tapToPlay': 'Tippe auf einen Namen, um als dieser Spieler zu spielen.',
+      'playAs': 'Du spielst als',
       'duration1': '1 Min',
       'duration2': '2 Min',
       'duration5': '5 Min',
@@ -238,6 +308,20 @@ class AppStrings {
       'greatJob': '🎉 干得漂亮！',
       'score': '得分：{score}',
       'correctAccuracy': '答对：{correct} / {answered}  •  正确率：{accuracy}%',
+      'choosePlayer': '选择玩家',
+      'noPlayersYet': '还没有玩家，请在下方添加。',
+      'newPlayer': '新玩家',
+      'addPlayer': '添加玩家',
+      'changePlayer': '更换玩家',
+      'language': '语言',
+      'history': '历史',
+      'faults': '错误',
+      'gamesPlayed': '已玩游戏',
+      'bestScore': '最高分',
+      'noHistoryYet': '还没有玩过游戏。',
+      'statistics': '统计',
+      'tapToPlay': '点击名字即可以该玩家身份开始游戏。',
+      'playAs': '当前玩家',
       'duration1': '1 分钟',
       'duration2': '2 分钟',
       'duration5': '5 分钟',
@@ -270,6 +354,40 @@ class AppStrings {
   String get home => _text('home');
   String get playAgain => _text('playAgain');
   String get greatJob => _text('greatJob');
+  String get choosePlayer => _text('choosePlayer');
+  String get noPlayersYet => _text('noPlayersYet');
+  String get newPlayer => _text('newPlayer');
+  String get addPlayer => _text('addPlayer');
+  String get changePlayer => _text('changePlayer');
+  String get language => _text('language');
+  String get history => _text('history');
+  String get faults => _text('faults');
+  String get gamesPlayed => _text('gamesPlayed');
+  String get bestScore => _text('bestScore');
+  String get noHistoryYet => _text('noHistoryYet');
+  String get statistics => _text('statistics');
+  String get tapToPlay => _text('tapToPlay');
+  String get playAs => _text('playAs');
+
+  /// The endonym (native name) of a supported language, used in the language
+  /// switcher. These intentionally are not translated.
+  static String languageName(String code) {
+    switch (code) {
+      case 'sk':
+        return 'Slovenčina';
+      case 'cs':
+        return 'Čeština';
+      case 'ru':
+        return 'Русский';
+      case 'de':
+        return 'Deutsch';
+      case 'zh':
+        return '中文';
+      case 'en':
+      default:
+        return 'English';
+    }
+  }
 
   String niceFeedback(String points) => _format('nice', {'points': points});
 
