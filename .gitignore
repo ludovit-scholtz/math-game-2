@@ -1,0 +1,38 @@
+# Miscellaneous
+*.class
+*.log
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# IntelliJ / Android Studio
+*.iml
+*.ipr
+*.iws
+.idea/
+.vscode/
+
+# Flutter/Dart/Pub
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+pubspec.lock
+
+# Generated platform folders (recreated by `flutter create .` in CI)
+/android/
+/ios/
+/linux/
+/macos/
+/windows/
+/web/
+
+# Symbolication / obfuscation
+app.*.symbols
+app.*.map.json

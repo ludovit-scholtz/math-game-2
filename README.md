@@ -1,3 +1,81 @@
-# Math game
+# 🧮 Math Masters
 
-Create game for 2nd grade elementary students to practice basic math operations - plus,minus,multiply and divide operations. When player answer correctly in less then 1 second he receives 3 points. If player answer in less then 10 seconds he receives 1 point. The duration between 1 second and 10 seconds gives player more points if they answer sooner - make it linear point distribution. If player answer after 10 seconds he gains one negative point. All math operations must be within 0 to 100. So valid test operations are for example 5*7, 25+35,99/3. All division operations must finish in round numbers, so there cannot be operation 98/3 for example. Make it mobile native game and deploy to android. Choose the mobile dev framework which is common and deployable also to other platforms. Make the game fun to play. Add there sound on correct or incorrect inputs. The answers will be the 5 cards with common user mistakes for given operations. The cards will be shuflled. When player do not answer correctly make sure after next few attempts he receives the same operation. The main point is to teach kids the basic math under 100 and speed their reflexes. The initial screen will have the game selection. Player can pick 1minute, 2 minute or 5 minutes challanges and can pick the math operations which will be included. The top scores leaderboard will be present and showned after the game ends. Make the game educative so that parents are ok to give the kids play the game, and kids have feeling they learn and tune their skills.
+A fun, kid-friendly math game that helps **2nd-grade** students practise the four
+basic operations — addition, subtraction, multiplication and division — with all
+numbers kept **under 100**. Built with **Flutter**, so the same code base runs on
+**Android, iOS, web and desktop**.
+
+## How to play
+
+1. On the home screen enter your name, pick a challenge length (**1, 2 or 5
+   minutes**) and choose which operations to practise.
+2. Answer as many questions as you can before the timer runs out by tapping one
+   of the five answer cards.
+3. After the game your score is added to the **leaderboard**.
+
+### Scoring
+
+| Time to answer correctly | Points |
+| --- | --- |
+| Under 1 second | **3** |
+| 1–10 seconds | **linearly from 3 down to 1** (faster = more) |
+| Slower than 10 seconds | **−1** |
+| Wrong answer | **−1** |
+
+Questions you get wrong come back a few questions later (**spaced repetition**)
+so you get another chance to master them.
+
+### Designed to be educative
+
+- Division questions always divide evenly (e.g. `99 ÷ 3`, never `98 ÷ 3`).
+- The four wrong answer cards are modelled on **common mistakes** for each
+  operation (off-by-one, place-value slips, adding instead of multiplying, …),
+  which helps children recognise and correct their own errors.
+- Sound effects reward correct answers and gently flag mistakes.
+
+## Project layout
+
+```
+lib/
+  models/      data types (Question, GameConfig, ScoreEntry, OperationType)
+  logic/       pure game logic (question generator, scoring, game controller)
+  services/    audio + leaderboard persistence
+  screens/     home, game and results/leaderboard screens
+  widgets/     reusable UI pieces
+test/          unit tests for the game logic
+assets/sounds/ short WAV sound effects
+```
+
+The pure game logic in `lib/logic` has no Flutter dependency and is covered by
+the unit tests in `test/`.
+
+## Running locally
+
+Requires the [Flutter SDK](https://docs.flutter.dev/get-started/install).
+
+```bash
+flutter pub get
+flutter test          # run the unit tests
+flutter run           # launch on a connected device, emulator or browser
+```
+
+## Building
+
+```bash
+flutter build apk --release        # Android APK
+flutter build appbundle --release  # Android App Bundle (for Google Play)
+flutter build web --release        # Web
+```
+
+> The platform folders (`android/`, `ios/`, `web/`, …) are generated with
+> `flutter create .` and are intentionally not committed; the CI pipeline
+> regenerates them before building.
+
+## CI/CD
+
+The [`CI` workflow](.github/workflows/ci.yml) runs on every push and pull
+request and:
+
+1. checks formatting, runs `flutter analyze` and `flutter test`;
+2. builds the release **APK** and **App Bundle** and uploads them as artifacts;
+3. builds the **web** version and uploads it as an artifact.
