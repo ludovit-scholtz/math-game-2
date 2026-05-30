@@ -80,6 +80,29 @@ class AppStrings {
       'subtraction': 'Subtract',
       'multiplication': 'Multiply',
       'division': 'Divide',
+      'coins': 'Coins',
+      'shop': 'Shop',
+      'customize': 'Customize buttons',
+      'documentation': 'Guide',
+      'buy': 'Buy',
+      'notEnoughCoins': 'Not enough coins yet!',
+      'newRecord': '🎆 New record!',
+      'chooseStyle': 'Choose a style',
+      'assignStyles': 'Tap a position to give it one of your styles.',
+      'coinsEarned': '+{coins} coins',
+      'purchased': 'Unlocked {name}!',
+      'docCoinsTitle': 'Coins',
+      'docCoinsBody':
+          'Every game rewards 0 to 20 coins. Reach the top score in a category and you earn the full 20; the more points you score, the more coins you collect.',
+      'docShopTitle': 'Shop',
+      'docShopBody':
+          'Spend your coins in the shop to unlock new button background styles. There are always 20 fresh styles to buy, each with a fixed price (100–1000 coins) that is the same for every player.',
+      'docCustomizeTitle': 'Customize buttons',
+      'docCustomizeBody':
+          'Open Customize to assign any style you own to each of the six answer buttons. Your choices are saved and used the next time you play.',
+      'docRecordsTitle': 'Records & fireworks',
+      'docRecordsBody':
+          'Beat the best score in a game category to set a new record — fireworks light up the results screen to celebrate!',
     },
     'sk': {
       'appName': 'Math Master',
@@ -130,6 +153,29 @@ class AppStrings {
       'subtraction': 'Odčítanie',
       'multiplication': 'Násobenie',
       'division': 'Delenie',
+      'coins': 'Mince',
+      'shop': 'Obchod',
+      'customize': 'Upraviť tlačidlá',
+      'documentation': 'Návod',
+      'buy': 'Kúpiť',
+      'notEnoughCoins': 'Zatiaľ nemáš dosť mincí!',
+      'newRecord': '🎆 Nový rekord!',
+      'chooseStyle': 'Vyber štýl',
+      'assignStyles': 'Klikni na pozíciu a priraď jej jeden zo svojich štýlov.',
+      'coinsEarned': '+{coins} mincí',
+      'purchased': 'Odomknuté: {name}!',
+      'docCoinsTitle': 'Mince',
+      'docCoinsBody':
+          'Za každú hru získaš 0 až 20 mincí. Ak dosiahneš najlepšie skóre v kategórii, získaš všetkých 20; čím viac bodov, tým viac mincí.',
+      'docShopTitle': 'Obchod',
+      'docShopBody':
+          'Mince míňaj v obchode na odomknutie nových štýlov pozadia tlačidiel. Vždy je k dispozícii 20 nových štýlov, každý s pevnou cenou (100 – 1000 mincí), ktorá je rovnaká pre všetkých hráčov.',
+      'docCustomizeTitle': 'Úprava tlačidiel',
+      'docCustomizeBody':
+          'V úprave priradíš ľubovoľný vlastnený štýl ku každému zo šiestich tlačidiel s odpoveďami. Tvoje voľby sa uložia a použijú pri ďalšej hre.',
+      'docRecordsTitle': 'Rekordy a ohňostroj',
+      'docRecordsBody':
+          'Prekonaj najlepšie skóre v kategórii a vytvoríš nový rekord — obrazovku s výsledkami rozžiari ohňostroj!',
     },
     'cs': {
       'appName': 'Math Master',
@@ -180,6 +226,29 @@ class AppStrings {
       'subtraction': 'Odčítání',
       'multiplication': 'Násobení',
       'division': 'Dělení',
+      'coins': 'Mince',
+      'shop': 'Obchod',
+      'customize': 'Upravit tlačítka',
+      'documentation': 'Návod',
+      'buy': 'Koupit',
+      'notEnoughCoins': 'Zatím nemáš dost mincí!',
+      'newRecord': '🎆 Nový rekord!',
+      'chooseStyle': 'Vyber styl',
+      'assignStyles': 'Klikni na pozici a přiřaď jí jeden ze svých stylů.',
+      'coinsEarned': '+{coins} mincí',
+      'purchased': 'Odemčeno: {name}!',
+      'docCoinsTitle': 'Mince',
+      'docCoinsBody':
+          'Za každou hru získáš 0 až 20 mincí. Když dosáhneš nejlepšího skóre v kategorii, získáš všech 20; čím více bodů, tím více mincí.',
+      'docShopTitle': 'Obchod',
+      'docShopBody':
+          'Mince utrácej v obchodě za odemčení nových stylů pozadí tlačítek. Vždy je k dispozici 20 nových stylů, každý s pevnou cenou (100–1000 mincí), která je stejná pro všechny hráče.',
+      'docCustomizeTitle': 'Úprava tlačítek',
+      'docCustomizeBody':
+          'V úpravě přiřadíš libovolný vlastněný styl ke každému ze šesti tlačítek s odpověďmi. Tvé volby se uloží a použijí při další hře.',
+      'docRecordsTitle': 'Rekordy a ohňostroj',
+      'docRecordsBody':
+          'Překonej nejlepší skóre v kategorii a vytvoříš nový rekord — obrazovku s výsledky rozzáří ohňostroj!',
     },
     'ru': {
       'appName': 'Math Master',
@@ -230,6 +299,29 @@ class AppStrings {
       'subtraction': 'Вычитание',
       'multiplication': 'Умножение',
       'division': 'Деление',
+      'coins': 'Монеты',
+      'shop': 'Магазин',
+      'customize': 'Настроить кнопки',
+      'documentation': 'Руководство',
+      'buy': 'Купить',
+      'notEnoughCoins': 'Пока не хватает монет!',
+      'newRecord': '🎆 Новый рекорд!',
+      'chooseStyle': 'Выбери стиль',
+      'assignStyles': 'Нажми на позицию, чтобы задать ей один из своих стилей.',
+      'coinsEarned': '+{coins} монет',
+      'purchased': 'Открыто: {name}!',
+      'docCoinsTitle': 'Монеты',
+      'docCoinsBody':
+          'За каждую игру ты получаешь от 0 до 20 монет. Достигни лучшего результата в категории — и получишь все 20; чем больше очков, тем больше монет.',
+      'docShopTitle': 'Магазин',
+      'docShopBody':
+          'Трать монеты в магазине, чтобы открывать новые стили фона кнопок. Всегда доступно 20 новых стилей, у каждого фиксированная цена (100–1000 монет), одинаковая для всех игроков.',
+      'docCustomizeTitle': 'Настройка кнопок',
+      'docCustomizeBody':
+          'В настройке назначь любой свой стиль каждой из шести кнопок ответов. Твой выбор сохранится и будет использован в следующей игре.',
+      'docRecordsTitle': 'Рекорды и фейерверк',
+      'docRecordsBody':
+          'Побей лучший результат в категории, чтобы установить новый рекорд — экран результатов озарит фейерверк!',
     },
     'de': {
       'appName': 'Math Master',
@@ -281,6 +373,30 @@ class AppStrings {
       'subtraction': 'Subtrahieren',
       'multiplication': 'Multiplizieren',
       'division': 'Dividieren',
+      'coins': 'Münzen',
+      'shop': 'Shop',
+      'customize': 'Tasten anpassen',
+      'documentation': 'Anleitung',
+      'buy': 'Kaufen',
+      'notEnoughCoins': 'Noch nicht genug Münzen!',
+      'newRecord': '🎆 Neuer Rekord!',
+      'chooseStyle': 'Stil wählen',
+      'assignStyles':
+          'Tippe auf eine Position, um ihr einen deiner Stile zu geben.',
+      'coinsEarned': '+{coins} Münzen',
+      'purchased': '{name} freigeschaltet!',
+      'docCoinsTitle': 'Münzen',
+      'docCoinsBody':
+          'Jedes Spiel bringt 0 bis 20 Münzen. Erreichst du die Bestpunktzahl einer Kategorie, bekommst du alle 20; je mehr Punkte, desto mehr Münzen.',
+      'docShopTitle': 'Shop',
+      'docShopBody':
+          'Gib deine Münzen im Shop aus, um neue Tasten-Hintergründe freizuschalten. Es gibt immer 20 frische Stile zu kaufen, jeder mit festem Preis (100–1000 Münzen), der für alle Spieler gleich ist.',
+      'docCustomizeTitle': 'Tasten anpassen',
+      'docCustomizeBody':
+          'Im Anpassen weist du jeder der sechs Antworttasten einen deiner Stile zu. Deine Auswahl wird gespeichert und beim nächsten Spiel verwendet.',
+      'docRecordsTitle': 'Rekorde & Feuerwerk',
+      'docRecordsBody':
+          'Schlage die Bestpunktzahl einer Kategorie, um einen neuen Rekord aufzustellen — ein Feuerwerk erhellt den Ergebnisbildschirm!',
     },
     'zh': {
       'appName': 'Math Master',
@@ -329,6 +445,25 @@ class AppStrings {
       'subtraction': '减法',
       'multiplication': '乘法',
       'division': '除法',
+      'coins': '金币',
+      'shop': '商店',
+      'customize': '自定义按钮',
+      'documentation': '指南',
+      'buy': '购买',
+      'notEnoughCoins': '金币还不够！',
+      'newRecord': '🎆 新纪录！',
+      'chooseStyle': '选择样式',
+      'assignStyles': '点击某个位置，为它指定你的一种样式。',
+      'coinsEarned': '+{coins} 金币',
+      'purchased': '已解锁：{name}！',
+      'docCoinsTitle': '金币',
+      'docCoinsBody': '每局游戏可获得 0 到 20 枚金币。在某个类别中达到最高分即可获得全部 20 枚；得分越高，金币越多。',
+      'docShopTitle': '商店',
+      'docShopBody': '在商店里花金币解锁新的按钮背景样式。始终有 20 种新样式可供购买，每种价格固定（100–1000 金币），对所有玩家都相同。',
+      'docCustomizeTitle': '自定义按钮',
+      'docCustomizeBody': '在自定义中，为六个答案按钮分别指定你拥有的任意样式。你的选择会被保存并在下次游戏中使用。',
+      'docRecordsTitle': '纪录与烟花',
+      'docRecordsBody': '在某个类别中刷新最高分即可创造新纪录——结算界面会燃放烟花庆祝！',
     },
   };
 
@@ -368,6 +503,29 @@ class AppStrings {
   String get statistics => _text('statistics');
   String get tapToPlay => _text('tapToPlay');
   String get playAs => _text('playAs');
+  String get coins => _text('coins');
+  String get shop => _text('shop');
+  String get customize => _text('customize');
+  String get documentation => _text('documentation');
+  String get buy => _text('buy');
+  String get notEnoughCoins => _text('notEnoughCoins');
+  String get newRecord => _text('newRecord');
+  String get chooseStyle => _text('chooseStyle');
+  String get assignStyles => _text('assignStyles');
+  String get docCoinsTitle => _text('docCoinsTitle');
+  String get docCoinsBody => _text('docCoinsBody');
+  String get docShopTitle => _text('docShopTitle');
+  String get docShopBody => _text('docShopBody');
+  String get docCustomizeTitle => _text('docCustomizeTitle');
+  String get docCustomizeBody => _text('docCustomizeBody');
+  String get docRecordsTitle => _text('docRecordsTitle');
+  String get docRecordsBody => _text('docRecordsBody');
+
+  String coinsEarnedLabel(int coins) =>
+      _format('coinsEarned', {'coins': '$coins'});
+
+  String purchasedStyle(String name) =>
+      _format('purchased', {'name': name});
 
   /// The endonym (native name) of a supported language, used in the language
   /// switcher. These intentionally are not translated.

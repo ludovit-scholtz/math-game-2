@@ -8,7 +8,7 @@ void main() {
   group('QuestionGenerator', () {
     final generator = QuestionGenerator(random: Random(42));
 
-    test('produces exactly five distinct answer cards including the answer',
+    test('produces exactly six distinct answer cards including the answer',
         () {
       for (var i = 0; i < 500; i++) {
         final q = generator.generate(OperationType.values.toSet());

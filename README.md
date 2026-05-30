@@ -13,12 +13,27 @@ numbers kept **under 100**. Built with **Flutter**, so the same code base runs o
 2. Pick a challenge length (**1, 2 or 5 minutes**) and choose which operations to
    practise.
 3. Answer as many questions as you can before the timer runs out by tapping one
-   of the five answer cards. The game plays in **portrait** orientation.
+   of the six answer cards. The game plays in **portrait** orientation.
 4. After the game your score is added to the **leaderboard**, which ranks the
    best score of every player **for each game type** (e.g. *1 min +−* or
-   *1 min +−×÷*) and lists each player only once per game type.
+   *1 min +−×÷*) and lists each player only once per game type. Beat the best
+   score in a category to set a **new record** — fireworks celebrate it!
 5. Open a player's **history** to review every game they've played, including how
    many faults they made.
+
+### Coins, shop & customization
+
+Every game also rewards **coins** — see the in-game **Guide** for the full
+details:
+
+- Each game earns **0 to 20 coins**: reaching the top score of a category earns
+  the full 20, and coins are distributed linearly down to 0 for fewer points.
+- Spend coins in the **shop** to unlock new answer-button background styles.
+  There are always **20 styles** available to buy and the shop never runs dry —
+  fresh styles are generated on demand. Every style has a **fixed price
+  (100–1000 coins)** that is identical for every player.
+- Use **Customize buttons** to assign any style you own to each of the **six**
+  answer-button positions. Your choices are saved for your next game.
 
 ### Scoring
 
@@ -35,7 +50,7 @@ so you get another chance to master them.
 ### Designed to be educative
 
 - Division questions always divide evenly (e.g. `99 ÷ 3`, never `98 ÷ 3`).
-- The four wrong answer cards are modelled on **common mistakes** for each
+- The five wrong answer cards are modelled on **common mistakes** for each
   operation (off-by-one, place-value slips, adding instead of multiplying, …),
   which helps children recognise and correct their own errors.
 - Sound effects reward correct answers and gently flag mistakes.
