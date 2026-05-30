@@ -5,14 +5,16 @@ import 'package:flutter/services.dart';
 
 import '../l10n/app_strings.dart';
 import '../logic/game_controller.dart';
+import '../models/background_style.dart';
 import '../models/game_config.dart';
 import '../models/question.dart';
 import '../services/audio_service.dart';
+import '../services/coin_service.dart';
 import '../theme.dart';
 import '../widgets/answer_card.dart';
 import 'results_screen.dart';
 
-/// The main gameplay screen: a countdown timer, the current question and five
+/// The main gameplay screen: a countdown timer, the current question and six
 /// shuffled answer cards.
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key, required this.config});
@@ -26,6 +28,12 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   late final GameController _controller;
   final AudioService _audio = AudioService();
+  final CoinService _coinService = CoinService();
+
+  /// The background style assigned to each of the six button positions.
+  List<BackgroundStyle> _positionStyles = List<BackgroundStyle>.from(
+    BackgroundStyle.defaults,
+  );
 
   late int _remainingSeconds;
   Timer? _timer;
@@ -51,6 +59,19 @@ class _GameScreenState extends State<GameScreen> {
     _question = _controller.nextQuestion();
     _questionStart = DateTime.now();
     _timer = Timer.periodic(const Duration(seconds: 1), _onTick);
+    _loadStyles();
+  }
+
+  Future<void> _loadStyles() async {
+    final wallet = await _coinService.load(widget.config.playerName);
+    if (!mounted) return;
+    setState(() {
+      _positionStyles = [
+        for (var i = 0; i < BackgroundStyle.positions; i++)
+          BackgroundCatalog.byId(wallet.assignments[i]) ??
+              BackgroundStyle.defaults[i],
+      ];
+    });
   }
 
   void _onTick(Timer timer) {
@@ -188,12 +209,13 @@ class _GameScreenState extends State<GameScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 mainAxisSpacing: 14,
                 crossAxisSpacing: 14,
-                childAspectRatio: 1.6,
+                childAspectRatio: 1.9,
                 children: [
                   for (var i = 0; i < _question.options.length; i++)
                     AnswerCard(
                       value: _question.options[i],
-                      color: AppTheme.cardColors[i % AppTheme.cardColors.length],
+                      gradient: _positionStyles[i % _positionStyles.length]
+                          .gradient,
                       state: _cardState(_question.options[i]),
                       onTap: _locked
                           ? null

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/app_strings.dart';
+import '../logic/coins.dart';
 import '../models/game_config.dart';
 import '../models/score_entry.dart';
+import '../services/coin_service.dart';
 import '../services/leaderboard_service.dart';
 import '../theme.dart';
+import '../widgets/fireworks.dart';
 
 /// Shows the high-score leaderboard grouped by game type (each player appears at
 /// most once per game type, showing their best score). When opened right after
@@ -30,11 +33,14 @@ class ResultsScreen extends StatefulWidget {
 
 class _ResultsScreenState extends State<ResultsScreen> {
   final LeaderboardService _service = LeaderboardService();
+  final CoinService _coinService = CoinService();
   List<GameTypeLeaderboard> _boards = [];
   bool _loading = true;
   int? _highlightDate;
   String? _highlightGameType;
   bool _initialized = false;
+  int _coinsEarned = 0;
+  bool _newRecord = false;
 
   @override
   void didChangeDependencies() {
@@ -59,6 +65,19 @@ class _ResultsScreenState extends State<ResultsScreen> {
       );
       _highlightDate = entry.dateMillis;
       _highlightGameType = entry.gameTypeKey;
+
+      // The previous best score for this category (across all players) decides
+      // both how many coins are earned and whether this is a new record.
+      final previous = await _service.load();
+      final previousTop = previous
+          .where((e) => e.gameTypeKey == entry.gameTypeKey)
+          .fold<int>(0, (best, e) => e.score > best ? e.score : best);
+      _coinsEarned = Coins.forScore(entry.score, previousTop);
+      _newRecord = entry.score > 0 && entry.score > previousTop;
+
+      if (_coinsEarned > 0) {
+        await _coinService.addCoins(config.playerName, _coinsEarned);
+      }
       history = await _service.addScore(entry);
     } else {
       history = await _service.load();
@@ -81,53 +100,59 @@ class _ResultsScreenState extends State<ResultsScreen> {
         foregroundColor: Colors.white,
       ),
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            if (isResult) _buildSummary(context),
-            Expanded(
-              child: _loading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _boards.isEmpty
-                      ? Center(child: Text(strings.noScoresYet))
-                      : ListView(
-                          padding: const EdgeInsets.all(16),
-                          children: [
-                            for (final board in _boards)
-                              _LeaderboardSection(
-                                board: board,
-                                highlightDate: _highlightDate,
-                                isHighlightedType:
-                                    board.gameTypeKey == _highlightGameType,
-                              ),
-                          ],
+            Column(
+              children: [
+                if (isResult) _buildSummary(context),
+                Expanded(
+                  child: _loading
+                      ? const Center(child: CircularProgressIndicator())
+                      : _boards.isEmpty
+                          ? Center(child: Text(strings.noScoresYet))
+                          : ListView(
+                              padding: const EdgeInsets.all(16),
+                              children: [
+                                for (final board in _boards)
+                                  _LeaderboardSection(
+                                    board: board,
+                                    highlightDate: _highlightDate,
+                                    isHighlightedType:
+                                        board.gameTypeKey == _highlightGameType,
+                                  ),
+                              ],
+                            ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _BottomButton(
+                          filled: false,
+                          icon: Icons.home_rounded,
+                          label: strings.home,
+                          onPressed: () => Navigator.of(context)
+                              .popUntil((route) => route.isFirst),
                         ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _BottomButton(
-                      filled: false,
-                      icon: Icons.home_rounded,
-                      label: strings.home,
-                      onPressed: () => Navigator.of(context)
-                          .popUntil((route) => route.isFirst),
-                    ),
-                  ),
-                  if (isResult) const SizedBox(width: 12),
-                  if (isResult)
-                    Expanded(
-                      child: _BottomButton(
-                        filled: true,
-                        icon: Icons.refresh_rounded,
-                        label: strings.playAgain,
-                        onPressed: () => Navigator.of(context).pop(),
                       ),
-                    ),
-                ],
-              ),
+                      if (isResult) const SizedBox(width: 12),
+                      if (isResult)
+                        Expanded(
+                          child: _BottomButton(
+                            filled: true,
+                            icon: Icons.refresh_rounded,
+                            label: strings.playAgain,
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
             ),
+            if (_newRecord)
+              const Positioned.fill(child: Fireworks()),
           ],
         ),
       ),
@@ -151,6 +176,17 @@ class _ResultsScreenState extends State<ResultsScreen> {
       ),
       child: Column(
         children: [
+          if (_newRecord) ...[
+            Text(
+              strings.newRecord,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 4),
+          ],
           Text(
             strings.greatJob,
             style: const TextStyle(
@@ -176,6 +212,28 @@ class _ResultsScreenState extends State<ResultsScreen> {
               accuracy: accuracy,
             ),
             style: const TextStyle(color: Colors.white),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('🪙', style: TextStyle(fontSize: 18)),
+                const SizedBox(width: 6),
+                Text(
+                  strings.coinsEarnedLabel(_coinsEarned),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

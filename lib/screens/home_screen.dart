@@ -5,12 +5,16 @@ import '../main.dart';
 import '../models/game_config.dart';
 import '../models/operation_type.dart';
 import '../models/player_profile.dart';
+import '../services/coin_service.dart';
 import '../services/player_service.dart';
 import '../theme.dart';
+import 'customization_screen.dart';
+import 'docs_screen.dart';
 import 'game_screen.dart';
 import 'history_screen.dart';
 import 'player_select_screen.dart';
 import 'results_screen.dart';
+import 'shop_screen.dart';
 
 /// The first screen: pick (or switch) the player, a challenge length and which
 /// operations to practise, then start playing.
@@ -23,9 +27,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final PlayerService _playerService = PlayerService();
+  final CoinService _coinService = CoinService();
 
   PlayerProfile? _player;
   bool _loadingPlayer = true;
+  int _coins = 0;
 
   ChallengeDuration _duration = ChallengeDuration.oneMinute;
   final Set<OperationType> _operations = {
@@ -47,12 +53,19 @@ class _HomeScreenState extends State<HomeScreen> {
       _loadingPlayer = false;
     });
     if (player != null) {
+      _loadCoins(player.name);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           MathGameApp.of(context).setLocale(Locale(player.languageCode));
         }
       });
     }
+  }
+
+  Future<void> _loadCoins(String name) async {
+    final wallet = await _coinService.load(name);
+    if (!mounted) return;
+    setState(() => _coins = wallet.coins);
   }
 
   Future<PlayerProfile?> _choosePlayer() async {
@@ -63,6 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (selected != null && mounted) {
       setState(() => _player = selected);
+      _loadCoins(selected.name);
     }
     return selected;
   }
@@ -99,8 +113,37 @@ class _HomeScreenState extends State<HomeScreen> {
       duration: _duration,
       operations: Set<OperationType>.from(_operations),
     );
-    Navigator.of(context).push(
+    await Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => GameScreen(config: config)),
+    );
+    // Returning from a finished game may have awarded coins.
+    if (mounted) _loadCoins(player.name);
+  }
+
+  Future<void> _openShop() async {
+    final player = _player;
+    if (player == null) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => ShopScreen(playerName: player.name),
+      ),
+    );
+    if (mounted) _loadCoins(player.name);
+  }
+
+  void _openCustomize() {
+    final player = _player;
+    if (player == null) return;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => CustomizationScreen(playerName: player.name),
+      ),
+    );
+  }
+
+  void _openDocs() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const DocsScreen()),
     );
   }
 
@@ -187,6 +230,24 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               if (_player != null) ...[
                 const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: _openShop,
+                        icon: const Icon(Icons.storefront_rounded),
+                        label: Text('${strings.shop}  🪙 $_coins'),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: _openCustomize,
+                  icon: const Icon(Icons.palette_rounded),
+                  label: Text(strings.customize),
+                ),
+                const SizedBox(height: 12),
                 OutlinedButton.icon(
                   onPressed: () {
                     Navigator.of(context).push(
@@ -199,6 +260,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: Text(strings.history),
                 ),
               ],
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: _openDocs,
+                icon: const Icon(Icons.menu_book_rounded),
+                label: Text(strings.documentation),
+              ),
               const SizedBox(height: 20),
               const _ScoringHelp(),
             ],
