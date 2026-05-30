@@ -6,8 +6,9 @@ import '../models/score_entry.dart';
 import '../services/leaderboard_service.dart';
 import '../theme.dart';
 
-/// Shows the high-score leaderboard. When opened right after a game it also
-/// saves the new score and shows a summary of the round.
+/// Shows the high-score leaderboard grouped by game type (each player appears at
+/// most once per game type, showing their best score). When opened right after
+/// a game it also saves the new result and shows a summary of the round.
 class ResultsScreen extends StatefulWidget {
   const ResultsScreen({
     super.key,
@@ -29,9 +30,10 @@ class ResultsScreen extends StatefulWidget {
 
 class _ResultsScreenState extends State<ResultsScreen> {
   final LeaderboardService _service = LeaderboardService();
-  List<ScoreEntry> _entries = [];
+  List<GameTypeLeaderboard> _boards = [];
   bool _loading = true;
   int? _highlightDate;
+  String? _highlightGameType;
   bool _initialized = false;
 
   @override
@@ -43,29 +45,29 @@ class _ResultsScreenState extends State<ResultsScreen> {
   }
 
   Future<void> _initBoard() async {
-    final strings = context.strings;
+    List<ScoreEntry> history;
     if (widget.finalScore != null && widget.finishedConfig != null) {
+      final config = widget.finishedConfig!;
       final entry = ScoreEntry(
-        name: widget.finishedConfig!.playerName,
+        name: config.playerName,
         score: widget.finalScore!,
-        durationLabel: strings.durationLabel(widget.finishedConfig!.duration),
+        duration: config.duration,
+        operations: config.operations.toList(),
+        correct: widget.correctCount ?? 0,
+        answered: widget.answeredCount ?? 0,
         dateMillis: DateTime.now().millisecondsSinceEpoch,
       );
       _highlightDate = entry.dateMillis;
-      final board = await _service.addScore(entry);
-      if (!mounted) return;
-      setState(() {
-        _entries = board;
-        _loading = false;
-      });
+      _highlightGameType = entry.gameTypeKey;
+      history = await _service.addScore(entry);
     } else {
-      final board = await _service.load();
-      if (!mounted) return;
-      setState(() {
-        _entries = board;
-        _loading = false;
-      });
+      history = await _service.load();
     }
+    if (!mounted) return;
+    setState(() {
+      _boards = LeaderboardService.buildLeaderboards(history);
+      _loading = false;
+    });
   }
 
   @override
@@ -85,23 +87,19 @@ class _ResultsScreenState extends State<ResultsScreen> {
             Expanded(
               child: _loading
                   ? const Center(child: CircularProgressIndicator())
-                  : _entries.isEmpty
-                      ? Center(
-                          child: Text(strings.noScoresYet),
-                        )
-                      : ListView.builder(
+                  : _boards.isEmpty
+                      ? Center(child: Text(strings.noScoresYet))
+                      : ListView(
                           padding: const EdgeInsets.all(16),
-                          itemCount: _entries.length,
-                          itemBuilder: (context, index) {
-                            final entry = _entries[index];
-                            final highlight =
-                                entry.dateMillis == _highlightDate;
-                            return _LeaderboardTile(
-                              rank: index + 1,
-                              entry: entry,
-                              highlight: highlight,
-                            );
-                          },
+                          children: [
+                            for (final board in _boards)
+                              _LeaderboardSection(
+                                board: board,
+                                highlightDate: _highlightDate,
+                                isHighlightedType:
+                                    board.gameTypeKey == _highlightGameType,
+                              ),
+                          ],
                         ),
             ),
             Padding(
@@ -109,20 +107,22 @@ class _ResultsScreenState extends State<ResultsScreen> {
               child: Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton.icon(
+                    child: _BottomButton(
+                      filled: false,
+                      icon: Icons.home_rounded,
+                      label: strings.home,
                       onPressed: () => Navigator.of(context)
                           .popUntil((route) => route.isFirst),
-                      icon: const Icon(Icons.home_rounded),
-                      label: Text(strings.home),
                     ),
                   ),
                   if (isResult) const SizedBox(width: 12),
                   if (isResult)
                     Expanded(
-                      child: ElevatedButton.icon(
+                      child: _BottomButton(
+                        filled: true,
+                        icon: Icons.refresh_rounded,
+                        label: strings.playAgain,
                         onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(Icons.refresh_rounded),
-                        label: Text(strings.playAgain),
                       ),
                     ),
                 ],
@@ -138,8 +138,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
     final strings = context.strings;
     final correct = widget.correctCount ?? 0;
     final answered = widget.answeredCount ?? 0;
-    final accuracy =
-        answered == 0 ? 0 : (correct / answered * 100).round();
+    final accuracy = answered == 0 ? 0 : (correct / answered * 100).round();
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.all(16),
@@ -184,6 +183,110 @@ class _ResultsScreenState extends State<ResultsScreen> {
   }
 }
 
+/// A fixed-height bottom action button whose label never wraps to a second line.
+class _BottomButton extends StatelessWidget {
+  const _BottomButton({
+    required this.filled,
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
+
+  final bool filled;
+  final IconData icon;
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final child = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            softWrap: false,
+          ),
+        ),
+      ],
+    );
+    const style = ButtonStyle(
+      padding: WidgetStatePropertyAll(
+        EdgeInsets.symmetric(horizontal: 12),
+      ),
+    );
+    return SizedBox(
+      height: 56,
+      child: filled
+          ? ElevatedButton(
+              onPressed: onPressed,
+              style: style,
+              child: child,
+            )
+          : OutlinedButton(
+              onPressed: onPressed,
+              style: style,
+              child: child,
+            ),
+    );
+  }
+}
+
+class _LeaderboardSection extends StatelessWidget {
+  const _LeaderboardSection({
+    required this.board,
+    required this.highlightDate,
+    required this.isHighlightedType,
+  });
+
+  final GameTypeLeaderboard board;
+  final int? highlightDate;
+  final bool isHighlightedType;
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = context.strings;
+    final title =
+        '${strings.durationLabel(board.duration)} ${board.operationSymbols}';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 8),
+          child: Row(
+            children: [
+              Icon(
+                Icons.emoji_events_rounded,
+                color: isHighlightedType ? AppTheme.secondary : AppTheme.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+        for (var i = 0; i < board.entries.length; i++)
+          _LeaderboardTile(
+            rank: i + 1,
+            entry: board.entries[i],
+            highlight: board.entries[i].dateMillis == highlightDate,
+          ),
+        const SizedBox(height: 12),
+      ],
+    );
+  }
+}
+
 class _LeaderboardTile extends StatelessWidget {
   const _LeaderboardTile({
     required this.rank,
@@ -210,6 +313,7 @@ class _LeaderboardTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = context.strings;
     return Card(
       color: highlight ? AppTheme.secondary.withOpacity(0.18) : null,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -219,7 +323,7 @@ class _LeaderboardTile extends StatelessWidget {
           entry.name,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(entry.durationLabel),
+        subtitle: Text('${strings.faults}: ${entry.faults}'),
         trailing: Text(
           '${entry.score}',
           style: const TextStyle(

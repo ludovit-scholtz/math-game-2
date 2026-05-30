@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/app_strings.dart';
+import '../main.dart';
 import '../models/game_config.dart';
 import '../models/operation_type.dart';
+import '../models/player_profile.dart';
+import '../services/player_service.dart';
 import '../theme.dart';
 import 'game_screen.dart';
+import 'history_screen.dart';
+import 'player_select_screen.dart';
 import 'results_screen.dart';
 
-/// The first screen: pick a name, a challenge length and which operations to
-/// practise, then start playing.
+/// The first screen: pick (or switch) the player, a challenge length and which
+/// operations to practise, then start playing.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -17,7 +22,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController _nameController = TextEditingController();
+  final PlayerService _playerService = PlayerService();
+
+  PlayerProfile? _player;
+  bool _loadingPlayer = true;
 
   ChallengeDuration _duration = ChallengeDuration.oneMinute;
   final Set<OperationType> _operations = {
@@ -26,9 +34,46 @@ class _HomeScreenState extends State<HomeScreen> {
   };
 
   @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _loadPlayer();
+  }
+
+  Future<void> _loadPlayer() async {
+    final player = await _playerService.loadCurrent();
+    if (!mounted) return;
+    setState(() {
+      _player = player;
+      _loadingPlayer = false;
+    });
+    if (player != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          MathGameApp.of(context).setLocale(Locale(player.languageCode));
+        }
+      });
+    }
+  }
+
+  Future<PlayerProfile?> _choosePlayer() async {
+    final selected = await Navigator.of(context).push<PlayerProfile>(
+      MaterialPageRoute<PlayerProfile>(
+        builder: (_) => const PlayerSelectScreen(),
+      ),
+    );
+    if (selected != null && mounted) {
+      setState(() => _player = selected);
+    }
+    return selected;
+  }
+
+  Future<void> _changeLanguage(String code) async {
+    final player = _player;
+    if (player == null) return;
+    final updated = await _playerService.setLanguage(player.name, code);
+    if (!mounted || updated == null) return;
+    setState(() => _player = updated);
+    MathGameApp.of(context).setLocale(Locale(code));
   }
 
   void _toggleOperation(OperationType type) {
@@ -41,13 +86,16 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _startGame() {
-    final strings = context.strings;
-    final name = _nameController.text.trim().isEmpty
-        ? strings.player
-        : _nameController.text.trim();
+  Future<void> _startGame() async {
+    var player = _player;
+    // If no player is selected, send the user to the selection screen first.
+    if (player == null) {
+      player = await _choosePlayer();
+      if (player == null) return;
+    }
+    if (!mounted) return;
     final config = GameConfig(
-      playerName: name,
+      playerName: player.name,
       duration: _duration,
       operations: Set<OperationType>.from(_operations),
     );
@@ -83,15 +131,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 24),
               _SectionCard(
-                title: strings.yourName,
-                child: TextField(
-                  controller: _nameController,
-                  textCapitalization: TextCapitalization.words,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    hintText: strings.enterYourName,
-                  ),
-                ),
+                title: strings.player,
+                child: _loadingPlayer
+                    ? const Center(child: CircularProgressIndicator())
+                    : _buildPlayerSection(strings),
               ),
               const SizedBox(height: 16),
               _SectionCard(
@@ -142,12 +185,87 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(Icons.emoji_events_outlined),
                 label: Text(strings.leaderboard),
               ),
+              if (_player != null) ...[
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => HistoryScreen(playerName: _player!.name),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.history_rounded),
+                  label: Text(strings.history),
+                ),
+              ],
               const SizedBox(height: 20),
               const _ScoringHelp(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPlayerSection(AppStrings strings) {
+    final player = _player;
+    if (player == null) {
+      return ElevatedButton.icon(
+        onPressed: _choosePlayer,
+        icon: const Icon(Icons.person_rounded),
+        label: Text(strings.choosePlayer),
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            const Icon(Icons.person_rounded, color: AppTheme.primary),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                player.name,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            TextButton.icon(
+              onPressed: _choosePlayer,
+              icon: const Icon(Icons.swap_horiz_rounded),
+              label: Text(strings.changePlayer),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        InputDecorator(
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            labelText: strings.language,
+            prefixIcon: const Icon(Icons.language_rounded),
+            isDense: true,
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              isExpanded: true,
+              value: player.languageCode,
+              onChanged: (code) {
+                if (code != null) _changeLanguage(code);
+              },
+              items: [
+                for (final locale in AppStrings.supportedLocales)
+                  DropdownMenuItem<String>(
+                    value: locale.languageCode,
+                    child: Text(AppStrings.languageName(locale.languageCode)),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
