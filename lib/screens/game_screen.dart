@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../l10n/app_strings.dart';
 import '../logic/game_controller.dart';
 import '../models/game_config.dart';
 import '../models/question.dart';
@@ -33,6 +34,7 @@ class _GameScreenState extends State<GameScreen> {
   int? _selectedAnswer;
   bool _locked = false;
   String _feedback = '';
+  bool _feedbackIsNegative = false;
 
   @override
   void initState() {
@@ -54,6 +56,7 @@ class _GameScreenState extends State<GameScreen> {
 
   Future<void> _onAnswerTapped(int value) async {
     if (_locked) return;
+    final strings = context.strings;
     final elapsed =
         DateTime.now().difference(_questionStart).inMilliseconds / 1000.0;
     final result = _controller.submitAnswer(_question, value, elapsed);
@@ -64,10 +67,14 @@ class _GameScreenState extends State<GameScreen> {
       if (result.correct) {
         final pts = result.pointsAwarded;
         _feedback = pts > 0
-            ? 'Nice! +${pts.toStringAsFixed(pts.truncateToDouble() == pts ? 0 : 1)}'
-            : 'Correct, but too slow! −1';
+            ? strings.niceFeedback(
+                pts.toStringAsFixed(pts.truncateToDouble() == pts ? 0 : 1),
+              )
+            : strings.slowFeedback();
+        _feedbackIsNegative = pts <= 0;
       } else {
-        _feedback = 'Oops! The answer was ${_question.correctAnswer}';
+        _feedback = strings.oopsFeedback(_question.correctAnswer);
+        _feedbackIsNegative = true;
       }
     });
 
@@ -85,6 +92,7 @@ class _GameScreenState extends State<GameScreen> {
       _selectedAnswer = null;
       _locked = false;
       _feedback = '';
+      _feedbackIsNegative = false;
     });
   }
 
@@ -135,6 +143,7 @@ class _GameScreenState extends State<GameScreen> {
                 remainingSeconds: _remainingSeconds,
                 score: _controller.score.round(),
                 progress: progress.clamp(0.0, 1.0),
+                quitTooltip: context.strings.quit,
                 onQuit: () {
                   _timer?.cancel();
                   Navigator.of(context).pop();
@@ -157,8 +166,7 @@ class _GameScreenState extends State<GameScreen> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: _feedback.startsWith('Oops') ||
-                            _feedback.contains('slow')
+                    color: _feedbackIsNegative
                         ? AppTheme.incorrect
                         : AppTheme.correct,
                   ),
@@ -198,12 +206,14 @@ class _TopBar extends StatelessWidget {
     required this.remainingSeconds,
     required this.score,
     required this.progress,
+    required this.quitTooltip,
     required this.onQuit,
   });
 
   final int remainingSeconds;
   final int score;
   final double progress;
+  final String quitTooltip;
   final VoidCallback onQuit;
 
   @override
@@ -217,7 +227,7 @@ class _TopBar extends StatelessWidget {
             IconButton(
               onPressed: onQuit,
               icon: const Icon(Icons.close_rounded),
-              tooltip: 'Quit',
+              tooltip: quitTooltip,
             ),
             const Spacer(),
             Row(

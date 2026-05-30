@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:math_game_2/l10n/app_strings.dart';
 import 'package:math_game_2/screens/home_screen.dart';
 
 void main() {
-  testWidgets('home screen shows the title and start button', (tester) async {
-    await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
+  testWidgets('home screen shows updated English title and actions', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppStrings.localizationsDelegates,
+        supportedLocales: AppStrings.supportedLocales,
+        home: const HomeScreen(),
+      ),
+    );
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('Math Masters'), findsOneWidget);
+    expect(find.textContaining('Math Master'), findsOneWidget);
     expect(find.text('Start'), findsOneWidget);
     expect(find.text('Leaderboard'), findsOneWidget);
 
@@ -16,5 +25,23 @@ void main() {
     expect(find.textContaining('Subtract'), findsOneWidget);
     expect(find.textContaining('Multiply'), findsOneWidget);
     expect(find.textContaining('Divide'), findsOneWidget);
+  });
+
+  testWidgets('home screen shows German translations when requested', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('de'),
+        localizationsDelegates: AppStrings.localizationsDelegates,
+        supportedLocales: AppStrings.supportedLocales,
+        home: const HomeScreen(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Starten'), findsOneWidget);
+    expect(find.text('Bestenliste'), findsOneWidget);
+    expect(find.textContaining('Addieren'), findsOneWidget);
   });
 }
