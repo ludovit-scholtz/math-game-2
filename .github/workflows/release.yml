@@ -101,6 +101,7 @@ jobs:
       - name: Configure Android release signing
         run: |
           python - <<'PY'
+          import re
           from pathlib import Path
 
           build_gradle = Path("android/app/build.gradle.kts")
@@ -123,16 +124,7 @@ jobs:
                   raise SystemExit("Could not find the android block in android/app/build.gradle.kts")
               text = text.replace(anchor, properties_block + anchor, 1)
 
-          default_release_block = """    buildTypes {
-              release {
-                  // TODO: Add your own signing config for the release build.
-                  // Signing with the debug keys for now, so `flutter run --release` works.
-                  signingConfig = signingConfigs.getByName("debug")
-              }
-          }
-          """
-
-          signing_block = """    signingConfigs {
+          signing_configs_block = """    signingConfigs {
               create("release") {
                   val storeFilePath = keystoreProperties.getProperty("storeFile")
                   if (storeFilePath != null) {
@@ -144,21 +136,32 @@ jobs:
               }
           }
 
-          buildTypes {
-              release {
-                  signingConfig = if (keystorePropertiesFile.exists()) {
-                      signingConfigs.getByName("release")
-                  } else {
-                      signingConfigs.getByName("debug")
-                  }
-              }
-          }
           """
+          if "signingConfigs {" not in text:
+              build_types_match = re.search(r"^\s*buildTypes\s*\{", text, flags=re.MULTILINE)
+              if not build_types_match:
+                  raise SystemExit("Could not find the buildTypes block in android/app/build.gradle.kts")
+              text = text[:build_types_match.start()] + signing_configs_block + text[build_types_match.start():]
 
-          if default_release_block not in text:
-              raise SystemExit("Could not find the generated debug signing block in android/app/build.gradle.kts")
+          debug_signing_pattern = re.compile(
+              r'^(?P<indent>\s*)signingConfig\s*=\s*signingConfigs\.getByName\("debug"\)\s*$',
+              flags=re.MULTILINE,
+          )
 
-          text = text.replace(default_release_block, signing_block, 1)
+          def replace_debug_signing(match):
+              indent = match.group("indent")
+              return (
+                  f'{indent}signingConfig = if (keystorePropertiesFile.exists()) {{\n'
+                  f'{indent}    signingConfigs.getByName("release")\n'
+                  f'{indent}}} else {{\n'
+                  f'{indent}    signingConfigs.getByName("debug")\n'
+                  f'{indent}}}'
+              )
+
+          text, replacements = debug_signing_pattern.subn(replace_debug_signing, text, count=1)
+          if replacements != 1:
+              raise SystemExit("Could not find the generated debug signing line in android/app/build.gradle.kts")
+
           build_gradle.write_text(text)
           PY
 
