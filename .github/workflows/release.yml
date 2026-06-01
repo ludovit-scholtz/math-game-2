@@ -59,6 +59,29 @@ jobs:
           echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
           echo "version_code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
 
+      - name: Apply release version to pubspec
+        run: |
+          python - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          pubspec = Path("pubspec.yaml")
+          version = f'{os.environ["VERSION_NAME"]}+{os.environ["VERSION_CODE"]}'
+          text = pubspec.read_text()
+          text, replacements = re.subn(
+              r"^version:\s*.+$",
+              f"version: {version}",
+              text,
+              count=1,
+              flags=re.MULTILINE,
+          )
+          if replacements != 1:
+              raise SystemExit("Could not update version in pubspec.yaml")
+          pubspec.write_text(text)
+          print(f"Updated pubspec.yaml to version {version}")
+          PY
+
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
@@ -176,6 +199,26 @@ jobs:
                   raise SystemExit("Could not find the buildTypes block in android/app/build.gradle.kts")
               text = text[:build_types_match.start()] + signing_configs_block + text[build_types_match.start():]
 
+          text, version_code_replacements = re.subn(
+              r"^(?P<indent>\s*)versionCode\s*=\s*flutter\.versionCode\s*$",
+              r'\g<indent>versionCode = System.getenv("VERSION_CODE")?.toInt() ?: flutter.versionCode',
+              text,
+              count=1,
+              flags=re.MULTILINE,
+          )
+          if version_code_replacements != 1:
+              raise SystemExit("Could not find the generated versionCode line in android/app/build.gradle.kts")
+
+          text, version_name_replacements = re.subn(
+              r"^(?P<indent>\s*)versionName\s*=\s*flutter\.versionName\s*$",
+              r'\g<indent>versionName = System.getenv("VERSION_NAME") ?: flutter.versionName',
+              text,
+              count=1,
+              flags=re.MULTILINE,
+          )
+          if version_name_replacements != 1:
+              raise SystemExit("Could not find the generated versionName line in android/app/build.gradle.kts")
+
           debug_signing_pattern = re.compile(
               r'^(?P<indent>\s*)signingConfig\s*=\s*signingConfigs\.getByName\("debug"\)\s*$',
               flags=re.MULTILINE,
@@ -204,6 +247,43 @@ jobs:
             --release \
             --build-name "$VERSION_NAME" \
             --build-number "$VERSION_CODE"
+
+      - name: Verify bundle version metadata
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          metadata_path = Path("build/app/outputs/bundle/release/output-metadata.json")
+          metadata = json.loads(metadata_path.read_text())
+          element = metadata["elements"][0]
+
+          actual_application_id = metadata.get("applicationId")
+          actual_version_code = int(element["versionCode"])
+          actual_version_name = str(element["versionName"])
+
+          expected_application_id = "io.biatec.math_master"
+          expected_version_code = int(os.environ["VERSION_CODE"])
+          expected_version_name = os.environ["VERSION_NAME"]
+
+          print(f"AAB applicationId: {actual_application_id}")
+          print(f"AAB versionName: {actual_version_name}")
+          print(f"AAB versionCode: {actual_version_code}")
+
+          if actual_application_id != expected_application_id:
+              raise SystemExit(
+                  f"Expected applicationId {expected_application_id}, got {actual_application_id}"
+              )
+          if actual_version_name != expected_version_name:
+              raise SystemExit(
+                  f"Expected versionName {expected_version_name}, got {actual_version_name}"
+              )
+          if actual_version_code != expected_version_code:
+              raise SystemExit(
+                  f"Expected versionCode {expected_version_code}, got {actual_version_code}"
+              )
+          PY
 
       - name: Verify the bundle is signed
         run: |
