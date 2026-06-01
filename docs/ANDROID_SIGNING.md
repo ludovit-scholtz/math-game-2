@@ -4,6 +4,9 @@ This guide explains how to create an upload signing key for **Math Master**, sto
 it securely in GitHub repository secrets, and produce a Google Play–signed
 Android App Bundle (`.aab`) via the CI/CD pipeline.
 
+The Android application ID used for Play Console uploads is
+`io.biatec.math_master`.
+
 > **Why this is needed:** Google Play rejects bundles signed with the Android
 > *debug* key ("the app was not signed for production release"). The release
 > build must be signed with your own *upload key*. The

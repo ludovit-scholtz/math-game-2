@@ -60,21 +60,24 @@ jobs:
         run: flutter pub get
 
       - name: Generate platform folders
-        run: flutter create --platforms=android,ios,web --org com.mathmasters --project-name math_game_2 .
+        run: flutter create --platforms=android,ios,web --org io.biatec --project-name math_master .
 
       - name: Update generated app metadata
         run: |
           python - <<'PY'
           import json
           import plistlib
+          import re
           from pathlib import Path
 
           manifest = Path("android/app/src/main/AndroidManifest.xml")
           manifest.write_text(
-              manifest.read_text().replace(
-                  'android:label="math_game_2"',
-                  'android:label="Math Master"',
-              )
+            re.sub(
+              r'android:label="[^"]+"',
+              'android:label="Math Master"',
+              manifest.read_text(),
+              count=1,
+            )
           )
 
           info_plist = Path("ios/Runner/Info.plist")
@@ -97,10 +100,12 @@ jobs:
           web_index = Path("web/index.html")
           if web_index.exists():
               web_index.write_text(
-                  web_index.read_text().replace(
-                      "<title>math_game_2</title>",
-                      "<title>Math Master</title>",
-                  )
+                re.sub(
+                  r"<title>.*?</title>",
+                  "<title>Math Master</title>",
+                  web_index.read_text(),
+                  count=1,
+                )
               )
           PY
 
@@ -145,12 +150,13 @@ jobs:
         run: flutter pub get
 
       - name: Generate platform folders
-        run: flutter create --platforms=web --org com.mathmasters --project-name math_game_2 .
+        run: flutter create --platforms=web --org io.biatec --project-name math_master .
 
       - name: Update generated web metadata
         run: |
           python - <<'PY'
           import json
+          import re
           from pathlib import Path
 
           web_manifest = Path("web/manifest.json")
@@ -165,10 +171,12 @@ jobs:
           web_index = Path("web/index.html")
           if web_index.exists():
               web_index.write_text(
-                  web_index.read_text().replace(
-                      "<title>math_game_2</title>",
-                      "<title>Math Master</title>",
-                  )
+                re.sub(
+                  r"<title>.*?</title>",
+                  "<title>Math Master</title>",
+                  web_index.read_text(),
+                  count=1,
+                )
               )
           PY
 
