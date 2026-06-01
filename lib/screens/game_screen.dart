@@ -306,7 +306,7 @@ class _TopBar extends StatelessWidget {
           child: LinearProgressIndicator(
             value: progress,
             minHeight: 8,
-            backgroundColor: AppTheme.primary.withOpacity(0.15),
+            backgroundColor: AppTheme.primary.withValues(alpha: 0.15),
           ),
         ),
       ],

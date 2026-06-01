@@ -19,7 +19,10 @@ void main() {
         final b = BackgroundStyle.generated(i);
         expect(a.id, b.id);
         expect(a.price, b.price);
-        expect(a.colors.map((c) => c.value), b.colors.map((c) => c.value));
+        expect(
+          a.colors.map((c) => c.toARGB32()),
+          b.colors.map((c) => c.toARGB32()),
+        );
       }
     });
 

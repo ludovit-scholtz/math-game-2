@@ -230,7 +230,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
@@ -386,7 +386,7 @@ class _LeaderboardTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final strings = context.strings;
     return Card(
-      color: highlight ? AppTheme.secondary.withOpacity(0.18) : null,
+      color: highlight ? AppTheme.secondary.withValues(alpha: 0.18) : null,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: ListTile(
         leading: Text(_medal, style: const TextStyle(fontSize: 22)),

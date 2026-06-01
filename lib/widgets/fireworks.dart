@@ -127,7 +127,7 @@ class _FireworksPainter extends CustomPainter {
       final radius = burst.maxRadius * size.shortestSide * progress;
       final opacity = (1.0 - progress).clamp(0.0, 1.0);
       final paint = Paint()
-        ..color = burst.color.withOpacity(opacity)
+        ..color = burst.color.withValues(alpha: opacity)
         ..style = PaintingStyle.fill;
       final random = Random(burst.seed);
       for (var i = 0; i < burst.sparkCount; i++) {
