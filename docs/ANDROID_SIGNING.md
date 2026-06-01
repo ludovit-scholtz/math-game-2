@@ -88,6 +88,9 @@ repository secret** and create the following four secrets:
 ## 4. Build a signed bundle via CI
 
 The release workflow runs when you push a version tag or trigger it manually.
+It derives the Android/iOS release version directly from the latest git tag.
+For example, tag `v1.0.5` builds with version name `1.0.5` and Android version
+code `10005`.
 
 **Option A — push a tag (recommended):**
 
