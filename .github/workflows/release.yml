@@ -98,6 +98,70 @@ jobs:
           storeFile=upload-keystore.jks
           EOF
 
+      - name: Configure Android release signing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          build_gradle = Path("android/app/build.gradle.kts")
+          text = build_gradle.read_text()
+
+          imports = "import java.io.FileInputStream\nimport java.util.Properties\n\n"
+          if not text.startswith("import java.io.FileInputStream"):
+              text = imports + text
+
+          properties_block = """val keystoreProperties = Properties()
+          val keystorePropertiesFile = rootProject.file("key.properties")
+          if (keystorePropertiesFile.exists()) {
+              keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+          }
+
+          """
+          if properties_block not in text:
+              anchor = "android {\n"
+              if anchor not in text:
+                  raise SystemExit("Could not find the android block in android/app/build.gradle.kts")
+              text = text.replace(anchor, properties_block + anchor, 1)
+
+          default_release_block = """    buildTypes {
+              release {
+                  // TODO: Add your own signing config for the release build.
+                  // Signing with the debug keys for now, so `flutter run --release` works.
+                  signingConfig = signingConfigs.getByName("debug")
+              }
+          }
+          """
+
+          signing_block = """    signingConfigs {
+              create("release") {
+                  val storeFilePath = keystoreProperties.getProperty("storeFile")
+                  if (storeFilePath != null) {
+                      storeFile = rootProject.file("app/$storeFilePath")
+                  }
+                  storePassword = keystoreProperties.getProperty("storePassword")
+                  keyAlias = keystoreProperties.getProperty("keyAlias")
+                  keyPassword = keystoreProperties.getProperty("keyPassword")
+              }
+          }
+
+          buildTypes {
+              release {
+                  signingConfig = if (keystorePropertiesFile.exists()) {
+                      signingConfigs.getByName("release")
+                  } else {
+                      signingConfigs.getByName("debug")
+                  }
+              }
+          }
+          """
+
+          if default_release_block not in text:
+              raise SystemExit("Could not find the generated debug signing block in android/app/build.gradle.kts")
+
+          text = text.replace(default_release_block, signing_block, 1)
+          build_gradle.write_text(text)
+          PY
+
       - name: Build signed App Bundle (release)
         run: flutter build appbundle --release
 

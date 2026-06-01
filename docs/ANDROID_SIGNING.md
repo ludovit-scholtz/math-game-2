@@ -100,9 +100,11 @@ When the run finishes, download the **`math-masters-signed-aab`** artifact. It
 contains `app-release.aab`, signed with your upload key and ready to upload to
 the Google Play Console.
 
-The workflow also runs a verification step that **fails the build** if the
-bundle is still signed with the debug key, so a mis-configured secret cannot
-silently produce an unpublishable bundle.
+The workflow also patches the generated Android Gradle file so the regenerated
+`android/` folder reads `android/key.properties` and uses your upload keystore
+for the release build. It then runs a verification step that **fails the
+build** if the bundle is still signed with the debug key, so a mis-configured
+secret cannot silently produce an unpublishable bundle.
 
 ---
 
@@ -125,6 +127,11 @@ To reproduce the signed build on your machine:
    ```bash
    flutter build appbundle --release
    ```
+
+If you regenerated `android/` with `flutter create .`, make sure
+`android/app/build.gradle.kts` has a release signing config that reads
+`android/key.properties`. The stock Flutter template signs release builds with
+the debug key until you replace that block.
 
 The output is at `build/app/outputs/bundle/release/app-release.aab`.
 
