@@ -91,7 +91,7 @@ The release workflow runs when you push a version tag or trigger it manually.
 It derives the Android/iOS release version directly from the latest git tag.
 For example, tag `v1.0.5` builds with version name `1.0.5` and Android version
 code `10005`.
-The workflow also verifies the generated App Bundle metadata and fails if the
+The workflow also verifies the generated App Bundle manifest and fails if the
 bundle does not contain the expected application ID, version name, or version
 code.
 

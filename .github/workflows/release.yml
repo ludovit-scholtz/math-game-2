@@ -248,20 +248,36 @@ jobs:
             --build-name "$VERSION_NAME" \
             --build-number "$VERSION_CODE"
 
-      - name: Verify bundle version metadata
+      - name: Verify bundle manifest metadata
+        env:
+          BUNDLETOOL_VERSION: "1.18.2"
         run: |
+          BUNDLE=build/app/outputs/bundle/release/app-release.aab
+          test -f "$BUNDLE"
+          curl -fsSL \
+            -o bundletool.jar \
+            "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar"
+          java -jar bundletool.jar dump manifest \
+            --bundle="$BUNDLE" \
+            --module=base \
+            > bundle-manifest.xml
+
           python - <<'PY'
-          import json
           import os
+          import re
           from pathlib import Path
 
-          metadata_path = Path("build/app/outputs/bundle/release/output-metadata.json")
-          metadata = json.loads(metadata_path.read_text())
-          element = metadata["elements"][0]
+          manifest = Path("bundle-manifest.xml").read_text()
 
-          actual_application_id = metadata.get("applicationId")
-          actual_version_code = int(element["versionCode"])
-          actual_version_name = str(element["versionName"])
+          def required_attribute(name):
+              match = re.search(rf'(?<![\w:]){re.escape(name)}="([^"]+)"', manifest)
+              if not match:
+                  raise SystemExit(f"Could not find {name} in App Bundle manifest")
+              return match.group(1)
+
+          actual_application_id = required_attribute("package")
+          actual_version_code = int(required_attribute("android:versionCode"))
+          actual_version_name = required_attribute("android:versionName")
 
           expected_application_id = "io.biatec.math_master"
           expected_version_code = int(os.environ["VERSION_CODE"])
