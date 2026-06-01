@@ -1,0 +1,125 @@
+name: Release (Signed AAB)
+
+# Builds a Google Play production-signed Android App Bundle (.aab).
+#
+# Triggered by pushing a version tag (e.g. v1.0.0) or manually via the
+# "Run workflow" button. Requires the following repository secrets to be set
+# (see docs/ANDROID_SIGNING.md for how to create and store them):
+#   ANDROID_KEYSTORE_BASE64  - base64-encoded upload keystore (.jks)
+#   ANDROID_KEYSTORE_PASSWORD - keystore (store) password
+#   ANDROID_KEY_PASSWORD      - key password
+#   ANDROID_KEY_ALIAS         - key alias
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: "3.24.3"
+
+jobs:
+  build-signed-aab:
+    name: Build Signed App Bundle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate platform folders
+        run: flutter create --platforms=android,ios,web --org com.mathmasters --project-name math_game_2 .
+
+      - name: Update generated app metadata
+        run: |
+          python - <<'PY'
+          import json
+          import plistlib
+          from pathlib import Path
+
+          manifest = Path("android/app/src/main/AndroidManifest.xml")
+          manifest.write_text(
+              manifest.read_text().replace(
+                  'android:label="math_game_2"',
+                  'android:label="Math Master"',
+              )
+          )
+
+          info_plist = Path("ios/Runner/Info.plist")
+          with info_plist.open("rb") as file:
+              plist = plistlib.load(file)
+          plist["CFBundleDisplayName"] = "Math Master"
+          plist["CFBundleName"] = "Math Master"
+          with info_plist.open("wb") as file:
+              plistlib.dump(plist, file)
+          PY
+
+      - name: Generate launcher icons
+        run: dart run flutter_launcher_icons
+
+      - name: Decode keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$ANDROID_KEYSTORE_BASE64" ]; then
+            echo "::error::ANDROID_KEYSTORE_BASE64 secret is not set. See docs/ANDROID_SIGNING.md."
+            exit 1
+          fi
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
+
+      - name: Create key.properties
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          cat > android/key.properties <<EOF
+          storePassword=${ANDROID_KEYSTORE_PASSWORD}
+          keyPassword=${ANDROID_KEY_PASSWORD}
+          keyAlias=${ANDROID_KEY_ALIAS}
+          storeFile=upload-keystore.jks
+          EOF
+
+      - name: Build signed App Bundle (release)
+        run: flutter build appbundle --release
+
+      - name: Verify the bundle is signed
+        run: |
+          BUNDLE=build/app/outputs/bundle/release/app-release.aab
+          test -f "$BUNDLE"
+          echo "Built $BUNDLE"
+          # Fail fast if the bundle was still signed with the Android debug key.
+          unzip -p "$BUNDLE" META-INF/*.RSA 2>/dev/null \
+            | keytool -printcert 2>/dev/null \
+            | grep -i "Android Debug" \
+            && { echo "::error::Bundle is signed with the debug key, not the upload key."; exit 1; } \
+            || echo "Bundle is not signed with the debug key."
+
+      - name: Clean up signing secrets
+        if: always()
+        run: rm -f android/key.properties android/app/upload-keystore.jks
+
+      - name: Upload signed App Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: math-masters-signed-aab
+          path: build/app/outputs/bundle/release/app-release.aab
+          if-no-files-found: error

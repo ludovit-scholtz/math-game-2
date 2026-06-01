@@ -36,3 +36,9 @@ pubspec.lock
 # Symbolication / obfuscation
 app.*.symbols
 app.*.map.json
+
+# Android signing secrets - NEVER commit these
+**/key.properties
+**/*.jks
+**/*.keystore
+**/upload-keystore.jks
