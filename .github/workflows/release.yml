@@ -20,7 +20,7 @@ permissions:
   contents: read
 
 env:
-  FLUTTER_VERSION: "3.24.3"
+  FLUTTER_VERSION: "3.44.0"
 
 jobs:
   build-signed-aab:
