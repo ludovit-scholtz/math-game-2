@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_strings.dart';
 import '../main.dart';
+import '../models/pet.dart';
 import '../models/player_profile.dart';
 import '../services/audio_service.dart';
 import '../services/player_service.dart';
 import '../theme.dart';
+import '../widgets/pet_widgets.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -63,6 +65,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     context.findAncestorStateOfType<MathGameAppState>()?.setLocale(Locale(code));
   }
 
+  Future<void> _changePet(PetType pet) async {
+    final player = _player;
+    if (player == null) return;
+    final updated = await _playerService.setPet(player.name, pet);
+    if (!mounted || updated == null) return;
+    setState(() => _player = updated);
+  }
+
   @override
   Widget build(BuildContext context) {
     final strings = context.strings;
@@ -107,6 +117,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ],
                           ),
                         ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    _SettingsCard(
+                      icon: Icons.pets_rounded,
+                      title: strings.pet,
+                      child: PetPickerGrid(
+                        selectedPet: _player!.petType,
+                        onSelected: _changePet,
                       ),
                     ),
                     const SizedBox(height: 12),

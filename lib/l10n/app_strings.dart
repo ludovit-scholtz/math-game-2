@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../models/game_config.dart';
 import '../models/operation_type.dart';
+import '../models/pet.dart';
 
 class AppStrings {
   AppStrings(Locale locale)
@@ -96,6 +97,20 @@ class AppStrings {
       'assignStyles': 'Tap a position to give it one of your styles.',
       'coinsEarned': '+{coins} coins',
       'purchased': 'Unlocked {name}!',
+      'pet': 'Pet',
+      'choosePet': 'Choose your pet',
+      'feeding': 'Food',
+      'enjoyment': 'Fun',
+      'petCareTitle': 'Care for your pet',
+      'feedPet': 'Feed your pet',
+      'buyPetToy': 'Buy a new toy',
+      'petFed': 'Yum! Your pet feels fed.',
+      'petToyBought': 'Your pet loves the new toy!',
+      'petGreeting': 'Your {pet}',
+      'cat': 'Cat',
+      'dog': 'Dog',
+      'panda': 'Panda',
+      'rabbit': 'Rabbit',
       'docCoinsTitle': 'Coins',
       'docCoinsBody':
           'Every game rewards 0 to 20 coins. Reach the top score in a category and you earn the full 20; the more points you score, the more coins you collect.',
@@ -105,6 +120,9 @@ class AppStrings {
       'docCustomizeTitle': 'Customize buttons',
       'docCustomizeBody':
           'Open Customize to assign any style you own to each of the six answer buttons. Your choices are saved and used the next time you play.',
+      'docPetsTitle': 'Pets',
+      'docPetsBody':
+          'Each player can choose a pet. Food drops by 100 points per day and fun drops by 20 points per day, so visit your pet often. Feeding costs 20 coins and adds 30 food; a new toy costs 100 coins and adds 50 fun.',
       'docRecordsTitle': 'Records & fireworks',
       'docRecordsBody':
           'Beat the best score in a game category to set a new record — fireworks light up the results screen to celebrate!',
@@ -174,6 +192,20 @@ class AppStrings {
       'assignStyles': 'Klikni na pozíciu a priraď jej jeden zo svojich štýlov.',
       'coinsEarned': '+{coins} mincí',
       'purchased': 'Odomknuté: {name}!',
+      'pet': 'Zvieratko',
+      'choosePet': 'Vyber si zvieratko',
+      'feeding': 'Jedlo',
+      'enjoyment': 'Zábava',
+      'petCareTitle': 'Postaraj sa o zvieratko',
+      'feedPet': 'Nakŕmiť zvieratko',
+      'buyPetToy': 'Kúpiť novú hračku',
+      'petFed': 'Mňam! Zvieratko je nakŕmené.',
+      'petToyBought': 'Zvieratko má radosť z novej hračky!',
+      'petGreeting': 'Tvoje zvieratko: {pet}',
+      'cat': 'Mačka',
+      'dog': 'Pes',
+      'panda': 'Panda',
+      'rabbit': 'Zajac',
       'docCoinsTitle': 'Mince',
       'docCoinsBody':
           'Za každú hru získaš 0 až 20 mincí. Ak dosiahneš najlepšie skóre v kategórii, získaš všetkých 20; čím viac bodov, tým viac mincí.',
@@ -183,6 +215,9 @@ class AppStrings {
       'docCustomizeTitle': 'Úprava tlačidiel',
       'docCustomizeBody':
           'V úprave priradíš ľubovoľný vlastnený štýl ku každému zo šiestich tlačidiel s odpoveďami. Tvoje voľby sa uložia a použijú pri ďalšej hre.',
+      'docPetsTitle': 'Zvieratká',
+      'docPetsBody':
+          'Každý hráč si môže vybrať zvieratko. Jedlo klesá o 100 bodov denne a zábava o 20 bodov denne, preto ho pravidelne navštevuj. Kŕmenie stojí 20 mincí a pridá 30 bodov jedla; nová hračka stojí 100 mincí a pridá 50 bodov zábavy.',
       'docRecordsTitle': 'Rekordy a ohňostroj',
       'docRecordsBody':
           'Prekonaj najlepšie skóre v kategórii a vytvoríš nový rekord — obrazovku s výsledkami rozžiari ohňostroj!',
@@ -252,6 +287,20 @@ class AppStrings {
       'assignStyles': 'Klikni na pozici a přiřaď jí jeden ze svých stylů.',
       'coinsEarned': '+{coins} mincí',
       'purchased': 'Odemčeno: {name}!',
+      'pet': 'Mazlíček',
+      'choosePet': 'Vyber si mazlíčka',
+      'feeding': 'Jídlo',
+      'enjoyment': 'Zábava',
+      'petCareTitle': 'Postarej se o mazlíčka',
+      'feedPet': 'Nakrm mazlíčka',
+      'buyPetToy': 'Kup novou hračku',
+      'petFed': 'Mňam! Mazlíček je nakrmený.',
+      'petToyBought': 'Mazlíček má radost z nové hračky!',
+      'petGreeting': 'Tvůj mazlíček: {pet}',
+      'cat': 'Kočka',
+      'dog': 'Pes',
+      'panda': 'Panda',
+      'rabbit': 'Králík',
       'docCoinsTitle': 'Mince',
       'docCoinsBody':
           'Za každou hru získáš 0 až 20 mincí. Když dosáhneš nejlepšího skóre v kategorii, získáš všech 20; čím více bodů, tím více mincí.',
@@ -261,6 +310,9 @@ class AppStrings {
       'docCustomizeTitle': 'Úprava tlačítek',
       'docCustomizeBody':
           'V úpravě přiřadíš libovolný vlastněný styl ke každému ze šesti tlačítek s odpověďmi. Tvé volby se uloží a použijí při další hře.',
+      'docPetsTitle': 'Mazlíčci',
+      'docPetsBody':
+          'Každý hráč si může vybrat mazlíčka. Jídlo klesá o 100 bodů denně a zábava o 20 bodů denně, proto ho pravidelně navštěvuj. Krmení stojí 20 mincí a přidá 30 bodů jídla; nová hračka stojí 100 mincí a přidá 50 bodů zábavy.',
       'docRecordsTitle': 'Rekordy a ohňostroj',
       'docRecordsBody':
           'Překonej nejlepší skóre v kategorii a vytvoříš nový rekord — obrazovku s výsledky rozzáří ohňostroj!',
@@ -330,6 +382,20 @@ class AppStrings {
       'assignStyles': 'Нажми на позицию, чтобы задать ей один из своих стилей.',
       'coinsEarned': '+{coins} монет',
       'purchased': 'Открыто: {name}!',
+      'pet': 'Питомец',
+      'choosePet': 'Выбери питомца',
+      'feeding': 'Еда',
+      'enjoyment': 'Радость',
+      'petCareTitle': 'Позаботься о питомце',
+      'feedPet': 'Покормить питомца',
+      'buyPetToy': 'Купить новую игрушку',
+      'petFed': 'Вкусно! Питомец сыт.',
+      'petToyBought': 'Питомцу очень нравится новая игрушка!',
+      'petGreeting': 'Твой питомец: {pet}',
+      'cat': 'Кот',
+      'dog': 'Собака',
+      'panda': 'Панда',
+      'rabbit': 'Кролик',
       'docCoinsTitle': 'Монеты',
       'docCoinsBody':
           'За каждую игру ты получаешь от 0 до 20 монет. Достигни лучшего результата в категории — и получишь все 20; чем больше очков, тем больше монет.',
@@ -339,6 +405,9 @@ class AppStrings {
       'docCustomizeTitle': 'Настройка кнопок',
       'docCustomizeBody':
           'В настройке назначь любой свой стиль каждой из шести кнопок ответов. Твой выбор сохранится и будет использован в следующей игре.',
+      'docPetsTitle': 'Питомцы',
+      'docPetsBody':
+          'Каждый игрок может выбрать питомца. Еда уменьшается на 100 очков в день, а радость на 20 очков в день, поэтому навещай питомца почаще. Кормление стоит 20 монет и добавляет 30 очков еды; новая игрушка стоит 100 монет и добавляет 50 очков радости.',
       'docRecordsTitle': 'Рекорды и фейерверк',
       'docRecordsBody':
           'Побей лучший результат в категории, чтобы установить новый рекорд — экран результатов озарит фейерверк!',
@@ -410,6 +479,20 @@ class AppStrings {
           'Tippe auf eine Position, um ihr einen deiner Stile zu geben.',
       'coinsEarned': '+{coins} Münzen',
       'purchased': '{name} freigeschaltet!',
+      'pet': 'Haustier',
+      'choosePet': 'Wähle dein Haustier',
+      'feeding': 'Futter',
+      'enjoyment': 'Spaß',
+      'petCareTitle': 'Kümmere dich um dein Haustier',
+      'feedPet': 'Haustier füttern',
+      'buyPetToy': 'Neues Spielzeug kaufen',
+      'petFed': 'Lecker! Dein Haustier ist satt.',
+      'petToyBought': 'Dein Haustier liebt das neue Spielzeug!',
+      'petGreeting': 'Dein Haustier: {pet}',
+      'cat': 'Katze',
+      'dog': 'Hund',
+      'panda': 'Panda',
+      'rabbit': 'Kaninchen',
       'docCoinsTitle': 'Münzen',
       'docCoinsBody':
           'Jedes Spiel bringt 0 bis 20 Münzen. Erreichst du die Bestpunktzahl einer Kategorie, bekommst du alle 20; je mehr Punkte, desto mehr Münzen.',
@@ -419,6 +502,9 @@ class AppStrings {
       'docCustomizeTitle': 'Tasten anpassen',
       'docCustomizeBody':
           'Im Anpassen weist du jeder der sechs Antworttasten einen deiner Stile zu. Deine Auswahl wird gespeichert und beim nächsten Spiel verwendet.',
+      'docPetsTitle': 'Haustiere',
+      'docPetsBody':
+          'Jeder Spieler kann ein Haustier wählen. Futter sinkt um 100 Punkte pro Tag und Spaß um 20 Punkte pro Tag, also schau regelmäßig vorbei. Füttern kostet 20 Münzen und gibt 30 Futterpunkte; ein neues Spielzeug kostet 100 Münzen und gibt 50 Spaßpunkte.',
       'docRecordsTitle': 'Rekorde & Feuerwerk',
       'docRecordsBody':
           'Schlage die Bestpunktzahl einer Kategorie, um einen neuen Rekord aufzustellen — ein Feuerwerk erhellt den Ergebnisbildschirm!',
@@ -486,12 +572,28 @@ class AppStrings {
       'assignStyles': '点击某个位置，为它指定你的一种样式。',
       'coinsEarned': '+{coins} 金币',
       'purchased': '已解锁：{name}！',
+      'pet': '宠物',
+      'choosePet': '选择你的宠物',
+      'feeding': '食物',
+      'enjoyment': '快乐',
+      'petCareTitle': '照顾你的宠物',
+      'feedPet': '喂宠物',
+      'buyPetToy': '买新玩具',
+      'petFed': '真好吃！宠物吃饱了。',
+      'petToyBought': '宠物很喜欢新玩具！',
+      'petGreeting': '你的宠物：{pet}',
+      'cat': '猫',
+      'dog': '狗',
+      'panda': '熊猫',
+      'rabbit': '兔子',
       'docCoinsTitle': '金币',
       'docCoinsBody': '每局游戏可获得 0 到 20 枚金币。在某个类别中达到最高分即可获得全部 20 枚；得分越高，金币越多。',
       'docShopTitle': '商店',
       'docShopBody': '在商店里花金币解锁新的按钮背景样式。始终有 20 种新样式可供购买，其中包括 50 金币的实惠选项；每种样式都有固定价格，对所有玩家都相同。',
       'docCustomizeTitle': '自定义按钮',
       'docCustomizeBody': '在自定义中，为六个答案按钮分别指定你拥有的任意样式。你的选择会被保存并在下次游戏中使用。',
+      'docPetsTitle': '宠物',
+      'docPetsBody': '每个玩家都可以选择一个宠物。食物每天减少 100 点，快乐每天减少 20 点，所以要经常来看它。喂食花费 20 金币并增加 30 点食物；新玩具花费 100 金币并增加 50 点快乐。',
       'docRecordsTitle': '纪录与烟花',
       'docRecordsBody': '在某个类别中刷新最高分即可创造新纪录——结算界面会燃放烟花庆祝！',
     },
@@ -553,6 +655,17 @@ class AppStrings {
   String get docShopBody => _text('docShopBody');
   String get docCustomizeTitle => _text('docCustomizeTitle');
   String get docCustomizeBody => _text('docCustomizeBody');
+  String get pet => _text('pet');
+  String get choosePet => _text('choosePet');
+  String get feeding => _text('feeding');
+  String get enjoyment => _text('enjoyment');
+  String get petCareTitle => _text('petCareTitle');
+  String get feedPet => _text('feedPet');
+  String get buyPetToy => _text('buyPetToy');
+  String get petFed => _text('petFed');
+  String get petToyBought => _text('petToyBought');
+  String get docPetsTitle => _text('docPetsTitle');
+  String get docPetsBody => _text('docPetsBody');
   String get docRecordsTitle => _text('docRecordsTitle');
   String get docRecordsBody => _text('docRecordsBody');
 
@@ -561,6 +674,21 @@ class AppStrings {
 
   String purchasedStyle(String name) =>
       _format('purchased', {'name': name});
+
+  String petGreeting(String pet) => _format('petGreeting', {'pet': pet});
+
+  String petName(PetType pet) {
+    switch (pet) {
+      case PetType.cat:
+        return _text('cat');
+      case PetType.dog:
+        return _text('dog');
+      case PetType.panda:
+        return _text('panda');
+      case PetType.rabbit:
+        return _text('rabbit');
+    }
+  }
 
   /// The endonym (native name) of a supported language, used in the language
   /// switcher. These intentionally are not translated.

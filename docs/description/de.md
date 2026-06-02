@@ -27,6 +27,7 @@ Wichtige Funktionen:
 - Der Spielverlauf zeigt gespielte Runden und Fehler.
 - Eine lokale Bestenliste speichert das beste Ergebnis für jeden Spieltyp.
 - Mehrere Spielerprofile können ein Gerät gemeinsam nutzen.
+- Jeder Spieler kann Katze, Hund, Panda oder Kaninchen wählen und das Haustier mit Münzen versorgen.
 - Münzen, Shop und Tastenanpassung motivieren zusätzlich.
 - Soundeffekte belohnen richtige Antworten und weisen auf Fehler hin.
 

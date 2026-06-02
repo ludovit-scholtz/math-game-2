@@ -9,7 +9,7 @@ numbers kept **under 100**. Built with **Flutter**, so the same code base runs o
 
 1. On the home screen choose your player. Players you've used before are
    remembered, so you can switch between them without retyping a name — and each
-   player keeps their own **language**.
+  player keeps their own **language** and **pet**.
 2. Pick a challenge length (**1, 2 or 5 minutes**) and choose which operations to
    practise.
 3. Answer as many questions as you can before the timer runs out by tapping one
@@ -36,6 +36,18 @@ details:
   (100–1000 coins)** that is identical for every player.
 - Use **Customize buttons** to assign any style you own to each of the **six**
   answer-button positions. Your choices are saved for your next game.
+
+### Pets
+
+Each player can choose a cat, dog, panda or rabbit. The pet appears on the home
+screen and reacts to care: when food drops below 20 points it looks hungry, and
+when fun drops below 20 points it looks sad. Food drops by **100 points per day**
+and fun drops by **20 points per day**.
+
+Players can spend coins to care for their pet:
+
+- **Feed pet** costs **20 coins** and adds **30 food points**.
+- **Buy a new toy** costs **100 coins** and adds **50 fun points**.
 
 ### Scoring
 
@@ -68,6 +80,7 @@ lib/
   widgets/     reusable UI pieces
 test/          unit tests for the game logic
 assets/sounds/ short WAV sound effects
+assets/pets/   pet images for happy, hungry and sad states
 ```
 
 The pure game logic in `lib/logic` has no Flutter dependency and is covered by

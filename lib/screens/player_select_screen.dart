@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_strings.dart';
 import '../main.dart';
+import '../models/pet.dart';
 import '../models/player_profile.dart';
 import '../services/player_service.dart';
 import '../theme.dart';
+import '../widgets/pet_widgets.dart';
 
 /// Lets the user pick a player from those who played before (so they don't have
 /// to retype a name when switching players) or create a new one. Each player
@@ -23,6 +25,7 @@ class _PlayerSelectScreenState extends State<PlayerSelectScreen> {
   List<PlayerProfile> _players = [];
   bool _loading = true;
   late String _newLanguage;
+  PetType _newPet = PetType.cat;
 
   @override
   void initState() {
@@ -57,7 +60,9 @@ class _PlayerSelectScreenState extends State<PlayerSelectScreen> {
   Future<void> _addNew() async {
     final name = _nameController.text.trim();
     if (name.isEmpty) return;
-    await _select(PlayerProfile(name: name, languageCode: _newLanguage));
+    await _select(
+      PlayerProfile(name: name, languageCode: _newLanguage).withPet(_newPet),
+    );
   }
 
   @override
@@ -96,10 +101,16 @@ class _PlayerSelectScreenState extends State<PlayerSelectScreen> {
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: ListTile(
-                          leading: const Icon(
-                            Icons.person_rounded,
-                            color: AppTheme.primary,
-                          ),
+                          leading: player.petType == null
+                              ? const Icon(
+                                  Icons.person_rounded,
+                                  color: AppTheme.primary,
+                                )
+                              : Image.asset(
+                                  player.petType!.asset(PetMood.happy),
+                                  width: 42,
+                                  height: 42,
+                                ),
                           title: Text(
                             player.name,
                             style:
@@ -146,6 +157,19 @@ class _PlayerSelectScreenState extends State<PlayerSelectScreen> {
                             label: strings.language,
                             onChanged: (code) =>
                                 setState(() => _newLanguage = code),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            strings.choosePet,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 8),
+                          PetPickerGrid(
+                            selectedPet: _newPet,
+                            onSelected: (pet) => setState(() => _newPet = pet),
                           ),
                           const SizedBox(height: 12),
                           ElevatedButton.icon(

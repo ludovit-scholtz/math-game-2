@@ -27,6 +27,7 @@ Hlavní funkce:
 - Historie her ukazuje, co každý hráč odehrál a kolik udělal chyb.
 - Lokální žebříček uchovává nejlepší výsledek pro každý typ hry.
 - Na jednom zařízení lze používat více hráčských profilů.
+- Každý hráč si může vybrat kočku, psa, pandu nebo králíka a starat se o mazlíčka pomocí mincí.
 - Mince, obchod a úprava tlačítek přidávají jemnou motivaci.
 - Zvukové efekty odměňují správné odpovědi a upozorňují na chyby.
 

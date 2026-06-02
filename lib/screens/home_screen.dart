@@ -8,6 +8,7 @@ import '../models/player_profile.dart';
 import '../services/coin_service.dart';
 import '../services/player_service.dart';
 import '../theme.dart';
+import '../widgets/pet_widgets.dart';
 import 'customization_screen.dart';
 import 'docs_screen.dart';
 import 'game_screen.dart';
@@ -82,6 +83,82 @@ class _HomeScreenState extends State<HomeScreen> {
     return selected;
   }
 
+  Future<void> _careForPet(_PetCareAction action) async {
+    final player = _player;
+    if (player == null || !player.hasPet) return;
+    final strings = context.strings;
+    final cost = action == _PetCareAction.feed ? 20 : 100;
+    final wallet = await _coinService.spendCoins(player.name, cost);
+    if (!mounted) return;
+    if (wallet == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(strings.notEnoughCoins)),
+      );
+      return;
+    }
+    final updated = action == _PetCareAction.feed
+        ? await _playerService.feedPet(player.name)
+        : await _playerService.buyPetToy(player.name);
+    if (!mounted || updated == null) return;
+    setState(() {
+      _player = updated;
+      _coins = wallet.coins;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          action == _PetCareAction.feed
+              ? strings.petFed
+              : strings.petToyBought,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openPetCare() async {
+    final player = _player;
+    if (player == null || !player.hasPet) return;
+    final strings = context.strings;
+    final action = await showModalBottomSheet<_PetCareAction>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                strings.petCareTitle,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 12),
+              ListTile(
+                leading: const Icon(
+                  Icons.restaurant_rounded,
+                  color: AppTheme.primary,
+                ),
+                title: Text(strings.feedPet),
+                subtitle: Text('20 ${strings.coins}'),
+                onTap: () => Navigator.of(context).pop(_PetCareAction.feed),
+              ),
+              ListTile(
+                leading: const Icon(Icons.toys_rounded, color: AppTheme.primary),
+                title: Text(strings.buyPetToy),
+                subtitle: Text('100 ${strings.coins}'),
+                onTap: () => Navigator.of(context).pop(_PetCareAction.toy),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (action != null) await _careForPet(action);
+  }
+
   void _toggleOperation(OperationType type) {
     setState(() {
       if (_operations.contains(type)) {
@@ -109,7 +186,10 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute<void>(builder: (_) => GameScreen(config: config)),
     );
     // Returning from a finished game may have awarded coins.
-    if (mounted) _loadCoins(player.name);
+    if (mounted) {
+      _loadCoins(player.name);
+      _loadPlayer();
+    }
   }
 
   Future<void> _openShop() async {
@@ -314,6 +394,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(Icons.play_arrow_rounded, size: 28),
                 label: Text(strings.start),
               ),
+              if (_player?.hasPet ?? false) ...[
+                const SizedBox(height: 16),
+                PetCareCard(player: _player!, onTap: _openPetCare),
+              ],
               const SizedBox(height: 20),
               const _ScoringHelp(),
             ],
@@ -368,6 +452,8 @@ enum _HomeMenuAction {
   settings,
   docs,
 }
+
+enum _PetCareAction { feed, toy }
 
 class _MenuItem extends StatelessWidget {
   const _MenuItem({required this.icon, required this.label});

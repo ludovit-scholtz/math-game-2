@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:math_game_2/models/pet.dart';
 import 'package:math_game_2/models/player_profile.dart';
 import 'package:math_game_2/services/player_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,5 +52,39 @@ void main() {
 
     final players = await service.loadPlayers();
     expect(players.single.languageCode, 'cs');
+  });
+
+  test('setPet gives a player a fresh pet with full care', () async {
+    final service = PlayerService();
+    await service.selectOrCreate(
+      PlayerProfile(name: 'Ann', languageCode: 'en'),
+    );
+
+    final updated = await service.setPet('Ann', PetType.panda);
+    expect(updated?.petType, PetType.panda);
+    expect(updated?.petCare().feedingPoints, 100);
+    expect(updated?.petCare().enjoymentPoints, 100);
+  });
+
+  test('pet care drops by elapsed days and reacts to care actions', () async {
+    final twoDaysAgo = DateTime(2026, 6, 1);
+    final now = DateTime(2026, 6, 3);
+    final profile = PlayerProfile(
+      name: 'Ann',
+      languageCode: 'en',
+      petType: PetType.cat,
+      petFeedingPoints: 100,
+      petEnjoymentPoints: 100,
+      petCareUpdatedAt: twoDaysAgo,
+    );
+
+    final care = profile.petCare(now: now);
+    expect(care.feedingPoints, 0);
+    expect(care.enjoymentPoints, 60);
+    expect(care.mood, PetMood.hungry);
+
+    final fed = profile.withUpdatedPetCare(feedingDelta: 30, now: now);
+    expect(fed.petCare(now: now).feedingPoints, 30);
+    expect(fed.petCare(now: now).enjoymentPoints, 60);
   });
 }

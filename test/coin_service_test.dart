@@ -34,6 +34,18 @@ void main() {
     expect((await service.load('Bob')).coins, 7);
   });
 
+  test('spending coins deducts only when affordable', () async {
+    final service = CoinService();
+    await service.addCoins('Ann', 50);
+
+    expect(await service.spendCoins('Ann', 100), isNull);
+    expect((await service.load('Ann')).coins, 50);
+
+    final wallet = await service.spendCoins('Ann', 20);
+    expect(wallet?.coins, 30);
+    expect((await service.load('Ann')).coins, 30);
+  });
+
   test('purchasing deducts the price and unlocks the style', () async {
     final service = CoinService();
     final style = BackgroundStyle.generated(0);

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/pet.dart';
 import '../models/player_profile.dart';
 
 /// Persists the list of player profiles and which player is currently selected,
@@ -57,6 +58,44 @@ class PlayerService {
     for (var i = 0; i < players.length; i++) {
       if (players[i].name == name) {
         updated = players[i].copyWith(languageCode: languageCode);
+        players[i] = updated;
+        break;
+      }
+    }
+    if (updated != null) await _savePlayers(players);
+    return updated;
+  }
+
+  /// Gives [name] a pet, resetting care points because this is a new companion.
+  Future<PlayerProfile?> setPet(String name, PetType petType) async {
+    return _updatePlayer(name, (player) => player.withPet(petType));
+  }
+
+  /// Feeds the player's pet and returns the updated profile.
+  Future<PlayerProfile?> feedPet(String name) async {
+    return _updatePlayer(
+      name,
+      (player) => player.withUpdatedPetCare(feedingDelta: 30),
+    );
+  }
+
+  /// Buys the player's pet a new toy and returns the updated profile.
+  Future<PlayerProfile?> buyPetToy(String name) async {
+    return _updatePlayer(
+      name,
+      (player) => player.withUpdatedPetCare(enjoymentDelta: 50),
+    );
+  }
+
+  Future<PlayerProfile?> _updatePlayer(
+    String name,
+    PlayerProfile Function(PlayerProfile player) update,
+  ) async {
+    final players = await loadPlayers();
+    PlayerProfile? updated;
+    for (var i = 0; i < players.length; i++) {
+      if (players[i].name == name) {
+        updated = update(players[i]);
         players[i] = updated;
         break;
       }

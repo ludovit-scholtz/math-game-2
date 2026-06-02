@@ -138,6 +138,15 @@ class CoinService {
     return _update(playerName, wallet.copyWith(coins: wallet.coins + amount));
   }
 
+  /// Attempts to spend [amount] coins. Returns the updated wallet on success,
+  /// or `null` if the player cannot afford it.
+  Future<CoinWallet?> spendCoins(String playerName, int amount) async {
+    if (amount <= 0) return load(playerName);
+    final wallet = await load(playerName);
+    if (wallet.coins < amount) return null;
+    return _update(playerName, wallet.copyWith(coins: wallet.coins - amount));
+  }
+
   /// Attempts to buy [style] for [playerName]. Returns the updated wallet on
   /// success, or `null` if the player cannot afford it or already owns it.
   Future<CoinWallet?> purchase(String playerName, BackgroundStyle style) async {

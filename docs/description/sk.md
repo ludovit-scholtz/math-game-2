@@ -27,6 +27,7 @@ Hlavné funkcie:
 - História hier ukazuje, čo každý hráč odohral a koľko mal chýb.
 - Lokálny rebríček uchováva najlepší výsledok pre každý typ hry.
 - Na jednom zariadení možno používať viac hráčskych profilov.
+- Každý hráč si môže vybrať mačku, psa, pandu alebo zajaca a starať sa o zvieratko pomocou mincí.
 - Mince, obchod a úprava tlačidiel pridávajú jemnú motiváciu.
 - Zvukové efekty odmeňujú správne odpovede a upozorňujú na chyby.
 

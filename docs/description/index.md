@@ -28,6 +28,7 @@ Key features:
 - Local leaderboard keeps the best score for each game type.
 - Multiple player profiles can be used on the same device.
 - Each player can keep their own language preference.
+- Each player can choose a cat, dog, panda or rabbit pet and care for it with coins.
 - Coins, shop items and button customization add gentle motivation.
 - Sound effects reward correct answers and signal mistakes.
 
