@@ -3,11 +3,21 @@ import 'package:math_game_2/models/background_style.dart';
 
 void main() {
   group('BackgroundStyle pricing', () {
-    test('prices are always within 100..1000 and rounded to tens', () {
+    test('prices are always within 50..1000 and rounded to tens', () {
       for (var i = 0; i < 1000; i++) {
         final price = BackgroundStyle.priceForIndex(i);
-        expect(price, inInclusiveRange(100, 1000));
+        expect(price, inInclusiveRange(BackgroundStyle.budgetPrice, 1000));
         expect(price % 10, 0);
+      }
+    });
+
+    test('every fifth generated style is a 50 coin budget style', () {
+      for (var i = 0; i < 100; i++) {
+        final expected = i % 5 == 0;
+        expect(
+          BackgroundStyle.priceForIndex(i) == BackgroundStyle.budgetPrice,
+          expected,
+        );
       }
     });
 
@@ -42,12 +52,43 @@ void main() {
           BackgroundCatalog.shopSize);
     });
 
+    test('always includes budget 50 coin styles in the shop', () {
+      final available = BackgroundCatalog.availableFor({});
+      expect(
+        available
+            .where((style) => style.price == BackgroundStyle.budgetPrice)
+            .length,
+        greaterThanOrEqualTo(BackgroundCatalog.minimumBudgetStyles),
+      );
+      expect(available.take(BackgroundCatalog.minimumBudgetStyles).every(
+            (style) => style.price == BackgroundStyle.budgetPrice,
+          ),
+          isTrue);
+    });
+
     test('skips owned styles so the shop never runs dry', () {
       final owned = {
         for (var i = 0; i < 5; i++) 'style-$i',
       };
       final available = BackgroundCatalog.availableFor(owned);
       expect(available.length, BackgroundCatalog.shopSize);
+      for (final style in available) {
+        expect(owned.contains(style.id), isFalse);
+      }
+    });
+
+    test('keeps budget styles available after cheap styles are purchased', () {
+      final owned = {
+        for (var i = 0; i <= 100; i += 5) 'style-$i',
+      };
+      final available = BackgroundCatalog.availableFor(owned);
+      expect(available.length, BackgroundCatalog.shopSize);
+      expect(
+        available
+            .where((style) => style.price == BackgroundStyle.budgetPrice)
+            .length,
+        greaterThanOrEqualTo(BackgroundCatalog.minimumBudgetStyles),
+      );
       for (final style in available) {
         expect(owned.contains(style.id), isFalse);
       }

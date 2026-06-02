@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 ///   six positions before the player customises anything.
 /// * **Generated** styles ([generated]) are the ones sold in the shop. They are
 ///   produced deterministically from an integer index, which means every player
-///   sees the exact same style and the exact same [price] for a given index –
+///   sees the exact same style and the exact same [price] for a given index -
 ///   so a background always costs the same for everyone.
 class BackgroundStyle {
   const BackgroundStyle({
@@ -43,6 +43,9 @@ class BackgroundStyle {
   /// Number of positions (answer buttons) shown in a game.
   static const int positions = 6;
 
+  /// The lowest purchasable theme price used for budget-friendly shop options.
+  static const int budgetPrice = 50;
+
   /// The free starter styles, one per button position.
   static const List<BackgroundStyle> defaults = [
     BackgroundStyle(
@@ -75,10 +78,12 @@ class BackgroundStyle {
     );
   }
 
-  /// The deterministic price (in coins) for the generated style at [index],
-  /// always in the inclusive range 100..1000 and rounded to whole tens. Because
-  /// it only depends on [index] every player pays the same amount.
+  /// The deterministic price (in coins) for the generated style at [index].
+  /// Every fifth style costs [budgetPrice], while the rest stay in the inclusive
+  /// range 100..1000 and are rounded to whole tens. Because it only depends on
+  /// [index] every player pays the same amount.
   static int priceForIndex(int index) {
+    if (index % 5 == 0) return budgetPrice;
     final raw = 100 + (_hash(index) % 901); // 100..1000
     return (raw ~/ 10) * 10;
   }
@@ -120,6 +125,9 @@ class BackgroundCatalog {
   /// How many purchasable styles the shop always offers.
   static const int shopSize = 20;
 
+  /// How many budget-priced styles should be visible whenever possible.
+  static const int minimumBudgetStyles = 4;
+
   /// Returns [shopSize] purchasable styles the player does not own yet. Because
   /// new styles are generated on demand, the shop never runs out: there are
   /// always at least [shopSize] fresh styles to buy.
@@ -131,7 +139,39 @@ class BackgroundCatalog {
       if (!ownedIds.contains(style.id)) result.add(style);
       index++;
     }
+    _ensureBudgetStyles(result, ownedIds);
+    result.sort((a, b) {
+      final priceOrder = a.price.compareTo(b.price);
+      if (priceOrder != 0) return priceOrder;
+      return _generatedIndex(a.id).compareTo(_generatedIndex(b.id));
+    });
     return result;
+  }
+
+  static void _ensureBudgetStyles(
+    List<BackgroundStyle> styles,
+    Set<String> ownedIds,
+  ) {
+    final usedIds = styles.map((style) => style.id).toSet();
+    var budgetCount = styles
+        .where((style) => style.price == BackgroundStyle.budgetPrice)
+        .length;
+    var index = 0;
+
+    while (budgetCount < minimumBudgetStyles) {
+      final candidate = BackgroundStyle.generated(index);
+      if (candidate.price == BackgroundStyle.budgetPrice &&
+          !ownedIds.contains(candidate.id) &&
+          usedIds.add(candidate.id)) {
+        final replaceIndex = styles.lastIndexWhere(
+          (style) => style.price != BackgroundStyle.budgetPrice,
+        );
+        if (replaceIndex < 0) return;
+        styles[replaceIndex] = candidate;
+        budgetCount++;
+      }
+      index++;
+    }
   }
 
   /// Resolves a style by its [id], or `null` if the id is unknown.
@@ -157,5 +197,10 @@ class BackgroundCatalog {
       }
     }
     return styles;
+  }
+
+  static int _generatedIndex(String id) {
+    if (!id.startsWith('style-')) return -1;
+    return int.tryParse(id.substring('style-'.length)) ?? -1;
   }
 }

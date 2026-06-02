@@ -101,7 +101,7 @@ class AppStrings {
           'Every game rewards 0 to 20 coins. Reach the top score in a category and you earn the full 20; the more points you score, the more coins you collect.',
       'docShopTitle': 'Shop',
       'docShopBody':
-          'Spend your coins in the shop to unlock new button background styles. There are always 20 fresh styles to buy, each with a fixed price (100–1000 coins) that is the same for every player.',
+          'Spend your coins in the shop to unlock new button background styles. There are always 20 fresh styles to buy, including budget options for 50 coins, and each style has a fixed price that is the same for every player.',
       'docCustomizeTitle': 'Customize buttons',
       'docCustomizeBody':
           'Open Customize to assign any style you own to each of the six answer buttons. Your choices are saved and used the next time you play.',
@@ -179,7 +179,7 @@ class AppStrings {
           'Za každú hru získaš 0 až 20 mincí. Ak dosiahneš najlepšie skóre v kategórii, získaš všetkých 20; čím viac bodov, tým viac mincí.',
       'docShopTitle': 'Obchod',
       'docShopBody':
-          'Mince míňaj v obchode na odomknutie nových štýlov pozadia tlačidiel. Vždy je k dispozícii 20 nových štýlov, každý s pevnou cenou (100 – 1000 mincí), ktorá je rovnaká pre všetkých hráčov.',
+          'Mince míňaj v obchode na odomknutie nových štýlov pozadia tlačidiel. Vždy je k dispozícii 20 nových štýlov vrátane výhodných možností za 50 mincí a každý štýl má pevnú cenu rovnakú pre všetkých hráčov.',
       'docCustomizeTitle': 'Úprava tlačidiel',
       'docCustomizeBody':
           'V úprave priradíš ľubovoľný vlastnený štýl ku každému zo šiestich tlačidiel s odpoveďami. Tvoje voľby sa uložia a použijú pri ďalšej hre.',
@@ -257,7 +257,7 @@ class AppStrings {
           'Za každou hru získáš 0 až 20 mincí. Když dosáhneš nejlepšího skóre v kategorii, získáš všech 20; čím více bodů, tím více mincí.',
       'docShopTitle': 'Obchod',
       'docShopBody':
-          'Mince utrácej v obchodě za odemčení nových stylů pozadí tlačítek. Vždy je k dispozici 20 nových stylů, každý s pevnou cenou (100–1000 mincí), která je stejná pro všechny hráče.',
+          'Mince utrácej v obchodě za odemčení nových stylů pozadí tlačítek. Vždy je k dispozici 20 nových stylů včetně výhodných možností za 50 mincí a každý styl má pevnou cenu stejnou pro všechny hráče.',
       'docCustomizeTitle': 'Úprava tlačítek',
       'docCustomizeBody':
           'V úpravě přiřadíš libovolný vlastněný styl ke každému ze šesti tlačítek s odpověďmi. Tvé volby se uloží a použijí při další hře.',
@@ -335,7 +335,7 @@ class AppStrings {
           'За каждую игру ты получаешь от 0 до 20 монет. Достигни лучшего результата в категории — и получишь все 20; чем больше очков, тем больше монет.',
       'docShopTitle': 'Магазин',
       'docShopBody':
-          'Трать монеты в магазине, чтобы открывать новые стили фона кнопок. Всегда доступно 20 новых стилей, у каждого фиксированная цена (100–1000 монет), одинаковая для всех игроков.',
+          'Трать монеты в магазине, чтобы открывать новые стили фона кнопок. Всегда доступно 20 новых стилей, включая бюджетные варианты за 50 монет, и у каждого стиля фиксированная цена, одинаковая для всех игроков.',
       'docCustomizeTitle': 'Настройка кнопок',
       'docCustomizeBody':
           'В настройке назначь любой свой стиль каждой из шести кнопок ответов. Твой выбор сохранится и будет использован в следующей игре.',
@@ -415,7 +415,7 @@ class AppStrings {
           'Jedes Spiel bringt 0 bis 20 Münzen. Erreichst du die Bestpunktzahl einer Kategorie, bekommst du alle 20; je mehr Punkte, desto mehr Münzen.',
       'docShopTitle': 'Shop',
       'docShopBody':
-          'Gib deine Münzen im Shop aus, um neue Tasten-Hintergründe freizuschalten. Es gibt immer 20 frische Stile zu kaufen, jeder mit festem Preis (100–1000 Münzen), der für alle Spieler gleich ist.',
+          'Gib deine Münzen im Shop aus, um neue Tasten-Hintergründe freizuschalten. Es gibt immer 20 frische Stile zu kaufen, darunter günstige Optionen für 50 Münzen, und jeder Stil hat einen festen Preis, der für alle Spieler gleich ist.',
       'docCustomizeTitle': 'Tasten anpassen',
       'docCustomizeBody':
           'Im Anpassen weist du jeder der sechs Antworttasten einen deiner Stile zu. Deine Auswahl wird gespeichert und beim nächsten Spiel verwendet.',
@@ -489,7 +489,7 @@ class AppStrings {
       'docCoinsTitle': '金币',
       'docCoinsBody': '每局游戏可获得 0 到 20 枚金币。在某个类别中达到最高分即可获得全部 20 枚；得分越高，金币越多。',
       'docShopTitle': '商店',
-      'docShopBody': '在商店里花金币解锁新的按钮背景样式。始终有 20 种新样式可供购买，每种价格固定（100–1000 金币），对所有玩家都相同。',
+      'docShopBody': '在商店里花金币解锁新的按钮背景样式。始终有 20 种新样式可供购买，其中包括 50 金币的实惠选项；每种样式都有固定价格，对所有玩家都相同。',
       'docCustomizeTitle': '自定义按钮',
       'docCustomizeBody': '在自定义中，为六个答案按钮分别指定你拥有的任意样式。你的选择会被保存并在下次游戏中使用。',
       'docRecordsTitle': '纪录与烟花',
