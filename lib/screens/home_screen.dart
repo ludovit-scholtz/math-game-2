@@ -82,15 +82,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return selected;
   }
 
-  Future<void> _changeLanguage(String code) async {
-    final player = _player;
-    if (player == null) return;
-    final updated = await _playerService.setLanguage(player.name, code);
-    if (!mounted || updated == null) return;
-    setState(() => _player = updated);
-    MathGameApp.of(context).setLocale(Locale(code));
-  }
-
   void _toggleOperation(OperationType type) {
     setState(() {
       if (_operations.contains(type)) {
@@ -148,16 +139,108 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _openSettings() {
+  void _openHistory() {
+    final player = _player;
+    if (player == null) return;
     Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => HistoryScreen(playerName: player.name),
+      ),
+    );
+  }
+
+  void _openLeaderboard() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const ResultsScreen()),
+    );
+  }
+
+  Future<void> _openSettings() async {
+    await Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => const SettingsScreen()),
     );
+    await _loadPlayer();
+  }
+
+  Future<void> _handleMenuAction(_HomeMenuAction action) async {
+    switch (action) {
+      case _HomeMenuAction.leaderboard:
+        _openLeaderboard();
+      case _HomeMenuAction.shop:
+        await _openShop();
+      case _HomeMenuAction.customize:
+        _openCustomize();
+      case _HomeMenuAction.history:
+        _openHistory();
+      case _HomeMenuAction.settings:
+        await _openSettings();
+      case _HomeMenuAction.docs:
+        _openDocs();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final strings = context.strings;
     return Scaffold(
+      appBar: AppBar(
+        title: Text(strings.appName),
+        backgroundColor: AppTheme.primary,
+        foregroundColor: Colors.white,
+        actions: [
+          PopupMenuButton<_HomeMenuAction>(
+            tooltip: strings.settings,
+            icon: const Icon(Icons.menu_rounded),
+            onSelected: _handleMenuAction,
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: _HomeMenuAction.leaderboard,
+                child: _MenuItem(
+                  icon: Icons.emoji_events_outlined,
+                  label: strings.leaderboard,
+                ),
+              ),
+              if (_player != null) ...[
+                PopupMenuItem(
+                  value: _HomeMenuAction.history,
+                  child: _MenuItem(
+                    icon: Icons.history_rounded,
+                    label: strings.history,
+                  ),
+                ),
+                PopupMenuItem(
+                  value: _HomeMenuAction.shop,
+                  child: _MenuItem(
+                    icon: Icons.storefront_rounded,
+                    label: '${strings.shop}  $_coins ${strings.coins}',
+                  ),
+                ),
+                PopupMenuItem(
+                  value: _HomeMenuAction.customize,
+                  child: _MenuItem(
+                    icon: Icons.palette_rounded,
+                    label: strings.customize,
+                  ),
+                ),
+              ],
+              PopupMenuItem(
+                value: _HomeMenuAction.settings,
+                child: _MenuItem(
+                  icon: Icons.settings_rounded,
+                  label: strings.settings,
+                ),
+              ),
+              PopupMenuItem(
+                value: _HomeMenuAction.docs,
+                child: _MenuItem(
+                  icon: Icons.menu_book_rounded,
+                  label: strings.documentation,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -165,8 +248,16 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 8),
+              Center(
+                child: Image.asset(
+                  'assets/icons/math_master_icon.png',
+                  width: 82,
+                  height: 82,
+                ),
+              ),
+              const SizedBox(height: 12),
               Text(
-                '🧮 ${strings.appName}',
+                strings.appName,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
@@ -223,62 +314,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(Icons.play_arrow_rounded, size: 28),
                 label: Text(strings.start),
               ),
-              const SizedBox(height: 12),
-              OutlinedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const ResultsScreen(),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.emoji_events_outlined),
-                label: Text(strings.leaderboard),
-              ),
-              if (_player != null) ...[
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: _openShop,
-                        icon: const Icon(Icons.storefront_rounded),
-                        label: Text('${strings.shop}  🪙 $_coins'),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: _openCustomize,
-                  icon: const Icon(Icons.palette_rounded),
-                  label: Text(strings.customize),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => HistoryScreen(playerName: _player!.name),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.history_rounded),
-                  label: Text(strings.history),
-                ),
-              ],
-              const SizedBox(height: 12),
-              OutlinedButton.icon(
-                onPressed: _openSettings,
-                icon: const Icon(Icons.settings_rounded),
-                label: Text(strings.settings),
-              ),
-              const SizedBox(height: 12),
-              OutlinedButton.icon(
-                onPressed: _openDocs,
-                icon: const Icon(Icons.menu_book_rounded),
-                label: Text(strings.documentation),
-              ),
               const SizedBox(height: 20),
               const _ScoringHelp(),
             ],
@@ -320,31 +355,33 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        const SizedBox(height: 8),
-        InputDecorator(
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            labelText: strings.language,
-            prefixIcon: const Icon(Icons.language_rounded),
-            isDense: true,
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              isExpanded: true,
-              value: player.languageCode,
-              onChanged: (code) {
-                if (code != null) _changeLanguage(code);
-              },
-              items: [
-                for (final locale in AppStrings.supportedLocales)
-                  DropdownMenuItem<String>(
-                    value: locale.languageCode,
-                    child: Text(AppStrings.languageName(locale.languageCode)),
-                  ),
-              ],
-            ),
-          ),
-        ),
+      ],
+    );
+  }
+}
+
+enum _HomeMenuAction {
+  leaderboard,
+  history,
+  shop,
+  customize,
+  settings,
+  docs,
+}
+
+class _MenuItem extends StatelessWidget {
+  const _MenuItem({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, color: AppTheme.primary),
+        const SizedBox(width: 12),
+        Flexible(child: Text(label)),
       ],
     );
   }

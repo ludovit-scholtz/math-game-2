@@ -1,4 +1,5 @@
 // Smoke test that the app boots and shows the home screen.
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,8 +14,12 @@ void main() {
     await tester.pumpWidget(const MathGameApp());
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('Math Master'), findsOneWidget);
+    expect(find.textContaining('Kids Math Practice | Biatec'), findsWidgets);
     expect(find.text('Start'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.menu_rounded));
+    await tester.pumpAndSettle();
+
     expect(find.text('Leaderboard'), findsOneWidget);
   });
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/app_strings.dart';
+import '../main.dart';
+import '../models/player_profile.dart';
 import '../services/audio_service.dart';
+import '../services/player_service.dart';
 import '../theme.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -12,9 +15,12 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final PlayerService _playerService = PlayerService();
+
   bool _loading = true;
   bool _muted = false;
   double _volume = 1.0;
+  PlayerProfile? _player;
 
   @override
   void initState() {
@@ -24,10 +30,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _loadSettings() async {
     final settings = await AudioService.loadSettings();
+    final player = await _playerService.loadCurrent();
     if (!mounted) return;
     setState(() {
       _muted = settings.muted;
       _volume = settings.volume;
+      _player = player;
       _loading = false;
     });
   }
@@ -46,6 +54,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await _saveSettings();
   }
 
+  Future<void> _changeLanguage(String code) async {
+    final player = _player;
+    if (player == null) return;
+    final updated = await _playerService.setLanguage(player.name, code);
+    if (!mounted || updated == null) return;
+    setState(() => _player = updated);
+    context.findAncestorStateOfType<MathGameAppState>()?.setLocale(Locale(code));
+  }
+
   @override
   Widget build(BuildContext context) {
     final strings = context.strings;
@@ -61,6 +78,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
             : ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
+                  if (_player != null) ...[
+                    _SettingsCard(
+                      icon: Icons.language_rounded,
+                      title: strings.language,
+                      child: InputDecorator(
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          labelText: strings.language,
+                          prefixIcon: const Icon(Icons.language_rounded),
+                          isDense: true,
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            isExpanded: true,
+                            value: _player!.languageCode,
+                            onChanged: (code) {
+                              if (code != null) _changeLanguage(code);
+                            },
+                            items: [
+                              for (final locale in AppStrings.supportedLocales)
+                                DropdownMenuItem<String>(
+                                  value: locale.languageCode,
+                                  child: Text(
+                                    AppStrings.languageName(locale.languageCode),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
                   Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18),
@@ -116,6 +166,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ],
               ),
+      ),
+    );
+  }
+}
+
+class _SettingsCard extends StatelessWidget {
+  const _SettingsCard({
+    required this.icon,
+    required this.title,
+    required this.child,
+  });
+
+  final IconData icon;
+  final String title;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(icon, color: AppTheme.primary),
+                const SizedBox(width: 8),
+                Text(
+                  title,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            child,
+          ],
+        ),
       ),
     );
   }

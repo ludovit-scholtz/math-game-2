@@ -21,8 +21,12 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('Math Master'), findsOneWidget);
+    expect(find.textContaining('Kids Math Practice | Biatec'), findsWidgets);
     expect(find.text('Start'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.menu_rounded));
+    await tester.pumpAndSettle();
+
     expect(find.text('Leaderboard'), findsOneWidget);
     expect(find.text('Settings'), findsOneWidget);
 
@@ -47,6 +51,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Starten'), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.menu_rounded));
+    await tester.pumpAndSettle();
+
     expect(find.text('Bestenliste'), findsOneWidget);
     expect(find.textContaining('Addieren'), findsOneWidget);
   });

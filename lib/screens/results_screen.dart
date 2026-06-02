@@ -11,6 +11,7 @@ import '../services/coin_service.dart';
 import '../services/leaderboard_service.dart';
 import '../theme.dart';
 import '../widgets/fireworks.dart';
+import 'game_screen.dart';
 
 /// Shows the high-score leaderboard grouped by game type (each player appears at
 /// most once per game type, showing their best score). When opened right after
@@ -156,7 +157,14 @@ class _ResultsScreenState extends State<ResultsScreen> {
                             filled: true,
                             icon: Icons.refresh_rounded,
                             label: strings.playAgain,
-                            onPressed: () => Navigator.of(context).pop(),
+                            onPressed: () => Navigator.of(context)
+                                .pushReplacement(
+                              MaterialPageRoute<void>(
+                                builder: (_) => GameScreen(
+                                  config: widget.finishedConfig!,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                     ],

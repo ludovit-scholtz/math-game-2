@@ -32,7 +32,7 @@ class AppStrings {
 
   static const Map<String, Map<String, String>> _localizedValues = {
     'en': {
-      'appName': 'Math Master',
+      'appName': 'Kids Math Practice | Biatec',
       'homeSubtitle':
           'Practise +, −, × and ÷ under 100 and beat your best score!',
       'yourName': 'Your name',
@@ -110,7 +110,7 @@ class AppStrings {
           'Beat the best score in a game category to set a new record — fireworks light up the results screen to celebrate!',
     },
     'sk': {
-      'appName': 'Math Master',
+      'appName': 'Kids Math Practice | Biatec',
       'homeSubtitle':
           'Precvičuj +, −, × a ÷ do 100 a prekonaj svoje maximum!',
       'yourName': 'Tvoje meno',
@@ -188,7 +188,7 @@ class AppStrings {
           'Prekonaj najlepšie skóre v kategórii a vytvoríš nový rekord — obrazovku s výsledkami rozžiari ohňostroj!',
     },
     'cs': {
-      'appName': 'Math Master',
+      'appName': 'Kids Math Practice | Biatec',
       'homeSubtitle':
           'Procvičuj +, −, × a ÷ do 100 a překonej své nejlepší skóre!',
       'yourName': 'Tvé jméno',
@@ -266,7 +266,7 @@ class AppStrings {
           'Překonej nejlepší skóre v kategorii a vytvoříš nový rekord — obrazovku s výsledky rozzáří ohňostroj!',
     },
     'ru': {
-      'appName': 'Math Master',
+      'appName': 'Kids Math Practice | Biatec',
       'homeSubtitle':
           'Тренируй +, −, × и ÷ до 100 и побей свой лучший результат!',
       'yourName': 'Твоё имя',
@@ -344,7 +344,7 @@ class AppStrings {
           'Побей лучший результат в категории, чтобы установить новый рекорд — экран результатов озарит фейерверк!',
     },
     'de': {
-      'appName': 'Math Master',
+      'appName': 'Kids Math Practice | Biatec',
       'homeSubtitle':
           'Übe +, −, × und ÷ unter 100 und knacke deinen Bestwert!',
       'yourName': 'Dein Name',
@@ -424,7 +424,7 @@ class AppStrings {
           'Schlage die Bestpunktzahl einer Kategorie, um einen neuen Rekord aufzustellen — ein Feuerwerk erhellt den Ergebnisbildschirm!',
     },
     'zh': {
-      'appName': 'Math Master',
+      'appName': 'Kids Math Practice | Biatec',
       'homeSubtitle': '练习 100 以内的 +、−、× 和 ÷，刷新你的最佳成绩！',
       'yourName': '你的名字',
       'enterYourName': '输入你的名字',
