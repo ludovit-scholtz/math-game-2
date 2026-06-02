@@ -80,13 +80,13 @@ class PetCareCard extends StatelessWidget {
                           ),
                     ),
                     const SizedBox(height: 8),
-                    _PetMeter(
+                    PetMeter(
                       icon: Icons.restaurant_rounded,
                       label: strings.feeding,
                       value: care.feedingPoints,
                     ),
                     const SizedBox(height: 8),
-                    _PetMeter(
+                    PetMeter(
                       icon: Icons.toys_rounded,
                       label: strings.enjoyment,
                       value: care.enjoymentPoints,
@@ -159,8 +159,9 @@ class _PetChoice extends StatelessWidget {
   }
 }
 
-class _PetMeter extends StatelessWidget {
-  const _PetMeter({
+class PetMeter extends StatelessWidget {
+  const PetMeter({
+    super.key,
     required this.icon,
     required this.label,
     required this.value,
@@ -174,7 +175,7 @@ class _PetMeter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 18, color: AppTheme.primary),
+        Icon(icon, size: 18, color: Theme.of(context).colorScheme.primary),
         const SizedBox(width: 6),
         SizedBox(width: 82, child: Text(label)),
         Expanded(
@@ -183,8 +184,13 @@ class _PetMeter extends StatelessWidget {
             child: LinearProgressIndicator(
               value: value / 100,
               minHeight: 10,
-              backgroundColor: Colors.grey.shade200,
-              color: value < 20 ? Colors.orange.shade600 : AppTheme.primary,
+              backgroundColor: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHighest
+                  .withValues(alpha: 0.7),
+              color: value < 20
+                  ? Colors.orange.shade600
+                  : Theme.of(context).colorScheme.primary,
             ),
           ),
         ),

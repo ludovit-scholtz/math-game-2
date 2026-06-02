@@ -11,6 +11,8 @@ class AppTheme {
   static const Color correct = Color(0xFF2BB673);
   static const Color incorrect = Color(0xFFE5484D);
   static const Color background = Color(0xFFF4F6FF);
+  static const Color darkBackground = Color(0xFF101427);
+  static const Color darkSurface = Color(0xFF1B2138);
 
   static const List<Color> cardColors = [
     Color(0xFF5B6CF0),
@@ -26,18 +28,54 @@ class AppTheme {
         seedColor: primary,
         primary: primary,
         secondary: secondary,
+        brightness: Brightness.light,
       ),
       scaffoldBackgroundColor: background,
       useMaterial3: true,
     );
+    return _finishTheme(
+      base,
+      bodyColor: const Color(0xFF222452),
+      cardColor: Colors.white,
+    );
+  }
+
+  static ThemeData darkThemeData() {
+    final base = ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primary,
+        primary: const Color(0xFF91A0FF),
+        secondary: const Color(0xFFFFB06F),
+        brightness: Brightness.dark,
+      ),
+      scaffoldBackgroundColor: darkBackground,
+      useMaterial3: true,
+    );
+    return _finishTheme(
+      base,
+      bodyColor: const Color(0xFFEAF0FF),
+      cardColor: darkSurface,
+    );
+  }
+
+  static ThemeData _finishTheme(
+    ThemeData base, {
+    required Color bodyColor,
+    required Color cardColor,
+  }) {
     return base.copyWith(
+      cardTheme: base.cardTheme.copyWith(
+        color: cardColor,
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      ),
       textTheme: base.textTheme.apply(
-        bodyColor: const Color(0xFF222452),
-        displayColor: const Color(0xFF222452),
+        bodyColor: bodyColor,
+        displayColor: bodyColor,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primary,
+          backgroundColor: base.colorScheme.primary,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
           shape: RoundedRectangleBorder(
@@ -51,6 +89,8 @@ class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
+          foregroundColor: base.colorScheme.primary,
+          side: BorderSide(color: base.colorScheme.primary),
           padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(buttonRadius),
@@ -63,6 +103,7 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
+          foregroundColor: base.colorScheme.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(buttonRadius),
           ),

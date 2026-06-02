@@ -90,6 +90,7 @@ class AppStrings {
       'unmuteSound': 'Unmute sound',
       'volume': 'Volume',
       'documentation': 'Guide',
+      'privacyPolicy': 'Privacy Policy',
       'buy': 'Buy',
       'notEnoughCoins': 'Not enough coins yet!',
       'newRecord': '🎆 New record!',
@@ -107,6 +108,11 @@ class AppStrings {
       'petFed': 'Yum! Your pet feels fed.',
       'petToyBought': 'Your pet loves the new toy!',
       'petGreeting': 'Your {pet}',
+      'theme': 'Theme',
+      'themeSystem': 'Device theme',
+      'themeLight': 'Light mode',
+      'themeDark': 'Dark mode',
+      'coinBalance': 'Balance: {coins} coins',
       'cat': 'Cat',
       'dog': 'Dog',
       'panda': 'Panda',
@@ -185,6 +191,7 @@ class AppStrings {
       'unmuteSound': 'Zapnúť zvuk',
       'volume': 'Hlasitosť',
       'documentation': 'Návod',
+      'privacyPolicy': 'Zásady ochrany súkromia',
       'buy': 'Kúpiť',
       'notEnoughCoins': 'Zatiaľ nemáš dosť mincí!',
       'newRecord': '🎆 Nový rekord!',
@@ -202,6 +209,11 @@ class AppStrings {
       'petFed': 'Mňam! Zvieratko je nakŕmené.',
       'petToyBought': 'Zvieratko má radosť z novej hračky!',
       'petGreeting': 'Tvoje zvieratko: {pet}',
+      'theme': 'Vzhľad',
+      'themeSystem': 'Podľa zariadenia',
+      'themeLight': 'Svetlý režim',
+      'themeDark': 'Tmavý režim',
+      'coinBalance': 'Zostatok: {coins} mincí',
       'cat': 'Mačka',
       'dog': 'Pes',
       'panda': 'Panda',
@@ -280,6 +292,7 @@ class AppStrings {
       'unmuteSound': 'Zapnout zvuk',
       'volume': 'Hlasitost',
       'documentation': 'Návod',
+      'privacyPolicy': 'Zásady ochrany soukromí',
       'buy': 'Koupit',
       'notEnoughCoins': 'Zatím nemáš dost mincí!',
       'newRecord': '🎆 Nový rekord!',
@@ -297,6 +310,11 @@ class AppStrings {
       'petFed': 'Mňam! Mazlíček je nakrmený.',
       'petToyBought': 'Mazlíček má radost z nové hračky!',
       'petGreeting': 'Tvůj mazlíček: {pet}',
+      'theme': 'Vzhled',
+      'themeSystem': 'Podle zařízení',
+      'themeLight': 'Světlý režim',
+      'themeDark': 'Tmavý režim',
+      'coinBalance': 'Zůstatek: {coins} mincí',
       'cat': 'Kočka',
       'dog': 'Pes',
       'panda': 'Panda',
@@ -375,6 +393,7 @@ class AppStrings {
       'unmuteSound': 'Включить звук',
       'volume': 'Громкость',
       'documentation': 'Руководство',
+      'privacyPolicy': 'Политика конфиденциальности',
       'buy': 'Купить',
       'notEnoughCoins': 'Пока не хватает монет!',
       'newRecord': '🎆 Новый рекорд!',
@@ -392,6 +411,11 @@ class AppStrings {
       'petFed': 'Вкусно! Питомец сыт.',
       'petToyBought': 'Питомцу очень нравится новая игрушка!',
       'petGreeting': 'Твой питомец: {pet}',
+      'theme': 'Тема',
+      'themeSystem': 'Как на устройстве',
+      'themeLight': 'Светлая тема',
+      'themeDark': 'Тёмная тема',
+      'coinBalance': 'Баланс: {coins} монет',
       'cat': 'Кот',
       'dog': 'Собака',
       'panda': 'Панда',
@@ -471,6 +495,7 @@ class AppStrings {
       'unmuteSound': 'Ton einschalten',
       'volume': 'Lautstärke',
       'documentation': 'Anleitung',
+      'privacyPolicy': 'Datenschutzrichtlinie',
       'buy': 'Kaufen',
       'notEnoughCoins': 'Noch nicht genug Münzen!',
       'newRecord': '🎆 Neuer Rekord!',
@@ -489,6 +514,11 @@ class AppStrings {
       'petFed': 'Lecker! Dein Haustier ist satt.',
       'petToyBought': 'Dein Haustier liebt das neue Spielzeug!',
       'petGreeting': 'Dein Haustier: {pet}',
+      'theme': 'Design',
+      'themeSystem': 'Gerätedesign',
+      'themeLight': 'Hellmodus',
+      'themeDark': 'Dunkelmodus',
+      'coinBalance': 'Guthaben: {coins} Münzen',
       'cat': 'Katze',
       'dog': 'Hund',
       'panda': 'Panda',
@@ -565,6 +595,7 @@ class AppStrings {
       'unmuteSound': '打开声音',
       'volume': '音量',
       'documentation': '指南',
+      'privacyPolicy': '隐私政策',
       'buy': '购买',
       'notEnoughCoins': '金币还不够！',
       'newRecord': '🎆 新纪录！',
@@ -582,6 +613,11 @@ class AppStrings {
       'petFed': '真好吃！宠物吃饱了。',
       'petToyBought': '宠物很喜欢新玩具！',
       'petGreeting': '你的宠物：{pet}',
+      'theme': '主题',
+      'themeSystem': '跟随设备',
+      'themeLight': '浅色模式',
+      'themeDark': '深色模式',
+      'coinBalance': '余额：{coins} 金币',
       'cat': '猫',
       'dog': '狗',
       'panda': '熊猫',
@@ -644,6 +680,7 @@ class AppStrings {
   String get unmuteSound => _text('unmuteSound');
   String get volume => _text('volume');
   String get documentation => _text('documentation');
+  String get privacyPolicy => _text('privacyPolicy');
   String get buy => _text('buy');
   String get notEnoughCoins => _text('notEnoughCoins');
   String get newRecord => _text('newRecord');
@@ -668,9 +705,16 @@ class AppStrings {
   String get docPetsBody => _text('docPetsBody');
   String get docRecordsTitle => _text('docRecordsTitle');
   String get docRecordsBody => _text('docRecordsBody');
+  String get theme => _text('theme');
+  String get themeSystem => _text('themeSystem');
+  String get themeLight => _text('themeLight');
+  String get themeDark => _text('themeDark');
 
   String coinsEarnedLabel(int coins) =>
       _format('coinsEarned', {'coins': '$coins'});
+
+  String coinBalanceLabel(int coins) =>
+      _format('coinBalance', {'coins': '$coins'});
 
   String purchasedStyle(String name) =>
       _format('purchased', {'name': name});

@@ -6,6 +6,7 @@ import '../models/pet.dart';
 import '../models/player_profile.dart';
 import '../services/audio_service.dart';
 import '../services/player_service.dart';
+import '../services/theme_service.dart';
 import '../theme.dart';
 import '../widgets/pet_widgets.dart';
 
@@ -22,6 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _loading = true;
   bool _muted = false;
   double _volume = 1.0;
+  ThemeMode _themeMode = ThemeMode.system;
   PlayerProfile? _player;
 
   @override
@@ -32,11 +34,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _loadSettings() async {
     final settings = await AudioService.loadSettings();
+    final themeMode = await ThemeService.loadThemeMode();
     final player = await _playerService.loadCurrent();
     if (!mounted) return;
     setState(() {
       _muted = settings.muted;
       _volume = settings.volume;
+      _themeMode = themeMode;
       _player = player;
       _loading = false;
     });
@@ -54,6 +58,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _setVolume(double value) async {
     setState(() => _volume = value);
     await _saveSettings();
+  }
+
+  Future<void> _setThemeMode(ThemeMode mode) async {
+    setState(() => _themeMode = mode);
+    final app = context.findAncestorStateOfType<MathGameAppState>();
+    if (app != null) {
+      await app.setThemeMode(mode);
+    } else {
+      await ThemeService.saveThemeMode(mode);
+    }
   }
 
   Future<void> _changeLanguage(String code) async {
@@ -130,6 +144,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     const SizedBox(height: 12),
                   ],
+                  _SettingsCard(
+                    icon: Icons.brightness_6_rounded,
+                    title: strings.theme,
+                    child: Column(
+                      children: [
+                        RadioListTile<ThemeMode>(
+                          value: ThemeMode.system,
+                          groupValue: _themeMode,
+                          onChanged: (mode) {
+                            if (mode != null) _setThemeMode(mode);
+                          },
+                          title: Text(strings.themeSystem),
+                          secondary: const Icon(Icons.devices_rounded),
+                        ),
+                        RadioListTile<ThemeMode>(
+                          value: ThemeMode.light,
+                          groupValue: _themeMode,
+                          onChanged: (mode) {
+                            if (mode != null) _setThemeMode(mode);
+                          },
+                          title: Text(strings.themeLight),
+                          secondary: const Icon(Icons.light_mode_rounded),
+                        ),
+                        RadioListTile<ThemeMode>(
+                          value: ThemeMode.dark,
+                          groupValue: _themeMode,
+                          onChanged: (mode) {
+                            if (mode != null) _setThemeMode(mode);
+                          },
+                          title: Text(strings.themeDark),
+                          secondary: const Icon(Icons.dark_mode_rounded),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
                   Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18),

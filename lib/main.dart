@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 
 import 'l10n/app_strings.dart';
 import 'services/audio_service.dart';
+import 'services/theme_service.dart';
 import 'screens/home_screen.dart';
 import 'theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AudioService.loadSettings();
-  runApp(const MathGameApp());
+  final themeMode = await ThemeService.loadThemeMode();
+  runApp(MathGameApp(initialThemeMode: themeMode));
 }
 
 class MathGameApp extends StatefulWidget {
-  const MathGameApp({super.key});
+  const MathGameApp({super.key, this.initialThemeMode = ThemeMode.system});
+
+  final ThemeMode initialThemeMode;
 
   /// Lets descendants override the active locale at runtime (e.g. when a player
   /// with a stored language preference is selected).
@@ -25,11 +29,24 @@ class MathGameApp extends StatefulWidget {
 
 class MathGameAppState extends State<MathGameApp> {
   Locale? _locale;
+  late ThemeMode _themeMode;
+
+  @override
+  void initState() {
+    super.initState();
+    _themeMode = widget.initialThemeMode;
+  }
 
   /// Overrides the active locale. Pass `null` to fall back to the device locale.
   void setLocale(Locale? locale) {
     if (_locale == locale) return;
     setState(() => _locale = locale);
+  }
+
+  Future<void> setThemeMode(ThemeMode mode) async {
+    if (_themeMode == mode) return;
+    setState(() => _themeMode = mode);
+    await ThemeService.saveThemeMode(mode);
   }
 
   @override
@@ -41,6 +58,8 @@ class MathGameAppState extends State<MathGameApp> {
       localizationsDelegates: AppStrings.localizationsDelegates,
       supportedLocales: AppStrings.supportedLocales,
       theme: AppTheme.themeData(),
+      darkTheme: AppTheme.darkThemeData(),
+      themeMode: _themeMode,
       home: const HomeScreen(),
     );
   }

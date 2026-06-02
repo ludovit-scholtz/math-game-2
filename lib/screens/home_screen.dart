@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../l10n/app_strings.dart';
@@ -7,7 +5,6 @@ import '../main.dart';
 import '../models/game_config.dart';
 import '../models/operation_type.dart';
 import '../models/player_profile.dart';
-import '../services/audio_service.dart';
 import '../services/coin_service.dart';
 import '../services/player_service.dart';
 import '../theme.dart';
@@ -16,7 +13,9 @@ import 'customization_screen.dart';
 import 'docs_screen.dart';
 import 'game_screen.dart';
 import 'history_screen.dart';
+import 'pet_screen.dart';
 import 'player_select_screen.dart';
+import 'privacy_policy_screen.dart';
 import 'results_screen.dart';
 import 'settings_screen.dart';
 import 'shop_screen.dart';
@@ -33,7 +32,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final PlayerService _playerService = PlayerService();
   final CoinService _coinService = CoinService();
-  final AudioService _audio = AudioService();
 
   PlayerProfile? _player;
   bool _loadingPlayer = true;
@@ -49,12 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadPlayer();
-  }
-
-  @override
-  void dispose() {
-    _audio.dispose();
-    super.dispose();
   }
 
   Future<void> _loadPlayer() async {
@@ -93,85 +85,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return selected;
   }
 
-  Future<void> _careForPet(_PetCareAction action) async {
-    final player = _player;
-    if (player == null || !player.hasPet) return;
-    final strings = context.strings;
-    final cost = action == _PetCareAction.feed ? 20 : 100;
-    final wallet = await _coinService.spendCoins(player.name, cost);
-    if (!mounted) return;
-    if (wallet == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(strings.notEnoughCoins)),
-      );
-      return;
-    }
-    final updated = action == _PetCareAction.feed
-        ? await _playerService.feedPet(player.name)
-        : await _playerService.buyPetToy(player.name);
-    if (!mounted || updated == null) return;
-    setState(() {
-      _player = updated;
-      _coins = wallet.coins;
-    });
-    unawaited(
-      action == _PetCareAction.feed
-          ? _audio.playPetFeed()
-          : _audio.playPetToy(),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          action == _PetCareAction.feed
-              ? strings.petFed
-              : strings.petToyBought,
-        ),
-      ),
-    );
-  }
-
   Future<void> _openPetCare() async {
     final player = _player;
     if (player == null || !player.hasPet) return;
-    final strings = context.strings;
-    final action = await showModalBottomSheet<_PetCareAction>(
-      context: context,
-      showDragHandle: true,
-      builder: (context) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                strings.petCareTitle,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 12),
-              ListTile(
-                leading: const Icon(
-                  Icons.restaurant_rounded,
-                  color: AppTheme.primary,
-                ),
-                title: Text(strings.feedPet),
-                subtitle: Text('20 ${strings.coins}'),
-                onTap: () => Navigator.of(context).pop(_PetCareAction.feed),
-              ),
-              ListTile(
-                leading: const Icon(Icons.toys_rounded, color: AppTheme.primary),
-                title: Text(strings.buyPetToy),
-                subtitle: Text('100 ${strings.coins}'),
-                onTap: () => Navigator.of(context).pop(_PetCareAction.toy),
-              ),
-            ],
-          ),
-        ),
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => PetScreen(playerName: player.name),
       ),
     );
-    if (action != null) await _careForPet(action);
+    if (!mounted) return;
+    await _loadPlayer();
+    await _loadCoins(player.name);
   }
 
   void _toggleOperation(OperationType type) {
@@ -234,6 +158,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _openPrivacyPolicy() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const PrivacyPolicyScreen()),
+    );
+  }
+
   void _openHistory() {
     final player = _player;
     if (player == null) return;
@@ -273,6 +203,8 @@ class _HomeScreenState extends State<HomeScreen> {
         await _openSettings();
       case _HomeMenuAction.docs:
         _openDocs();
+      case _HomeMenuAction.privacyPolicy:
+        _openPrivacyPolicy();
     }
   }
 
@@ -340,6 +272,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: _MenuItem(
                   icon: Icons.menu_book_rounded,
                   label: strings.documentation,
+                ),
+              ),
+              PopupMenuItem(
+                value: _HomeMenuAction.privacyPolicy,
+                child: _MenuItem(
+                  icon: Icons.privacy_tip_rounded,
+                  label: strings.privacyPolicy,
                 ),
               ),
             ],
@@ -462,9 +401,8 @@ enum _HomeMenuAction {
   customize,
   settings,
   docs,
+  privacyPolicy,
 }
-
-enum _PetCareAction { feed, toy }
 
 class _MenuItem extends StatelessWidget {
   const _MenuItem({required this.icon, required this.label});
@@ -522,12 +460,15 @@ class _ScoringHelp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final strings = context.strings;
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppTheme.primary.withValues(alpha: 0.2)),
+        border: Border.all(
+          color: colorScheme.primary.withValues(alpha: 0.22),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

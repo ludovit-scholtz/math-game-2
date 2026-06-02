@@ -45,6 +45,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
   String? _highlightGameType;
   bool _initialized = false;
   int _coinsEarned = 0;
+  int? _coinBalance;
   bool _newRecord = false;
 
   @override
@@ -87,6 +88,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
       if (_coinsEarned > 0) {
         await _coinService.addCoins(config.playerName, _coinsEarned);
       }
+      _coinBalance = (await _coinService.load(config.playerName)).coins;
       history = await _service.addScore(entry);
     } else {
       history = await _service.load();
@@ -260,6 +262,16 @@ class _ResultsScreenState extends State<ResultsScreen> {
               ],
             ),
           ),
+          if (_coinBalance != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              strings.coinBalanceLabel(_coinBalance!),
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ],
       ),
     );
