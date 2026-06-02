@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../l10n/app_strings.dart';
@@ -5,6 +7,7 @@ import '../main.dart';
 import '../models/game_config.dart';
 import '../models/operation_type.dart';
 import '../models/player_profile.dart';
+import '../services/audio_service.dart';
 import '../services/coin_service.dart';
 import '../services/player_service.dart';
 import '../theme.dart';
@@ -30,6 +33,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final PlayerService _playerService = PlayerService();
   final CoinService _coinService = CoinService();
+  final AudioService _audio = AudioService();
 
   PlayerProfile? _player;
   bool _loadingPlayer = true;
@@ -45,6 +49,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadPlayer();
+  }
+
+  @override
+  void dispose() {
+    _audio.dispose();
+    super.dispose();
   }
 
   Future<void> _loadPlayer() async {
@@ -104,6 +114,11 @@ class _HomeScreenState extends State<HomeScreen> {
       _player = updated;
       _coins = wallet.coins;
     });
+    unawaited(
+      action == _PetCareAction.feed
+          ? _audio.playPetFeed()
+          : _audio.playPetToy(),
+    );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -248,6 +263,8 @@ class _HomeScreenState extends State<HomeScreen> {
         _openLeaderboard();
       case _HomeMenuAction.shop:
         await _openShop();
+      case _HomeMenuAction.pet:
+        await _openPetCare();
       case _HomeMenuAction.customize:
         _openCustomize();
       case _HomeMenuAction.history:
@@ -295,6 +312,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     label: '${strings.shop}  $_coins ${strings.coins}',
                   ),
                 ),
+                if (_player?.hasPet ?? false)
+                  PopupMenuItem(
+                    value: _HomeMenuAction.pet,
+                    child: _MenuItem(
+                      icon: Icons.pets_rounded,
+                      label: strings.pet,
+                    ),
+                  ),
                 PopupMenuItem(
                   value: _HomeMenuAction.customize,
                   child: _MenuItem(
@@ -334,21 +359,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 82,
                   height: 82,
                 ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                strings.appName,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.primary,
-                    ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                strings.homeSubtitle,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 24),
               _SectionCard(
@@ -448,6 +458,7 @@ enum _HomeMenuAction {
   leaderboard,
   history,
   shop,
+  pet,
   customize,
   settings,
   docs,

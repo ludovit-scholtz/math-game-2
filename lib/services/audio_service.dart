@@ -83,6 +83,16 @@ class AudioService {
         volumeMultiplier: 0.8,
       );
 
+  Future<void> playPetFeed() => _play(
+        'sounds/pet_feed.wav',
+        volumeMultiplier: 0.85,
+      );
+
+  Future<void> playPetToy() => _play(
+        'sounds/pet_toy.wav',
+        volumeMultiplier: 0.8,
+      );
+
   Future<void> dispose() async {
     await _player.dispose();
   }

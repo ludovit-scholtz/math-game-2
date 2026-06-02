@@ -113,7 +113,7 @@ class AppStrings {
       'rabbit': 'Rabbit',
       'docCoinsTitle': 'Coins',
       'docCoinsBody':
-          'Every game rewards 0 to 20 coins. Reach the top score in a category and you earn the full 20; the more points you score, the more coins you collect.',
+          'Games reward coins by length: 0 to 20 for 1 minute, 0 to 50 for 2 minutes and 0 to 150 for 5 minutes. Reach the top score in a category and you earn the full reward; the more points you score, the more coins you collect.',
       'docShopTitle': 'Shop',
       'docShopBody':
           'Spend your coins in the shop to unlock new button background styles. There are always 20 fresh styles to buy, including budget options for 50 coins, and each style has a fixed price that is the same for every player.',
@@ -208,7 +208,7 @@ class AppStrings {
       'rabbit': 'Zajac',
       'docCoinsTitle': 'Mince',
       'docCoinsBody':
-          'Za každú hru získaš 0 až 20 mincí. Ak dosiahneš najlepšie skóre v kategórii, získaš všetkých 20; čím viac bodov, tým viac mincí.',
+          'Mince závisia od dĺžky hry: 0 až 20 za 1 minútu, 0 až 50 za 2 minúty a 0 až 150 za 5 minút. Ak dosiahneš najlepšie skóre v kategórii, získaš plnú odmenu; čím viac bodov, tým viac mincí.',
       'docShopTitle': 'Obchod',
       'docShopBody':
           'Mince míňaj v obchode na odomknutie nových štýlov pozadia tlačidiel. Vždy je k dispozícii 20 nových štýlov vrátane výhodných možností za 50 mincí a každý štýl má pevnú cenu rovnakú pre všetkých hráčov.',
@@ -303,7 +303,7 @@ class AppStrings {
       'rabbit': 'Králík',
       'docCoinsTitle': 'Mince',
       'docCoinsBody':
-          'Za každou hru získáš 0 až 20 mincí. Když dosáhneš nejlepšího skóre v kategorii, získáš všech 20; čím více bodů, tím více mincí.',
+          'Mince závisí na délce hry: 0 až 20 za 1 minutu, 0 až 50 za 2 minuty a 0 až 150 za 5 minut. Když dosáhneš nejlepšího skóre v kategorii, získáš plnou odměnu; čím více bodů, tím více mincí.',
       'docShopTitle': 'Obchod',
       'docShopBody':
           'Mince utrácej v obchodě za odemčení nových stylů pozadí tlačítek. Vždy je k dispozici 20 nových stylů včetně výhodných možností za 50 mincí a každý styl má pevnou cenu stejnou pro všechny hráče.',
@@ -398,7 +398,7 @@ class AppStrings {
       'rabbit': 'Кролик',
       'docCoinsTitle': 'Монеты',
       'docCoinsBody':
-          'За каждую игру ты получаешь от 0 до 20 монет. Достигни лучшего результата в категории — и получишь все 20; чем больше очков, тем больше монет.',
+          'Награда зависит от длительности игры: от 0 до 20 монет за 1 минуту, от 0 до 50 за 2 минуты и от 0 до 150 за 5 минут. Достигни лучшего результата в категории — и получишь полную награду; чем больше очков, тем больше монет.',
       'docShopTitle': 'Магазин',
       'docShopBody':
           'Трать монеты в магазине, чтобы открывать новые стили фона кнопок. Всегда доступно 20 новых стилей, включая бюджетные варианты за 50 монет, и у каждого стиля фиксированная цена, одинаковая для всех игроков.',
@@ -495,7 +495,7 @@ class AppStrings {
       'rabbit': 'Kaninchen',
       'docCoinsTitle': 'Münzen',
       'docCoinsBody':
-          'Jedes Spiel bringt 0 bis 20 Münzen. Erreichst du die Bestpunktzahl einer Kategorie, bekommst du alle 20; je mehr Punkte, desto mehr Münzen.',
+          'Die Münzen hängen von der Spieldauer ab: 0 bis 20 für 1 Minute, 0 bis 50 für 2 Minuten und 0 bis 150 für 5 Minuten. Erreichst du die Bestpunktzahl einer Kategorie, bekommst du die volle Belohnung; je mehr Punkte, desto mehr Münzen.',
       'docShopTitle': 'Shop',
       'docShopBody':
           'Gib deine Münzen im Shop aus, um neue Tasten-Hintergründe freizuschalten. Es gibt immer 20 frische Stile zu kaufen, darunter günstige Optionen für 50 Münzen, und jeder Stil hat einen festen Preis, der für alle Spieler gleich ist.',
@@ -587,7 +587,7 @@ class AppStrings {
       'panda': '熊猫',
       'rabbit': '兔子',
       'docCoinsTitle': '金币',
-      'docCoinsBody': '每局游戏可获得 0 到 20 枚金币。在某个类别中达到最高分即可获得全部 20 枚；得分越高，金币越多。',
+      'docCoinsBody': '金币奖励取决于游戏时长：1 分钟为 0 到 20 枚，2 分钟为 0 到 50 枚，5 分钟为 0 到 150 枚。在某个类别中达到最高分即可获得全部奖励；得分越高，金币越多。',
       'docShopTitle': '商店',
       'docShopBody': '在商店里花金币解锁新的按钮背景样式。始终有 20 种新样式可供购买，其中包括 50 金币的实惠选项；每种样式都有固定价格，对所有玩家都相同。',
       'docCustomizeTitle': '自定义按钮',

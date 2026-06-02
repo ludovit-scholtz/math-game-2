@@ -28,8 +28,10 @@ numbers kept **under 100**. Built with **Flutter**, so the same code base runs o
 Every game also rewards **coins** — see the in-game **Guide** for the full
 details:
 
-- Each game earns **0 to 20 coins**: reaching the top score of a category earns
-  the full 20, and coins are distributed linearly down to 0 for fewer points.
+- Each game earns coins based on its length: **0 to 20 coins** for 1 minute,
+  **0 to 50 coins** for 2 minutes and **0 to 150 coins** for 5 minutes.
+  Reaching the top score of a category earns the full reward, and coins are
+  distributed linearly down to 0 for fewer points.
 - Spend coins in the **shop** to unlock new answer-button background styles.
   There are always **20 styles** available to buy and the shop never runs dry —
   fresh styles are generated on demand. Every style has a **fixed price

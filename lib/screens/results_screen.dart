@@ -77,7 +77,11 @@ class _ResultsScreenState extends State<ResultsScreen> {
       final previousTop = previous
           .where((e) => e.gameTypeKey == entry.gameTypeKey)
           .fold<int>(0, (best, e) => e.score > best ? e.score : best);
-      _coinsEarned = Coins.forScore(entry.score, previousTop);
+      _coinsEarned = Coins.forScore(
+        entry.score,
+        previousTop,
+        duration: config.duration,
+      );
       _newRecord = entry.score > 0 && entry.score > previousTop;
 
       if (_coinsEarned > 0) {
