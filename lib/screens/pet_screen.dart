@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_strings.dart';
+import '../models/pet.dart';
 import '../models/player_profile.dart';
 import '../services/audio_service.dart';
 import '../services/coin_service.dart';

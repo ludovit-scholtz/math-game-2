@@ -149,32 +149,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     title: strings.theme,
                     child: Column(
                       children: [
-                        RadioListTile<ThemeMode>(
-                          value: ThemeMode.system,
-                          groupValue: _themeMode,
-                          onChanged: (mode) {
-                            if (mode != null) _setThemeMode(mode);
-                          },
-                          title: Text(strings.themeSystem),
-                          secondary: const Icon(Icons.devices_rounded),
+                        _ThemeModeTile(
+                          icon: Icons.devices_rounded,
+                          label: strings.themeSystem,
+                          selected: _themeMode == ThemeMode.system,
+                          onTap: () => _setThemeMode(ThemeMode.system),
                         ),
-                        RadioListTile<ThemeMode>(
-                          value: ThemeMode.light,
-                          groupValue: _themeMode,
-                          onChanged: (mode) {
-                            if (mode != null) _setThemeMode(mode);
-                          },
-                          title: Text(strings.themeLight),
-                          secondary: const Icon(Icons.light_mode_rounded),
+                        _ThemeModeTile(
+                          icon: Icons.light_mode_rounded,
+                          label: strings.themeLight,
+                          selected: _themeMode == ThemeMode.light,
+                          onTap: () => _setThemeMode(ThemeMode.light),
                         ),
-                        RadioListTile<ThemeMode>(
-                          value: ThemeMode.dark,
-                          groupValue: _themeMode,
-                          onChanged: (mode) {
-                            if (mode != null) _setThemeMode(mode);
-                          },
-                          title: Text(strings.themeDark),
-                          secondary: const Icon(Icons.dark_mode_rounded),
+                        _ThemeModeTile(
+                          icon: Icons.dark_mode_rounded,
+                          label: strings.themeDark,
+                          selected: _themeMode == ThemeMode.dark,
+                          onTap: () => _setThemeMode(ThemeMode.dark),
                         ),
                       ],
                     ),
@@ -236,6 +227,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
       ),
+    );
+  }
+}
+
+class _ThemeModeTile extends StatelessWidget {
+  const _ThemeModeTile({
+    required this.icon,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Icon(icon, color: selected ? colorScheme.primary : null),
+      title: Text(label),
+      trailing: selected
+          ? Icon(Icons.check_circle_rounded, color: colorScheme.primary)
+          : const Icon(Icons.circle_outlined),
+      onTap: onTap,
     );
   }
 }
