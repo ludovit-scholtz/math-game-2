@@ -1,7 +1,7 @@
 # Android Production Signing & Release
 
 This guide explains how to create an upload signing key for **Math Master**, store
-it securely in GitHub repository secrets, and produce a Google Play–signed
+it securely in GitHub repository secrets, and produce a Google Play-signed
 Android App Bundle (`.aab`) via the CI/CD pipeline.
 
 The Android application ID used for Play Console uploads is
@@ -85,7 +85,7 @@ repository secret** and create the following four secrets:
 
 ---
 
-## 4. Build a signed bundle via CI
+## 4. Build and upload a signed bundle via CI
 
 The release workflow runs when you push a version tag or trigger it manually.
 It derives the Android/iOS release version directly from the latest git tag.
@@ -93,7 +93,8 @@ For example, tag `v1.0.5` builds with version name `1.0.5` and Android version
 code `10005`.
 The workflow also verifies the generated App Bundle manifest and fails if the
 bundle does not contain the expected application ID, version name, or version
-code.
+code. After signing verification, it uploads the bundle to the Google Play
+internal testing track.
 
 **Option A — push a tag (recommended):**
 
@@ -102,12 +103,17 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-**Option B — manual run:** open the **Actions** tab → **Release (Signed AAB)** →
-**Run workflow**.
+**Option B — manual run:** open the **Actions** tab → **Release (Google Play
+Internal Testing)** → **Run workflow**.
 
-When the run finishes, download the **`math-masters-signed-aab`** artifact. It
-contains `app-release.aab`, signed with your upload key and ready to upload to
-the Google Play Console.
+When the run finishes, the workflow creates the internal testing release in the
+Google Play Console and stores a signed artifact named like
+**`math-masters-1.0.5-signed-aab`**. It contains `app-release.aab`, signed with
+your upload key.
+
+The Play Console upload requires one additional secret,
+`GOOGLE_PLAY_SERVICE_ACCOUNT_JSON`. See [Google Play Internal Testing
+Release](GOOGLE_PLAY_RELEASE.md) for the service account setup steps.
 
 The workflow also patches the generated Android Gradle file so the regenerated
 `android/` folder reads `android/key.properties` and uses your upload keystore

@@ -1,14 +1,16 @@
-name: Release (Signed AAB)
+name: Release (Google Play Internal Testing)
 
-# Builds a Google Play production-signed Android App Bundle (.aab).
+# Builds a Google Play production-signed Android App Bundle (.aab) and uploads
+# it to the Google Play internal testing track.
 #
 # Triggered by pushing a version tag (e.g. v1.0.0) or manually via the
 # "Run workflow" button. Requires the following repository secrets to be set
-# (see docs/ANDROID_SIGNING.md for how to create and store them):
+# (see docs/ANDROID_SIGNING.md and docs/GOOGLE_PLAY_RELEASE.md):
 #   ANDROID_KEYSTORE_BASE64  - base64-encoded upload keystore (.jks)
 #   ANDROID_KEYSTORE_PASSWORD - keystore (store) password
 #   ANDROID_KEY_PASSWORD      - key password
 #   ANDROID_KEY_ALIAS         - key alias
+#   GOOGLE_PLAY_SERVICE_ACCOUNT_JSON - Google Play service account JSON key
 
 on:
   push:
@@ -21,6 +23,7 @@ permissions:
 
 env:
   FLUTTER_VERSION: "3.44.0"
+  ANDROID_PACKAGE_NAME: io.biatec.math_master
 
 jobs:
   build-signed-aab:
@@ -279,7 +282,7 @@ jobs:
           actual_version_code = int(required_attribute("android:versionCode"))
           actual_version_name = required_attribute("android:versionName")
 
-          expected_application_id = "io.biatec.math_master"
+          expected_application_id = os.environ["ANDROID_PACKAGE_NAME"]
           expected_version_code = int(os.environ["VERSION_CODE"])
           expected_version_name = os.environ["VERSION_NAME"]
 
@@ -312,6 +315,25 @@ jobs:
             | grep -i "Android Debug" \
             && { echo "::error::Bundle is signed with the debug key, not the upload key."; exit 1; } \
             || echo "Bundle is not signed with the debug key."
+
+      - name: Validate Google Play service account secret
+        env:
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          if [ -z "$GOOGLE_PLAY_SERVICE_ACCOUNT_JSON" ]; then
+            echo "::error::GOOGLE_PLAY_SERVICE_ACCOUNT_JSON secret is not set. See docs/GOOGLE_PLAY_RELEASE.md."
+            exit 1
+          fi
+
+      - name: Upload to Google Play internal testing
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: ${{ env.ANDROID_PACKAGE_NAME }}
+          releaseFiles: build/app/outputs/bundle/release/app-release.aab
+          track: internal
+          status: completed
+          releaseName: ${{ steps.release_version.outputs.version_name }} (${{ steps.release_version.outputs.version_code }})
 
       - name: Clean up signing secrets
         if: always()
