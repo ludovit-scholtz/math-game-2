@@ -13,7 +13,18 @@ class PlayerProfile {
     this.petFeedingPoints = 0,
     this.petEnjoymentPoints = 0,
     DateTime? petCareUpdatedAt,
-  }) : petCareUpdatedAt = petCareUpdatedAt ?? DateTime.now();
+    DateTime? petFeedingUpdatedAt,
+    DateTime? petEnjoymentUpdatedAt,
+  })  : petCareUpdatedAt = petCareUpdatedAt ?? DateTime.now(),
+        petFeedingUpdatedAt =
+            petFeedingUpdatedAt ?? petCareUpdatedAt ?? DateTime.now(),
+        petEnjoymentUpdatedAt =
+            petEnjoymentUpdatedAt ?? petCareUpdatedAt ?? DateTime.now();
+
+  static const int _pointsPerDay = 100;
+  static const int _minutesPerDay = 24 * 60;
+  static const double _feedingMinutesPerPoint = _minutesPerDay / 100;
+  static const double _enjoymentMinutesPerPoint = _minutesPerDay / 20;
 
   final String name;
   final String languageCode;
@@ -21,6 +32,8 @@ class PlayerProfile {
   final int petFeedingPoints;
   final int petEnjoymentPoints;
   final DateTime petCareUpdatedAt;
+  final DateTime petFeedingUpdatedAt;
+  final DateTime petEnjoymentUpdatedAt;
 
   bool get hasPet => petType != null;
 
@@ -31,6 +44,8 @@ class PlayerProfile {
     int? petFeedingPoints,
     int? petEnjoymentPoints,
     DateTime? petCareUpdatedAt,
+    DateTime? petFeedingUpdatedAt,
+    DateTime? petEnjoymentUpdatedAt,
   }) =>
       PlayerProfile(
         name: name ?? this.name,
@@ -39,6 +54,9 @@ class PlayerProfile {
         petFeedingPoints: petFeedingPoints ?? this.petFeedingPoints,
         petEnjoymentPoints: petEnjoymentPoints ?? this.petEnjoymentPoints,
         petCareUpdatedAt: petCareUpdatedAt ?? this.petCareUpdatedAt,
+        petFeedingUpdatedAt: petFeedingUpdatedAt ?? this.petFeedingUpdatedAt,
+        petEnjoymentUpdatedAt:
+            petEnjoymentUpdatedAt ?? this.petEnjoymentUpdatedAt,
       );
 
   PlayerProfile withPet(PetType type, {DateTime? now}) {
@@ -50,17 +68,40 @@ class PlayerProfile {
       petFeedingPoints: 100,
       petEnjoymentPoints: 100,
       petCareUpdatedAt: selectedAt,
+      petFeedingUpdatedAt: selectedAt,
+      petEnjoymentUpdatedAt: selectedAt,
     );
   }
 
   PetCare petCare({DateTime? now}) {
     final current = now ?? DateTime.now();
-    final elapsedDays = current.difference(petCareUpdatedAt).inDays;
     return PetCare(
-      feedingPoints: (petFeedingPoints - (elapsedDays * 100)).clamp(0, 100),
-      enjoymentPoints:
-          (petEnjoymentPoints - (elapsedDays * 20)).clamp(0, 100),
+      feedingPoints: _decayedPoints(
+        petFeedingPoints,
+        petFeedingUpdatedAt,
+        current,
+        _feedingMinutesPerPoint,
+      ),
+      enjoymentPoints: _decayedPoints(
+        petEnjoymentPoints,
+        petEnjoymentUpdatedAt,
+        current,
+        _enjoymentMinutesPerPoint,
+      ),
     );
+  }
+
+  static int _decayedPoints(
+    int points,
+    DateTime updatedAt,
+    DateTime current,
+    double minutesPerPoint,
+  ) {
+    final elapsedMilliseconds = current.difference(updatedAt).inMilliseconds;
+    if (elapsedMilliseconds <= 0) return points.clamp(0, _pointsPerDay);
+    final millisecondsPerPoint = minutesPerPoint * 60 * 1000;
+    final lostPoints = (elapsedMilliseconds / millisecondsPerPoint).floor();
+    return (points - lostPoints).clamp(0, _pointsPerDay);
   }
 
   PlayerProfile withUpdatedPetCare({
@@ -70,10 +111,19 @@ class PlayerProfile {
   }) {
     final current = now ?? DateTime.now();
     final care = petCare(now: current);
+    final updatesFeeding = feedingDelta != 0;
+    final updatesEnjoyment = enjoymentDelta != 0;
     return copyWith(
-      petFeedingPoints: (care.feedingPoints + feedingDelta).clamp(0, 100),
-      petEnjoymentPoints: (care.enjoymentPoints + enjoymentDelta).clamp(0, 100),
+      petFeedingPoints: updatesFeeding
+          ? (care.feedingPoints + feedingDelta).clamp(0, 100)
+          : petFeedingPoints,
+      petEnjoymentPoints: updatesEnjoyment
+          ? (care.enjoymentPoints + enjoymentDelta).clamp(0, 100)
+          : petEnjoymentPoints,
       petCareUpdatedAt: current,
+      petFeedingUpdatedAt: updatesFeeding ? current : petFeedingUpdatedAt,
+      petEnjoymentUpdatedAt:
+          updatesEnjoyment ? current : petEnjoymentUpdatedAt,
     );
   }
 
@@ -84,17 +134,29 @@ class PlayerProfile {
         'petFeedingPoints': petFeedingPoints,
         'petEnjoymentPoints': petEnjoymentPoints,
         'petCareUpdatedAt': petCareUpdatedAt.millisecondsSinceEpoch,
+        'petFeedingUpdatedAt': petFeedingUpdatedAt.millisecondsSinceEpoch,
+        'petEnjoymentUpdatedAt': petEnjoymentUpdatedAt.millisecondsSinceEpoch,
       };
 
-  factory PlayerProfile.fromJson(Map<String, dynamic> json) => PlayerProfile(
-        name: (json['name'] ?? '').toString(),
-        languageCode: (json['languageCode'] ?? 'en').toString(),
-        petType: PetTypeX.fromId(json['petType']?.toString()),
-        petFeedingPoints: (json['petFeedingPoints'] as num?)?.toInt() ?? 0,
-        petEnjoymentPoints: (json['petEnjoymentPoints'] as num?)?.toInt() ?? 0,
-        petCareUpdatedAt: DateTime.fromMillisecondsSinceEpoch(
-          (json['petCareUpdatedAt'] as num?)?.toInt() ??
-              DateTime.now().millisecondsSinceEpoch,
-        ),
-      );
+  factory PlayerProfile.fromJson(Map<String, dynamic> json) {
+    final nowMillis = DateTime.now().millisecondsSinceEpoch;
+    final careUpdatedMillis =
+        (json['petCareUpdatedAt'] as num?)?.toInt() ?? nowMillis;
+    final feedingUpdatedMillis =
+        (json['petFeedingUpdatedAt'] as num?)?.toInt() ?? careUpdatedMillis;
+    final enjoymentUpdatedMillis =
+        (json['petEnjoymentUpdatedAt'] as num?)?.toInt() ?? careUpdatedMillis;
+    return PlayerProfile(
+      name: (json['name'] ?? '').toString(),
+      languageCode: (json['languageCode'] ?? 'en').toString(),
+      petType: PetTypeX.fromId(json['petType']?.toString()),
+      petFeedingPoints: (json['petFeedingPoints'] as num?)?.toInt() ?? 0,
+      petEnjoymentPoints: (json['petEnjoymentPoints'] as num?)?.toInt() ?? 0,
+      petCareUpdatedAt: DateTime.fromMillisecondsSinceEpoch(careUpdatedMillis),
+      petFeedingUpdatedAt:
+          DateTime.fromMillisecondsSinceEpoch(feedingUpdatedMillis),
+      petEnjoymentUpdatedAt:
+          DateTime.fromMillisecondsSinceEpoch(enjoymentUpdatedMillis),
+    );
+  }
 }
