@@ -45,15 +45,43 @@ this app.
 6. After it is created, return to **Play Console > Setup > API access** and
    grant the service account access to the Play Console.
 
-Recommended access:
+Important details:
 
+- The service account email in Play Console must match the `client_email` value
+  from the JSON key stored in `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON`.
+- Prefer granting access from **Setup > API access** after the Cloud project is
+  linked. Inviting the same service account from **Users and permissions** can
+  also work, but the API access page is the easiest place to verify that Play
+  Console recognizes the account as an API user.
 - Scope access to this app only: `io.biatec.math_master`.
-- Use the built-in **Release manager** role, or a custom role that can view app
-  information and create releases on testing tracks.
+- The built-in **Release manager** role is usually enough. **Admin** also works,
+   but is broader than needed.
 
 The exact permission labels in Play Console can change, but the account must be
 able to upload Android App Bundles and release them to the internal testing
 track.
+
+For a custom role, grant permissions equivalent to:
+
+- View app information.
+- Create and edit releases.
+- Release to testing tracks.
+- Manage testing tracks, if Play Console shows this as a separate permission.
+
+If Google Play shows app-level permissions, apply those permissions to
+`io.biatec.math_master`, not only at account level.
+
+You do not need to give this service account special Google Cloud IAM roles such
+as Owner, Editor, or Service Account Admin just for Play uploads. On the Cloud
+Console side, the required setup is:
+
+- The linked Cloud project exists.
+- The **Google Play Android Developer API** is enabled in that project.
+- The service account exists in that project.
+- The JSON key used in GitHub belongs to that same service account.
+
+The permission to create Play releases is controlled by **Play Console**, not by
+Google Cloud IAM.
 
 ---
 
@@ -126,7 +154,24 @@ tag available in the repository.
 | Symptom                                                | Fix                                                                                  |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------------ |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON secret is not set`   | Add the repository secret from step 4.                                                |
-| `The caller does not have permission`                  | Grant the service account app access in Play Console API access.                      |
+| `The caller does not have permission`                  | Check the permission checklist below.                                                 |
 | `Package not found` or wrong package name              | Confirm the app exists in Play Console with package `io.biatec.math_master`.          |
 | Upload succeeds but testers do not see the app         | Check the internal tester list and make sure testers accepted the opt-in invitation.  |
 | Play Console says setup or declarations are incomplete | Finish the required Play Console app setup forms and rerun the release workflow.      |
+
+For `The caller does not have permission`, check these in order:
+
+1. Open the GitHub secret value locally or in your password manager and confirm
+   the JSON `client_email` is the same service account email you granted in Play
+   Console.
+2. In **Play Console > Setup > API access**, confirm the linked Cloud project is
+   the project where that service account was created.
+3. In **Play Console > Setup > API access**, confirm the service account shows
+   as granted access. If it only exists in Cloud Console, grant access in Play
+   Console too.
+4. In **Play Console > Users and permissions**, open the service account user
+   and confirm it has access to app `io.biatec.math_master`.
+5. Confirm the app permission includes release creation for internal testing,
+   or temporarily use **Admin** to prove the permission issue is solved.
+6. Wait a few minutes after changing Play Console permissions, then rerun the
+   workflow. Play API permissions can take a short time to propagate.
