@@ -1,199 +1,99 @@
-# Zasady ochrany osobnych udajov pre Math Master
+# Zásady ochrany osobných údajov pre Math Master
 
-Datum ucinnosti: 2. jun 2026  
-Posledna aktualizacia: 2. jun 2026
+Dátum účinnosti: 2. jún 2026
+Posledná aktualizácia: 2. jún 2026
 
-Tieto Zasady ochrany osobnych udajov vysvetluju, ako Scholtz & Company, jsa,
-ICO 51882272 ("vyvojar", "my", "nas" alebo "nasa spolocnost") naklada s
-informaciami v suvislosti s aplikaciou Math Master ("aplikacia"). Aplikacia je
-vzdelavacia matematicka hra urcena pre deti a rodiny. Je navrhnuta tak, aby bola
-bezpecna pre deti: neobsahuje reklamu, behaviorálne sledovanie, socialne siete,
-verejny chat, zverejnovanie osobnych udajov v aplikacii ani ziadnu funkciu,
-ktora by mala dieta viest k zdielaniu osobnych udajov s nami alebo s inymi
-pouzivatelmi.
+Tieto Zásady ochrany osobných údajov opisujú, ako Scholtz & Company, jsa, IČO 51882272 ("vývojár", "my", "nás" alebo "naša spoločnosť") nakladá s informáciami v súvislosti s aplikáciou Math Master ("aplikácia"). Aplikácia je vzdelávacia matematická hra určená pre deti a rodiny. Je navrhnutá tak, aby bola bezpečná pre deti: neobsahuje reklamu, behaviorálne sledovanie, funkcie sociálnych sietí, verejný chat, zverejňovanie osobných údajov v aplikácii ani žiadnu funkciu, ktorej cieľom by bolo viesť dieťa k zdieľaniu osobných údajov s nami alebo s inými používateľmi.
 
-Tieto Zasady su napisane tak, aby jasne a uplne vysvetlili nase postupy
-pouzivatelom, rodicom, zakonnym zastupcom, skolam a kontrolnym timom obchodov s
-aplikaciami vratane kontroly v Google Play Console. Najdolezitejsie je toto:
-aplikacia uklada prezyvku hraca a hernu aktivitu lokalne v zariadeni, aby hra
-fungovala, ale ziadne osobne udaje prostrednictvom aplikacie neopustaju
-zariadenie.
+Tieto Zásady majú jasne a úplne vysvetliť naše postupy používateľom, rodičom, zákonným zástupcom, školám a kontrolným tímom obchodov s aplikáciami vrátane kontroly v Google Play Console. Najdôležitejšie je toto: aplikácia ukladá prezývku hráča a hernú aktivitu lokálne v zariadení, aby hra fungovala, ale žiadne osobné údaje prostredníctvom aplikácie neopúšťajú zariadenie.
 
-## 1. Vyvojar a rozsah
+## 1. Vývojár a rozsah
 
-Aplikaciu vytvorila a poskytuje Scholtz & Company, jsa, ICO 51882272. Tieto
-Zasady sa vztahuju iba na aplikaciu Math Master a na informacie spracuvane
-samotnou aplikaciou. Nevztahuju sa na Google Play, operacny system zariadenia,
-spravu uctu v obchode s aplikaciami, zalohy zariadenia, nastroje rodicovskej
-kontroly ani ine sluzby tretich stran, ktore mozu fungovat nezavisle od
-aplikacie.
+Aplikáciu vytvorila a poskytuje Scholtz & Company, jsa, IČO 51882272. Tieto Zásady sa vzťahujú iba na aplikáciu Math Master a na informácie spracúvané samotnou aplikáciou. Nevzťahujú sa na Google Play, operačný systém zariadenia, správu účtu v obchode s aplikáciami, zálohy zariadenia, nástroje rodičovskej kontroly ani iné služby tretích strán, ktoré môžu fungovať nezávisle od aplikácie.
 
-Aplikacia je lokalny vzdelavaci produkt. Pomaha detom precvicovat aritmetiku,
-zaznamenava ich pokrok v zariadeni a umoznuje pouzivat viac lokalnych profilov
-hracov na jednom zariadeni. Pre aplikaciu neprevadzkujeme cloudovy uctovy system
-a aplikacia nevyzaduje, aby si dieta vytvorilo online ucet.
+Aplikácia je lokálny vzdelávací produkt. Pomáha deťom precvičovať aritmetiku, zaznamenáva ich pokrok v zariadení a umožňuje používať viac lokálnych profilov hráčov na jednom zariadení. Pre aplikáciu neprevádzkujeme cloudový účtový systém a aplikácia nevyžaduje, aby si dieťa vytvorilo online účet.
 
-## 2. Jasne vyhlasenie o bezpecnosti deti
+## 2. Jasné vyhlásenie o bezpečnosti detí
 
-Aplikacia je navrhnuta ako vhodna pre deti. Deti ju mozu pouzivat za ucasti
-rodica, zakonneho zastupcu, ucitela alebo inej zodpovednej dospelej osoby.
-Aplikacia neziada cele meno dietata, e-mailovu adresu, telefonne cislo, postovu
-adresu, fotografiu, hlasovu nahravku, presnu polohu, nazov skoly, zoznam
-kontaktov, platobne udaje, reklamny identifikator ani ine nepotrebne osobne
-informacie.
+Aplikácia je navrhnutá ako vhodná pre deti. Deti ju môžu používať za účasti rodiča, zákonného zástupcu, učiteľa alebo inej zodpovednej dospelej osoby. Aplikácia nežiada celé meno dieťaťa, e-mailovú adresu, telefónne číslo, poštovú adresu, fotografiu, hlasovú nahrávku, presnú polohu, názov školy, zoznam kontaktov, platobné údaje, reklamný identifikátor ani iné nepotrebné osobné informácie.
 
-Meno hraca zadane v aplikacii moze byt akakolvek prezyvka, inicialky alebo
-vymyslene meno, ktore si pouzivatel zvoli. Odporucame, aby deti nezadavali cele
-pravne meno. Prezyvka sa pouziva iba v aplikacii na rozlisenie lokalnych hracov
-na tom istom zariadeni.
+Meno hráča zadané v aplikácii môže byť akákoľvek prezývka, iniciály alebo vymyslené meno, ktoré si používateľ zvolí. Odporúčame, aby deti nezadávali celé právne meno. Prezývka sa používa iba v aplikácii na rozlíšenie lokálnych hráčov na tom istom zariadení.
 
-## 3. Informacie spracuvane aplikaciou
+## 3. Informácie spracúvané aplikáciou
 
-Aplikacia lokalne v zariadeni spracuvava tieto obmedzene informacie:
+Aplikácia lokálne v zariadení spracúva tieto obmedzené informácie:
 
-- Prezyvka hraca: meno zvolene pouzivatelom na identifikaciu lokalneho profilu.
-- Preferovany jazyk: jazyk vybrany pre hraca alebo zariadenie.
-- Herna aktivita: zodpovedane matematicke ulohy, vybrany herny rezim, vysledky,
-  skore, chyby, vykon podla casu, zaznamy v lokalnom rebricku, historia hier,
-  ziskane mince, odomknute vizualne styly, nastavenia tlacidiel a podobne udaje
-  o pokroku potrebne pre herny zazitok.
-- Nastavenia aplikacie: lokalne predvolby, vdaka ktorym si aplikacia pamata, ako
-  ma v zariadeni vyzerat alebo fungovat.
+- Prezývka hráča: meno zvolené používateľom na identifikáciu lokálneho profilu.
+- Preferovaný jazyk: jazyk vybraný pre hráča alebo zariadenie.
+- Herná aktivita: zodpovedané matematické úlohy, vybraný herný režim, výsledky, skóre, chyby, výkon podľa času, záznamy v lokálnom rebríčku, história hier, získané mince, odomknuté vizuálne štýly, nastavenia tlačidiel a podobné údaje o pokroku potrebné pre herný zážitok.
+- Nastavenia aplikácie: lokálne predvoľby, vďaka ktorým si aplikácia pamätá, ako má v zariadení vyzerať alebo fungovať.
 
-Tieto informacie sa pouzivaju iba na poskytovanie vzdelavacej hry, zapamatanie
-pokroku, zobrazenie historie a rebrickov v zariadeni, podporu lokalneho
-prisposobenia a pohodlne opakovane pouzivanie aplikacie.
+Tieto informácie sa používajú iba na poskytovanie vzdelávacej hry, zapamätanie pokroku, zobrazenie histórie a rebríčkov v zariadení, podporu lokálneho prispôsobenia a pohodlné opakované používanie aplikácie.
 
-## 4. Informacie, ktore nezhromazdujeme
+## 4. Informácie, ktoré nezhromažďujeme
 
-Aplikacia prostrednictvom aplikacie nezhromazduje, nevyzaduje ani neprenasa
-nasledujuce kategorie udajov:
+Aplikácia prostredníctvom aplikácie nezhromažďuje, nevyžaduje ani neprenáša nasledujúce kategórie údajov:
 
-- skutocne pravne meno, pokial ho pouzivatel dobrovolne nezada ako prezyvku, co
-  sa nevyzaduje a pre deti sa neodporuca;
-- e-mailovu adresu, telefonne cislo, postovu adresu ani ine kontaktne udaje;
-- presnu ani pribliznu polohu;
-- fotografie, videa, zaznamy mikrofonu, udaje z kamery, kontakty, kalendar,
-  subory, spravy ani zaznamy hovorov;
-- statne identifikatory, zdravotne informacie, financne informacie, udaje o
-  platobnych kartach ani citlive osobne udaje;
-- reklamne ID, sledovacie identifikatory, analyticke identifikatory ani profily
-  na behaviorálnu reklamu;
-- prihlasovacie udaje k online sluzbam.
+- skutočné právne meno, pokiaľ ho používateľ dobrovoľne nezadá ako prezývku, čo sa nevyžaduje a pre deti sa neodporúča;
+- e-mailovú adresu, telefónne číslo, poštovú adresu ani iné kontaktné údaje;
+- presnú ani približnú polohu;
+- fotografie, videá, záznamy mikrofónu, údaje z kamery, kontakty, kalendár, súbory, správy ani záznamy hovorov;
+- štátne identifikátory, zdravotné informácie, finančné informácie, údaje o platobných kartách ani citlivé osobné údaje;
+- reklamné ID, sledovacie identifikátory, analytické identifikátory ani profily na behaviorálnu reklamu;
+- prihlasovacie údaje k online službám.
 
-## 5. Ziadne udaje neopustaju zariadenie
+## 5. Žiadne údaje neopúšťajú zariadenie
 
-Aplikacia je navrhnuta tak, aby prezyvka hraca a herna aktivita zostali v
-zariadeni. Aplikacia neposiela tieto informacie spolocnosti Scholtz & Company,
-jsa, na vzdialeny server, poskytovatelovi analytiky, reklamnej sieti ani ziadnej
-tretej strane.
+Aplikácia je navrhnutá tak, aby prezývka hráča a herná aktivita zostali v zariadení. Aplikácia neposiela tieto informácie spoločnosti Scholtz & Company, jsa, na vzdialený server, poskytovateľovi analytiky, reklamnej sieti ani žiadnej tretej strane.
 
-Kedze aplikacia nam tieto informacie neprenasa, nevidime ich, nepredavame,
-neprenajimame, nevymiename, neprofilujeme, nekombinujeme ani inak komercne
-nevyuzivame prezyvku hraca alebo udaje o aktivite. Tieto informacie taktiez
-nepouzivame na reklamu, sledovanie napriec aplikaciami, profilovanie
-pouzivatelov, automatizovane rozhodovanie ani marketing.
+Keďže aplikácia nám tieto informácie neprenáša, nevidíme ich, nepredávame, neprenajímame, nevymieňame, neprofilujeme, nekombinujeme ani inak komerčne nevyužívame prezývku hráča alebo údaje o aktivite. Tieto informácie taktiež nepoužívame na reklamu, sledovanie naprieč aplikáciami, profilovanie používateľov, automatizované rozhodovanie ani marketing.
 
-Niektore sluzby na urovni zariadenia su mimo kontroly aplikacie. Napriklad
-obchod s aplikaciami, operacny system, nastroje hlasenia padov povolene
-platformou, nastavenia zalohovania zariadenia, rodicovska kontrola alebo rodinne
-zdielanie mozu spracuvat udaje podla vlastnych podmienok a pravidiel ochrany
-sukromia. Tieto Zasady opisujú postupy samotnej aplikacie, nie tychto
-nezavislych sluzieb.
+Niektoré služby na úrovni zariadenia sú mimo kontroly aplikácie. Napríklad obchod s aplikáciami, operačný systém, nástroje hlásenia pádov povolené platformou, nastavenia zálohovania zariadenia, rodičovská kontrola alebo rodinné zdieľanie môžu spracúvať údaje podľa vlastných podmienok a pravidiel ochrany súkromia. Tieto Zásady opisujú postupy samotnej aplikácie, nie týchto nezávislých služieb.
 
-## 6. Pravni zaklad a ucel spracuvania
+## 6. Právny základ a účel spracúvania
 
-Ak pravne predpisy vyzaduju pravny zaklad, aplikacia spracuvava vyssie uvedene
-obmedzene lokalne informacie preto, ze je to potrebne na poskytnutie poziadanej
-funkcnosti hry a preto, ze pouzivatelia ocakavaju, ze si aplikacia zapamata
-lokalny pokrok, skore, profily hracov, jazykove nastavenia a volby
-prisposobenia. Spracuvanie v aplikacii je cielene obmedzene na to, co je
-potrebne pre vzdelavaciu hru, a nepouziva sa na nesuvisiace ucely.
+Ak právne predpisy vyžadujú právny základ, aplikácia spracúva vyššie uvedené obmedzené lokálne informácie preto, že je to potrebné na poskytnutie požadovanej funkčnosti hry a preto, že používatelia očakávajú, že si aplikácia zapamätá lokálny pokrok, skóre, profily hráčov, jazykové nastavenia a voľby prispôsobenia. Spracúvanie v aplikácii je cielene obmedzené na to, čo je potrebné pre vzdelávaciu hru, a nepoužíva sa na nesúvisiace účely.
 
-Pri detoch aplikacia uplatnuje princip minimalizacie udajov. Ziadata iba
-prezyvku a uklada iba herne informacie potrebne na fungovanie vzdelavacej
-skusenosti. Prostrednictvom aplikacie s dietatom nenadvazujeme priamy kontakt.
+Pri deťoch aplikácia uplatňuje princíp minimalizácie údajov. Žiada iba prezývku a ukladá iba herné informácie potrebné na fungovanie vzdelávacej skúsenosti. Prostredníctvom aplikácie s dieťaťom nenadväzujeme priamy kontakt.
 
-## 7. Zdielanie, predaj a spristupnenie
+## 7. Zdieľanie, predaj a sprístupnenie
 
-Prezyvku hraca ani hernu aktivitu prostrednictvom aplikacie nezdielame s tretimi
-stranami. Osobne udaje nepredavame. Osobne udaje nespristupnujeme na cielenu
-reklamu. Nedovolujeme, aby reklamne alebo sledovacie SDK tretich stran zbierali
-udaje z aplikacie.
+Prezývku hráča ani hernú aktivitu prostredníctvom aplikácie nezdieľame s tretími stranami. Osobné údaje nepredávame. Osobné údaje nesprístupňujeme na cielenú reklamu. Nedovoľujeme, aby reklamné alebo sledovacie SDK tretích strán zbierali údaje z aplikácie.
 
-Ak sa pouzivatel sam rozhodne ukazat obrazovku zariadenia inej osobe, vytvorit
-snímku obrazovky, pouzit zalohu operacneho systemu alebo preniest udaje zo
-zariadenia pomocou nastrojov mimo aplikacie, ide o konanie pouzivatela alebo
-platformy zariadenia, nie aplikacie.
+Ak sa používateľ sám rozhodne ukázať obrazovku zariadenia inej osobe, vytvoriť snímku obrazovky, použiť zálohu operačného systému alebo preniesť údaje zo zariadenia pomocou nástrojov mimo aplikácie, ide o konanie používateľa alebo platformy zariadenia, nie aplikácie.
 
-## 8. Uchovavanie a vymazanie
+## 8. Uchovávanie a vymazanie
 
-Prezyvka hraca a herna aktivita zostavaju ulozene lokalne tak dlho, ako je
-aplikacia nainstalovana a ako je prislusny lokalny profil alebo udaje aplikacie
-uchovavane v zariadeni. Pouzivatelia mozu lokalne informacie odstranit
-vymazanim profilov hracov, ak to aplikacia umoznuje, vymazanim uloziska
-aplikacie v operacnom systeme alebo odinstalovanim aplikacie. Odinstalovanie
-aplikacie zvycajne odstrani lokalne ulozene udaje aplikacie zo zariadenia, podla
-operacneho systemu a zalohovacich nastaveni ovladanych pouzivatelom.
+Prezývka hráča a herná aktivita zostávajú uložené lokálne tak dlho, ako je aplikácia nainštalovaná a ako je príslušný lokálny profil alebo údaje aplikácie uchovávané v zariadení. Používatelia môžu lokálne informácie odstrániť vymazaním profilov hráčov, ak to aplikácia umožňuje, vymazaním úložiska aplikácie v operačnom systéme alebo odinštalovaním aplikácie. Odinštalovanie aplikácie zvyčajne odstráni lokálne uložené údaje aplikácie zo zariadenia, podľa operačného systému a zálohovacích nastavení ovládaných používateľom.
 
-Kedze aplikacia neposiela udaje nam, nemame vzdialenu kopiu, ktoru by sme mohli
-vyhladat, exportovat, opravit alebo vymazat na nasich serveroch.
+Keďže aplikácia neposiela údaje nám, nemáme vzdialenú kópiu, ktorú by sme mohli vyhľadať, exportovať, opraviť alebo vymazať na našich serveroch.
 
-## 9. Bezpecnost
+## 9. Bezpečnosť
 
-Aplikacia chrani sukromie deti najma tym, ze sa vyhyba zbytocnemu zberu udajov
-a ponechava obmedzene informacie lokalne v zariadeni. Lokalne ulozisko zavisi od
-bezpecnosti zariadenia, operacneho systemu a nastaveni pouzivatela. Rodicia a
-zakonni zastupcovia by mali podla potreby pouzivat bezne ochrany zariadenia,
-napriklad zamok obrazovky, opravnenia aplikacii, rodinne ovladacie prvky a
-zodpovedne nastavenia zalohovania.
+Aplikácia chráni súkromie detí najmä tým, že sa vyhýba zbytočnému zberu údajov a ponecháva obmedzené informácie lokálne v zariadení. Lokálne úložisko závisí od bezpečnosti zariadenia, operačného systému a nastavení používateľa. Rodičia a zákonní zástupcovia by mali podľa potreby používať bežné ochrany zariadenia, napríklad zámok obrazovky, oprávnenia aplikácií, rodinné ovládacie prvky a zodpovedné nastavenia zálohovania.
 
-Ziadny sposob elektronickeho ulozenia nemoze byt zaruceny ako dokonale
-bezpecny. Aplikacia vsak znizuje riziko tym, ze neprenasa prezyvku hraca ani
-hernu aktivitu na externe servery a neintegruje reklamne ani behaviorálne
-sledovacie systemy.
+Žiadny spôsob elektronického uloženia nemožno zaručiť ako dokonale bezpečný. Aplikácia však znižuje riziko tým, že neprenáša prezývku hráča ani hernú aktivitu na externé servery a neintegruje reklamné ani behaviorálne sledovacie systémy.
 
-## 10. Sukromie deti a kontrola rodicov
+## 10. Súkromie detí a kontrola rodičov
 
-Aplikacia je vhodna pre deti, pretoze je zalozena na precvicovani aritmetiky a
-lokalnom pokroku. Neposkytuje otvorenu komunikaciu medzi pouzivatelmi,
-nezverejnuje rebricky online, nevystavuje deti cielenej reklame a neziada
-citlive osobne udaje.
+Aplikácia je vhodná pre deti, pretože je založená na precvičovaní aritmetiky a lokálnom pokroku. Neposkytuje otvorenú komunikáciu medzi používateľmi, nezverejňuje rebríčky online, nevystavuje deti cielenej reklame a nežiada citlivé osobné údaje.
 
-Rodicia, zakonni zastupcovia a ucitelia mozu skontrolovat lokalne informacie
-viditelne v aplikacii otvorenim prislusneho profilu hraca, historie, rebricka,
-nastaveni alebo obrazoviek prisposobenia v zariadeni. Udaje mozu vymazat alebo
-resetovat pomocou ovladacich prvkov aplikacie, ak su dostupne, alebo pomocou
-ovladacich prvkov operacneho systemu.
+Rodičia, zákonní zástupcovia a učitelia môžu skontrolovať lokálne informácie viditeľné v aplikácii otvorením príslušného profilu hráča, histórie, rebríčka, nastavení alebo obrazoviek prispôsobenia v zariadení. Údaje môžu vymazať alebo resetovať pomocou ovládacích prvkov aplikácie, ak sú dostupné, alebo pomocou ovládacích prvkov operačného systému.
 
-## 11. Medzinarodni pouzivatelia
+## 11. Medzinárodní používatelia
 
-Aplikacia sa moze pouzivat v roznych krajinach a podporuje viac jazykov. Jej
-ochrana sukromia je v kazdom jazyku rovnaka: prezyvka hraca a udaje o aktivite
-zostavaju lokalne v zariadeni a prostrednictvom aplikacie sa nam neposielaju.
+Aplikácia sa môže používať v rôznych krajinách a podporuje viac jazykov. Jej ochrana súkromia je v každom jazyku rovnaká: prezývka hráča a údaje o aktivite zostávajú lokálne v zariadení a prostredníctvom aplikácie sa nám neposielajú.
 
-Ak sa prelozena verzia tychto Zasad odlisuje od anglickej verzie, na vyriesenie
-rozdielu sa v rozsahu povolenom platnym pravom pouzije anglicka verzia.
+Ak sa preložená verzia týchto Zásad odlišuje od anglickej verzie, na vyriešenie rozdielu sa v rozsahu povolenom platným právom použije anglická verzia.
 
-## 12. Zmeny tychto Zasad
+## 12. Zmeny týchto Zásad
 
-Tieto Zasady mozeme aktualizovat, ak sa zmenia funkcie aplikacie, pravne
-poziadavky alebo poziadavky obchodov s aplikaciami. Kazda aktualizovana verzia
-by mala uviest novy datum ucinnosti. Ak by buduca verzia aplikacie zaviedla
-online sluzby, analytiku, reklamu, ucty alebo prenos udajov mimo zariadenia,
-tieto Zasady musia byt aktualizovane pred spristupnenim takych funkcii alebo v
-case ich spristupnenia.
+Tieto Zásady môžeme aktualizovať, ak sa zmenia funkcie aplikácie, právne požiadavky alebo požiadavky obchodov s aplikáciami. Každá aktualizovaná verzia by mala uviesť nový dátum účinnosti. Ak by budúca verzia aplikácie zaviedla online služby, analytiku, reklamu, účty alebo prenos údajov mimo zariadenia, tieto Zásady musia byť aktualizované pred sprístupnením takých funkcií alebo v čase ich sprístupnenia.
 
 ## 13. Kontakt
 
-V pripade otazok k ochrane sukromia v aplikacii kontaktujte vyvojara pomocou
-kontaktnych udajov uvedenych v zazname aplikacie v Google Play alebo na inej
-oficialnej distribucnej stranke aplikacie Math Master.
+V prípade otázok k ochrane súkromia v aplikácii kontaktujte vývojára pomocou kontaktných údajov uvedených v zázname aplikácie v Google Play alebo na inej oficiálnej distribučnej stránke aplikácie Math Master.
 
 ## 14. Zhrnutie pre rodiny
 
-Math Master je urceny ako bezpecna aplikacia pre deti. Aplikacia uklada prezyvku
-a pokrok v matematickej hre v zariadeni, aby sa deti mohli hrat, precvicovat a
-vidiet svoje vysledky. Aplikacia nam tieto informacie neposiela, nepredava udaje,
-nezobrazuje reklamy a nesleduje deti napriec aplikaciami alebo webovymi
-strankami.
+Math Master je určený ako bezpečná aplikácia pre deti. Aplikácia ukladá prezývku a pokrok v matematickej hre v zariadení, aby sa deti mohli hrať, precvičovať a vidieť svoje výsledky. Aplikácia nám tieto informácie neposiela, nepredáva údaje, nezobrazuje reklamy a nesleduje deti naprieč aplikáciami alebo webovými stránkami.

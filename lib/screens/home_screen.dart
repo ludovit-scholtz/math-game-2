@@ -81,6 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (selected != null && mounted) {
       setState(() => _player = selected);
       _loadCoins(selected.name);
+      MathGameApp.of(context).setLocale(Locale(selected.languageCode));
     }
     return selected;
   }
@@ -189,6 +190,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _handleMenuAction(_HomeMenuAction action) async {
     switch (action) {
+      case _HomeMenuAction.changePlayer:
+        await _choosePlayer();
       case _HomeMenuAction.leaderboard:
         _openLeaderboard();
       case _HomeMenuAction.shop:
@@ -213,6 +216,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final strings = context.strings;
     return Scaffold(
       appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Image.asset('assets/icons/math_master_icon.png'),
+        ),
         title: Text(strings.appName),
         backgroundColor: AppTheme.primary,
         foregroundColor: Colors.white,
@@ -222,6 +229,13 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(Icons.menu_rounded),
             onSelected: _handleMenuAction,
             itemBuilder: (context) => [
+              PopupMenuItem(
+                value: _HomeMenuAction.changePlayer,
+                child: _MenuItem(
+                  icon: Icons.swap_horiz_rounded,
+                  label: strings.changePlayer,
+                ),
+              ),
               PopupMenuItem(
                 value: _HomeMenuAction.leaderboard,
                 child: _MenuItem(
@@ -291,22 +305,10 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 8),
-              Center(
-                child: Image.asset(
-                  'assets/icons/math_master_icon.png',
-                  width: 82,
-                  height: 82,
-                ),
-              ),
-              const SizedBox(height: 24),
-              _SectionCard(
-                title: strings.player,
-                child: _loadingPlayer
-                    ? const Center(child: CircularProgressIndicator())
-                    : _buildPlayerSection(strings),
-              ),
-              const SizedBox(height: 16),
+              if (_player?.hasPet ?? false) ...[
+                PetCareCard(player: _player!, onTap: _openPetCare),
+                const SizedBox(height: 16),
+              ],
               _SectionCard(
                 title: strings.challengeLength,
                 child: Wrap(
@@ -337,16 +339,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   }).toList(),
                 ),
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 20),
+              _PlayerGreeting(
+                loading: _loadingPlayer,
+                player: _player,
+                onChoosePlayer: _choosePlayer,
+              ),
+              const SizedBox(height: 12),
               ElevatedButton.icon(
                 onPressed: _startGame,
                 icon: const Icon(Icons.play_arrow_rounded, size: 28),
                 label: Text(strings.start),
               ),
-              if (_player?.hasPet ?? false) ...[
-                const SizedBox(height: 16),
-                PetCareCard(player: _player!, onTap: _openPetCare),
-              ],
               const SizedBox(height: 20),
               const _ScoringHelp(),
             ],
@@ -356,44 +360,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildPlayerSection(AppStrings strings) {
-    final player = _player;
-    if (player == null) {
-      return ElevatedButton.icon(
-        onPressed: _choosePlayer,
-        icon: const Icon(Icons.person_rounded),
-        label: Text(strings.choosePlayer),
-      );
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          children: [
-            const Icon(Icons.person_rounded, color: AppTheme.primary),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                player.name,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            TextButton.icon(
-              onPressed: _choosePlayer,
-              icon: const Icon(Icons.swap_horiz_rounded),
-              label: Text(strings.changePlayer),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
 }
 
 enum _HomeMenuAction {
+  changePlayer,
   leaderboard,
   history,
   shop,
@@ -402,6 +372,40 @@ enum _HomeMenuAction {
   settings,
   docs,
   privacyPolicy,
+}
+
+class _PlayerGreeting extends StatelessWidget {
+  const _PlayerGreeting({
+    required this.loading,
+    required this.player,
+    required this.onChoosePlayer,
+  });
+
+  final bool loading;
+  final PlayerProfile? player;
+  final VoidCallback onChoosePlayer;
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = context.strings;
+    if (loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (player == null) {
+      return OutlinedButton.icon(
+        onPressed: onChoosePlayer,
+        icon: const Icon(Icons.person_rounded),
+        label: Text(strings.choosePlayer),
+      );
+    }
+    return Text(
+      strings.playerGreeting(player!.name),
+      textAlign: TextAlign.center,
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+    );
+  }
 }
 
 class _MenuItem extends StatelessWidget {
