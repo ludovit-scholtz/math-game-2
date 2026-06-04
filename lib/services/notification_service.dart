@@ -38,6 +38,7 @@ class NotificationService {
   static const String _endHourKey = 'pet_notification_end_hour_v1';
   static const String _permissionGrantedKey =
       'pet_notification_permission_granted_v1';
+  static const Duration _pluginTimeout = Duration(seconds: 2);
   static const NotificationWindow defaultWindow = NotificationWindow(
     startHour: 16,
     endHour: 20,
@@ -63,8 +64,8 @@ class NotificationService {
     );
     const settings = InitializationSettings(android: android, iOS: darwin);
     try {
-      await _plugin.initialize(settings);
-    } on MissingPluginException {
+      await _plugin.initialize(settings).timeout(_pluginTimeout);
+    } catch (_) {
       // Widget tests and unsupported platforms do not register the plugin.
     }
   }
@@ -87,13 +88,18 @@ class NotificationService {
 
   Future<bool> notificationsAllowed() async {
     if (kIsWeb) return false;
-    await initialize();
+    try {
+      await initialize().timeout(_pluginTimeout);
+    } catch (_) {
+      return false;
+    }
     try {
       final android = _plugin.resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>();
-      final androidEnabled = await android?.areNotificationsEnabled();
+      final androidEnabled =
+          await android?.areNotificationsEnabled().timeout(_pluginTimeout);
       if (androidEnabled != null) return androidEnabled;
-    } on MissingPluginException {
+    } catch (_) {
       return false;
     }
     final prefs = await SharedPreferences.getInstance();
@@ -107,23 +113,27 @@ class NotificationService {
       var granted = true;
       final android = _plugin.resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>();
-      final androidGranted = await android?.requestNotificationsPermission();
+      final androidGranted = await android
+          ?.requestNotificationsPermission()
+          .timeout(_pluginTimeout);
       if (androidGranted != null) granted = granted && androidGranted;
 
       final ios = _plugin.resolvePlatformSpecificImplementation<
           IOSFlutterLocalNotificationsPlugin>();
-      final iosGranted = await ios?.requestPermissions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
+      final iosGranted = await ios
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          )
+          .timeout(_pluginTimeout);
       if (iosGranted != null) granted = granted && iosGranted;
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(_permissionGrantedKey, granted);
       await scheduleForCurrentPlayer();
       return granted;
-    } on MissingPluginException {
+    } catch (_) {
       return false;
     }
   }
