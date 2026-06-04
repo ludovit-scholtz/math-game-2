@@ -81,7 +81,7 @@ class _PetScreenState extends State<PetScreen> {
       _player = updated;
       _coins = wallet.coins;
     });
-    await NotificationService().scheduleForPlayer(updated);
+    unawaited(NotificationService().scheduleForPlayer(updated));
     unawaited(
       action == _PetCareAction.feed
           ? _audio.playPetFeed()
