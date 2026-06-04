@@ -25,7 +25,15 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Settings'), findsOneWidget);
-    expect(find.text('Unmute sound'), findsOneWidget);
+
+    final unmuteButton = find.text('Unmute sound');
+    await tester.scrollUntilVisible(
+      unmuteButton,
+      300,
+      scrollable: find.byType(Scrollable),
+    );
+    await tester.pumpAndSettle();
+    expect(unmuteButton, findsOneWidget);
 
     final slider = tester.widget<Slider>(find.byType(Slider));
     expect(slider.value, closeTo(0.4, 0.001));
