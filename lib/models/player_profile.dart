@@ -91,6 +91,28 @@ class PlayerProfile {
     );
   }
 
+  DateTime? nextPetCareBelow({required int threshold, DateTime? now}) {
+    if (!hasPet) return null;
+    final current = now ?? DateTime.now();
+    final feedingAt = _thresholdTime(
+      petFeedingPoints,
+      petFeedingUpdatedAt,
+      current,
+      _feedingMinutesPerPoint,
+      threshold,
+    );
+    final enjoymentAt = _thresholdTime(
+      petEnjoymentPoints,
+      petEnjoymentUpdatedAt,
+      current,
+      _enjoymentMinutesPerPoint,
+      threshold,
+    );
+    if (feedingAt == null) return enjoymentAt;
+    if (enjoymentAt == null) return feedingAt;
+    return feedingAt.isBefore(enjoymentAt) ? feedingAt : enjoymentAt;
+  }
+
   static int _decayedPoints(
     int points,
     DateTime updatedAt,
@@ -102,6 +124,23 @@ class PlayerProfile {
     final millisecondsPerPoint = minutesPerPoint * 60 * 1000;
     final lostPoints = (elapsedMilliseconds / millisecondsPerPoint).floor();
     return (points - lostPoints).clamp(0, _pointsPerDay);
+  }
+
+  static DateTime? _thresholdTime(
+    int points,
+    DateTime updatedAt,
+    DateTime current,
+    double minutesPerPoint,
+    int threshold,
+  ) {
+    if (points <= threshold) return current;
+    final pointsToLose = points - threshold;
+    final thresholdAt = updatedAt.add(
+      Duration(
+        milliseconds: (pointsToLose * minutesPerPoint * 60 * 1000).ceil(),
+      ),
+    );
+    return thresholdAt.isBefore(current) ? current : thresholdAt;
   }
 
   PlayerProfile withUpdatedPetCare({

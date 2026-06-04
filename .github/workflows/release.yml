@@ -113,14 +113,38 @@ jobs:
           from pathlib import Path
 
           manifest = Path("android/app/src/main/AndroidManifest.xml")
-          manifest.write_text(
-            re.sub(
-              r'android:label="[^"]+"',
-              'android:label="Math Master"',
-              manifest.read_text(),
-              count=1,
-            )
+          manifest_text = manifest.read_text()
+          manifest_text = re.sub(
+            r'android:label="[^"]+"',
+            'android:label="Math Master"',
+            manifest_text,
+            count=1,
           )
+          notification_permission = '<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />'
+          if notification_permission not in manifest_text:
+              manifest_text = manifest_text.replace(
+                  '<manifest xmlns:android="http://schemas.android.com/apk/res/android">',
+                  '<manifest xmlns:android="http://schemas.android.com/apk/res/android">\n    '
+                  + notification_permission,
+                  1,
+              )
+          manifest.write_text(manifest_text)
+
+          build_gradle = Path("android/app/build.gradle.kts")
+          build_gradle_text = build_gradle.read_text()
+          if "isCoreLibraryDesugaringEnabled = true" not in build_gradle_text:
+              build_gradle_text = build_gradle_text.replace(
+                  "    compileOptions {\n",
+                  "    compileOptions {\n        isCoreLibraryDesugaringEnabled = true\n",
+                  1,
+              )
+          if "coreLibraryDesugaring(" not in build_gradle_text:
+              build_gradle_text += (
+                  "\ndependencies {\n"
+                  "    coreLibraryDesugaring(\"com.android.tools:desugar_jdk_libs:2.1.5\")\n"
+                  "}\n"
+              )
+          build_gradle.write_text(build_gradle_text)
 
           info_plist = Path("ios/Runner/Info.plist")
           with info_plist.open("rb") as file:

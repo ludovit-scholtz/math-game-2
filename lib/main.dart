@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'l10n/app_strings.dart';
 import 'services/audio_service.dart';
+import 'services/notification_service.dart';
 import 'services/theme_service.dart';
 import 'screens/home_screen.dart';
 import 'theme.dart';
@@ -9,6 +10,8 @@ import 'theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AudioService.loadSettings();
+  await NotificationService().initialize();
+  await NotificationService().scheduleForCurrentPlayer();
   final themeMode = await ThemeService.loadThemeMode();
   runApp(MathGameApp(initialThemeMode: themeMode));
 }

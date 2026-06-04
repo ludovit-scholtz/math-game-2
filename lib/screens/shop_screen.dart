@@ -72,7 +72,7 @@ class _ShopScreenState extends State<ShopScreen> {
             child: Padding(
               padding: const EdgeInsets.only(right: 16),
               child: Text(
-                '🪙 ${wallet?.coins ?? 0}',
+                '🪙 ${strings.coinCount(wallet?.coins ?? 0)}',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -102,6 +102,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     style: style,
                     canAfford: canAfford,
                     buyLabel: strings.buy,
+                    priceLabel: strings.coinCount(style.price),
                     onBuy: canAfford ? () => _buy(style) : null,
                   );
                 },
@@ -116,12 +117,14 @@ class _ShopTile extends StatelessWidget {
     required this.style,
     required this.canAfford,
     required this.buyLabel,
+    required this.priceLabel,
     required this.onBuy,
   });
 
   final BackgroundStyle style;
   final bool canAfford;
   final String buyLabel;
+  final String priceLabel;
   final VoidCallback? onBuy;
 
   @override
@@ -170,7 +173,7 @@ class _ShopTile extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    child: Text('$buyLabel  🪙 ${style.price}'),
+                    child: Text('$buyLabel  🪙 $priceLabel'),
                   ),
                 ),
               ],

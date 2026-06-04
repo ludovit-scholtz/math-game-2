@@ -7,6 +7,7 @@ import '../models/pet.dart';
 import '../models/player_profile.dart';
 import '../services/audio_service.dart';
 import '../services/coin_service.dart';
+import '../services/notification_service.dart';
 import '../services/player_service.dart';
 import '../theme.dart';
 import '../widgets/pet_widgets.dart';
@@ -80,6 +81,7 @@ class _PetScreenState extends State<PetScreen> {
       _player = updated;
       _coins = wallet.coins;
     });
+    await NotificationService().scheduleForPlayer(updated);
     unawaited(
       action == _PetCareAction.feed
           ? _audio.playPetFeed()
@@ -139,11 +141,6 @@ class _PetScreenState extends State<PetScreen> {
                                     .titleLarge
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
-                              const SizedBox(height: 8),
-                              Text(
-                                strings.coinBalanceLabel(_coins),
-                                style: Theme.of(context).textTheme.titleSmall,
-                              ),
                               const SizedBox(height: 18),
                               PetMeter(
                                 icon: Icons.restaurant_rounded,
@@ -161,17 +158,30 @@ class _PetScreenState extends State<PetScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
+                      Center(
+                        child: Chip(
+                          avatar: const Text('🪙'),
+                          label: Text(
+                            strings.coinBalanceLabel(_coins),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
                       ElevatedButton.icon(
                         onPressed: () => _careForPet(_PetCareAction.feed),
                         icon: const Icon(Icons.restaurant_rounded),
-                        label: Text('${strings.feedPet}  20 ${strings.coins}'),
+                        label: Text(
+                          '${strings.feedPet}  ${strings.coinCount(20)}',
+                        ),
                       ),
                       const SizedBox(height: 12),
                       OutlinedButton.icon(
                         onPressed: () => _careForPet(_PetCareAction.toy),
                         icon: const Icon(Icons.toys_rounded),
-                        label:
-                            Text('${strings.buyPetToy}  100 ${strings.coins}'),
+                        label: Text(
+                          '${strings.buyPetToy}  ${strings.coinCount(100)}',
+                        ),
                       ),
                     ],
                   ),

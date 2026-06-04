@@ -4,6 +4,7 @@ import '../l10n/app_strings.dart';
 import '../main.dart';
 import '../models/pet.dart';
 import '../models/player_profile.dart';
+import '../services/notification_service.dart';
 import '../services/player_service.dart';
 import '../theme.dart';
 import '../widgets/pet_widgets.dart';
@@ -60,9 +61,11 @@ class _PlayerSelectScreenState extends State<PlayerSelectScreen> {
   Future<void> _addNew() async {
     final name = _nameController.text.trim();
     if (name.isEmpty) return;
-    await _select(
-      PlayerProfile(name: name, languageCode: _newLanguage).withPet(_newPet),
-    );
+    final profile =
+        PlayerProfile(name: name, languageCode: _newLanguage).withPet(_newPet);
+    await NotificationService().requestPermissionsIfNeeded();
+    await NotificationService().scheduleForPlayer(profile);
+    await _select(profile);
   }
 
   @override
@@ -219,7 +222,19 @@ class _LanguageDropdown extends StatelessWidget {
             for (final locale in AppStrings.supportedLocales)
               DropdownMenuItem<String>(
                 value: locale.languageCode,
-                child: Text(AppStrings.languageName(locale.languageCode)),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 32,
+                      child: Text(
+                        AppStrings.languageIcon(locale.languageCode),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(AppStrings.languageName(locale.languageCode)),
+                  ],
+                ),
               ),
           ],
         ),

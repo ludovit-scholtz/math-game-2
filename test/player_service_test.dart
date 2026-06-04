@@ -68,6 +68,24 @@ void main() {
     expect(AppStrings(const Locale('de')).appName, 'Mathe für Kinder | Biatec');
   });
 
+  test('coin labels use localized plural forms', () {
+    expect(AppStrings(const Locale('en')).coinCount(1), '1 coin');
+    expect(AppStrings(const Locale('en')).coinCount(2), '2 coins');
+
+    final slovak = AppStrings(const Locale('sk'));
+    expect(slovak.coinCount(1), '1 minca');
+    expect(slovak.coinCount(2), '2 mince');
+    expect(slovak.coinCount(5), '5 mincí');
+
+    final russian = AppStrings(const Locale('ru'));
+    expect(russian.coinCount(1), '1 монета');
+    expect(russian.coinCount(2), '2 монеты');
+    expect(russian.coinCount(5), '5 монет');
+    expect(russian.coinCount(21), '21 монета');
+    expect(russian.coinCount(22), '22 монеты');
+    expect(russian.coinCount(25), '25 монет');
+  });
+
   test('setPet gives a player a fresh pet with full care', () async {
     final service = PlayerService();
     await service.selectOrCreate(
@@ -139,6 +157,24 @@ void main() {
     );
     expect(dayCare.feedingPoints, 0);
     expect(dayCare.mood, PetMood.hungry);
+  });
+
+  test('pet care reports when a notification threshold will be crossed', () {
+    final selectedAt = DateTime(2026, 6, 3, 8);
+    final profile = PlayerProfile(
+      name: 'Ann',
+      languageCode: 'en',
+      petType: PetType.cat,
+      petFeedingPoints: 100,
+      petEnjoymentPoints: 100,
+      petFeedingUpdatedAt: selectedAt,
+      petEnjoymentUpdatedAt: selectedAt,
+    );
+
+    expect(
+      profile.nextPetCareBelow(threshold: 20, now: selectedAt),
+      selectedAt.add(const Duration(hours: 19, minutes: 12)),
+    );
   });
 
   test('feeding and toys keep separate decay timestamps', () {

@@ -14,17 +14,17 @@ class AppStrings {
   final String _languageCode;
 
   static const supportedLocales = [
-    Locale('en'),
-    Locale('sk'),
     Locale('cs'),
-    Locale('ru'),
     Locale('de'),
-    Locale('zh'),
+    Locale('en'),
     Locale('es'),
-    Locale('ko'),
-    Locale('tr'),
     Locale('fr'),
     Locale('ja'),
+    Locale('ko'),
+    Locale('ru'),
+    Locale('sk'),
+    Locale('tr'),
+    Locale('zh'),
   ];
 
   static const localizationsDelegates = [
@@ -91,6 +91,15 @@ class AppStrings {
       'shop': 'Shop',
       'customize': 'Customize buttons',
       'settings': 'Settings',
+      'notifications': 'Notifications',
+      'notificationsAllowed': 'Notifications are allowed',
+      'notificationsBlocked': 'Notifications are not allowed yet',
+      'enableNotifications': 'Enable notifications',
+      'notificationWindow': 'Reminder time',
+      'notificationFrom': 'From',
+      'notificationTo': 'To',
+      'petNotificationTitle': 'Your pet needs care',
+      'petNotificationBody': '{name}\'s pet needs food or fun.',
       'sound': 'Sound',
       'muteSound': 'Mute sound',
       'unmuteSound': 'Unmute sound',
@@ -102,7 +111,7 @@ class AppStrings {
       'newRecord': '🎆 New record!',
       'chooseStyle': 'Choose a style',
       'assignStyles': 'Tap a position to give it one of your styles.',
-      'coinsEarned': '+{coins} coins',
+      'coinsEarned': '+{coins}',
       'purchased': 'Unlocked {name}!',
       'pet': 'Pet',
       'choosePet': 'Choose your pet',
@@ -118,7 +127,7 @@ class AppStrings {
       'themeSystem': 'Device theme',
       'themeLight': 'Light mode',
       'themeDark': 'Dark mode',
-      'coinBalance': 'Balance: {coins} coins',
+      'coinBalance': 'Balance: {coins}',
       'cat': 'Cat',
       'dog': 'Dog',
       'panda': 'Panda',
@@ -193,6 +202,15 @@ class AppStrings {
       'shop': 'Obchod',
       'customize': 'Upraviť tlačidlá',
       'settings': 'Nastavenia',
+      'notifications': 'Upozornenia',
+      'notificationsAllowed': 'Upozornenia sú povolené',
+      'notificationsBlocked': 'Upozornenia zatiaľ nie sú povolené',
+      'enableNotifications': 'Povoliť upozornenia',
+      'notificationWindow': 'Čas pripomienok',
+      'notificationFrom': 'Od',
+      'notificationTo': 'Do',
+      'petNotificationTitle': 'Tvoje zvieratko potrebuje starostlivosť',
+      'petNotificationBody': 'Zvieratko hráča {name} potrebuje jedlo alebo zábavu.',
       'sound': 'Zvuk',
       'muteSound': 'Vypnúť zvuk',
       'unmuteSound': 'Zapnúť zvuk',
@@ -204,7 +222,7 @@ class AppStrings {
       'newRecord': '🎆 Nový rekord!',
       'chooseStyle': 'Vyber štýl',
       'assignStyles': 'Klikni na pozíciu a priraď jej jeden zo svojich štýlov.',
-      'coinsEarned': '+{coins} mincí',
+      'coinsEarned': '+{coins}',
       'purchased': 'Odomknuté: {name}!',
       'pet': 'Zvieratko',
       'choosePet': 'Vyber si zvieratko',
@@ -220,7 +238,7 @@ class AppStrings {
       'themeSystem': 'Podľa zariadenia',
       'themeLight': 'Svetlý režim',
       'themeDark': 'Tmavý režim',
-      'coinBalance': 'Zostatok: {coins} mincí',
+      'coinBalance': 'Zostatok: {coins}',
       'cat': 'Mačka',
       'dog': 'Pes',
       'panda': 'Panda',
@@ -295,6 +313,15 @@ class AppStrings {
       'shop': 'Obchod',
       'customize': 'Upravit tlačítka',
       'settings': 'Nastavení',
+      'notifications': 'Upozornění',
+      'notificationsAllowed': 'Upozornění jsou povolena',
+      'notificationsBlocked': 'Upozornění zatím nejsou povolena',
+      'enableNotifications': 'Povolit upozornění',
+      'notificationWindow': 'Čas připomínek',
+      'notificationFrom': 'Od',
+      'notificationTo': 'Do',
+      'petNotificationTitle': 'Tvůj mazlíček potřebuje péči',
+      'petNotificationBody': 'Mazlíček hráče {name} potřebuje jídlo nebo zábavu.',
       'sound': 'Zvuk',
       'muteSound': 'Vypnout zvuk',
       'unmuteSound': 'Zapnout zvuk',
@@ -306,7 +333,7 @@ class AppStrings {
       'newRecord': '🎆 Nový rekord!',
       'chooseStyle': 'Vyber styl',
       'assignStyles': 'Klikni na pozici a přiřaď jí jeden ze svých stylů.',
-      'coinsEarned': '+{coins} mincí',
+      'coinsEarned': '+{coins}',
       'purchased': 'Odemčeno: {name}!',
       'pet': 'Mazlíček',
       'choosePet': 'Vyber si mazlíčka',
@@ -322,7 +349,7 @@ class AppStrings {
       'themeSystem': 'Podle zařízení',
       'themeLight': 'Světlý režim',
       'themeDark': 'Tmavý režim',
-      'coinBalance': 'Zůstatek: {coins} mincí',
+      'coinBalance': 'Zůstatek: {coins}',
       'cat': 'Kočka',
       'dog': 'Pes',
       'panda': 'Panda',
@@ -397,6 +424,15 @@ class AppStrings {
       'shop': 'Магазин',
       'customize': 'Настроить кнопки',
       'settings': 'Настройки',
+      'notifications': 'Уведомления',
+      'notificationsAllowed': 'Уведомления разрешены',
+      'notificationsBlocked': 'Уведомления пока не разрешены',
+      'enableNotifications': 'Разрешить уведомления',
+      'notificationWindow': 'Время напоминаний',
+      'notificationFrom': 'С',
+      'notificationTo': 'До',
+      'petNotificationTitle': 'Питомцу нужен уход',
+      'petNotificationBody': 'Питомцу игрока {name} нужна еда или игра.',
       'sound': 'Звук',
       'muteSound': 'Выключить звук',
       'unmuteSound': 'Включить звук',
@@ -408,7 +444,7 @@ class AppStrings {
       'newRecord': '🎆 Новый рекорд!',
       'chooseStyle': 'Выбери стиль',
       'assignStyles': 'Нажми на позицию, чтобы задать ей один из своих стилей.',
-      'coinsEarned': '+{coins} монет',
+      'coinsEarned': '+{coins}',
       'purchased': 'Открыто: {name}!',
       'pet': 'Питомец',
       'choosePet': 'Выбери питомца',
@@ -424,7 +460,7 @@ class AppStrings {
       'themeSystem': 'Как на устройстве',
       'themeLight': 'Светлая тема',
       'themeDark': 'Тёмная тема',
-      'coinBalance': 'Баланс: {coins} монет',
+      'coinBalance': 'Баланс: {coins}',
       'cat': 'Кот',
       'dog': 'Собака',
       'panda': 'Панда',
@@ -500,6 +536,15 @@ class AppStrings {
       'shop': 'Shop',
       'customize': 'Tasten anpassen',
       'settings': 'Einstellungen',
+      'notifications': 'Benachrichtigungen',
+      'notificationsAllowed': 'Benachrichtigungen sind erlaubt',
+      'notificationsBlocked': 'Benachrichtigungen sind noch nicht erlaubt',
+      'enableNotifications': 'Benachrichtigungen erlauben',
+      'notificationWindow': 'Erinnerungszeit',
+      'notificationFrom': 'Von',
+      'notificationTo': 'Bis',
+      'petNotificationTitle': 'Dein Haustier braucht Pflege',
+      'petNotificationBody': '{name}s Haustier braucht Futter oder Spaß.',
       'sound': 'Ton',
       'muteSound': 'Ton stummschalten',
       'unmuteSound': 'Ton einschalten',
@@ -512,7 +557,7 @@ class AppStrings {
       'chooseStyle': 'Stil wählen',
       'assignStyles':
           'Tippe auf eine Position, um ihr einen deiner Stile zu geben.',
-      'coinsEarned': '+{coins} Münzen',
+      'coinsEarned': '+{coins}',
       'purchased': '{name} freigeschaltet!',
       'pet': 'Haustier',
       'choosePet': 'Wähle dein Haustier',
@@ -528,7 +573,7 @@ class AppStrings {
       'themeSystem': 'Gerätedesign',
       'themeLight': 'Hellmodus',
       'themeDark': 'Dunkelmodus',
-      'coinBalance': 'Guthaben: {coins} Münzen',
+      'coinBalance': 'Guthaben: {coins}',
       'cat': 'Katze',
       'dog': 'Hund',
       'panda': 'Panda',
@@ -601,6 +646,15 @@ class AppStrings {
       'shop': '商店',
       'customize': '自定义按钮',
       'settings': '设置',
+      'notifications': '通知',
+      'notificationsAllowed': '通知已允许',
+      'notificationsBlocked': '通知尚未允许',
+      'enableNotifications': '允许通知',
+      'notificationWindow': '提醒时间',
+      'notificationFrom': '从',
+      'notificationTo': '到',
+      'petNotificationTitle': '你的宠物需要照顾',
+      'petNotificationBody': '{name} 的宠物需要食物或玩耍。',
       'sound': '声音',
       'muteSound': '静音',
       'unmuteSound': '打开声音',
@@ -612,7 +666,7 @@ class AppStrings {
       'newRecord': '🎆 新纪录！',
       'chooseStyle': '选择样式',
       'assignStyles': '点击某个位置，为它指定你的一种样式。',
-      'coinsEarned': '+{coins} 金币',
+      'coinsEarned': '+{coins}',
       'purchased': '已解锁：{name}！',
       'pet': '宠物',
       'choosePet': '选择你的宠物',
@@ -628,7 +682,7 @@ class AppStrings {
       'themeSystem': '跟随设备',
       'themeLight': '浅色模式',
       'themeDark': '深色模式',
-      'coinBalance': '余额：{coins} 金币',
+      'coinBalance': '余额：{coins}',
       'cat': '猫',
       'dog': '狗',
       'panda': '熊猫',
@@ -696,6 +750,15 @@ class AppStrings {
       'shop': 'Tienda',
       'customize': 'Personalizar botones',
       'settings': 'Ajustes',
+      'notifications': 'Notificaciones',
+      'notificationsAllowed': 'Las notificaciones están permitidas',
+      'notificationsBlocked': 'Las notificaciones aún no están permitidas',
+      'enableNotifications': 'Permitir notificaciones',
+      'notificationWindow': 'Hora de recordatorio',
+      'notificationFrom': 'Desde',
+      'notificationTo': 'Hasta',
+      'petNotificationTitle': 'Tu mascota necesita cuidados',
+      'petNotificationBody': 'La mascota de {name} necesita comida o diversión.',
       'sound': 'Sonido',
       'muteSound': 'Silenciar sonido',
       'unmuteSound': 'Activar sonido',
@@ -707,7 +770,7 @@ class AppStrings {
       'newRecord': '🎆 ¡Nuevo récord!',
       'chooseStyle': 'Elige un estilo',
       'assignStyles': 'Toca una posición para asignarle uno de tus estilos.',
-      'coinsEarned': '+{coins} monedas',
+      'coinsEarned': '+{coins}',
       'purchased': '¡{name} desbloqueado!',
       'pet': 'Mascota',
       'choosePet': 'Elige tu mascota',
@@ -723,7 +786,7 @@ class AppStrings {
       'themeSystem': 'Tema del dispositivo',
       'themeLight': 'Modo claro',
       'themeDark': 'Modo oscuro',
-      'coinBalance': 'Saldo: {coins} monedas',
+      'coinBalance': 'Saldo: {coins}',
       'cat': 'Gato',
       'dog': 'Perro',
       'panda': 'Panda',
@@ -791,6 +854,15 @@ class AppStrings {
       'shop': '상점',
       'customize': '버튼 꾸미기',
       'settings': '설정',
+      'notifications': '알림',
+      'notificationsAllowed': '알림이 허용되어 있어요',
+      'notificationsBlocked': '아직 알림이 허용되지 않았어요',
+      'enableNotifications': '알림 허용',
+      'notificationWindow': '알림 시간',
+      'notificationFrom': '시작',
+      'notificationTo': '끝',
+      'petNotificationTitle': '펫에게 돌봄이 필요해요',
+      'petNotificationBody': '{name}의 펫에게 먹이나 놀이가 필요해요.',
       'sound': '소리',
       'muteSound': '소리 끄기',
       'unmuteSound': '소리 켜기',
@@ -802,7 +874,7 @@ class AppStrings {
       'newRecord': '🎆 새 기록!',
       'chooseStyle': '스타일 선택',
       'assignStyles': '위치를 눌러 가진 스타일 중 하나를 지정하세요.',
-      'coinsEarned': '+{coins} 코인',
+      'coinsEarned': '+{coins}',
       'purchased': '{name} 잠금 해제!',
       'pet': '반려동물',
       'choosePet': '반려동물 선택',
@@ -818,7 +890,7 @@ class AppStrings {
       'themeSystem': '기기 테마',
       'themeLight': '라이트 모드',
       'themeDark': '다크 모드',
-      'coinBalance': '잔액: {coins} 코인',
+      'coinBalance': '잔액: {coins}',
       'cat': '고양이',
       'dog': '강아지',
       'panda': '판다',
@@ -886,6 +958,15 @@ class AppStrings {
       'shop': 'Mağaza',
       'customize': 'Düğmeleri özelleştir',
       'settings': 'Ayarlar',
+      'notifications': 'Bildirimler',
+      'notificationsAllowed': 'Bildirimlere izin verildi',
+      'notificationsBlocked': 'Bildirimlere henüz izin verilmedi',
+      'enableNotifications': 'Bildirimlere izin ver',
+      'notificationWindow': 'Hatırlatma zamanı',
+      'notificationFrom': 'Başlangıç',
+      'notificationTo': 'Bitiş',
+      'petNotificationTitle': 'Evcil hayvanın bakım istiyor',
+      'petNotificationBody': '{name} adlı oyuncunun evcil hayvanı yemek veya eğlence istiyor.',
       'sound': 'Ses',
       'muteSound': 'Sesi kapat',
       'unmuteSound': 'Sesi aç',
@@ -897,7 +978,7 @@ class AppStrings {
       'newRecord': '🎆 Yeni rekor!',
       'chooseStyle': 'Bir stil seç',
       'assignStyles': 'Bir konuma dokunup sahip olduğun stillerden birini ver.',
-      'coinsEarned': '+{coins} jeton',
+      'coinsEarned': '+{coins}',
       'purchased': '{name} açıldı!',
       'pet': 'Evcil hayvan',
       'choosePet': 'Evcil hayvanını seç',
@@ -913,7 +994,7 @@ class AppStrings {
       'themeSystem': 'Cihaz teması',
       'themeLight': 'Açık mod',
       'themeDark': 'Koyu mod',
-      'coinBalance': 'Bakiye: {coins} jeton',
+      'coinBalance': 'Bakiye: {coins}',
       'cat': 'Kedi',
       'dog': 'Köpek',
       'panda': 'Panda',
@@ -981,6 +1062,15 @@ class AppStrings {
       'shop': 'Boutique',
       'customize': 'Personnaliser les boutons',
       'settings': 'Paramètres',
+      'notifications': 'Notifications',
+      'notificationsAllowed': 'Les notifications sont autorisées',
+      'notificationsBlocked': 'Les notifications ne sont pas encore autorisées',
+      'enableNotifications': 'Autoriser les notifications',
+      'notificationWindow': 'Heure du rappel',
+      'notificationFrom': 'De',
+      'notificationTo': 'À',
+      'petNotificationTitle': 'Ton animal a besoin de soins',
+      'petNotificationBody': 'L’animal de {name} a besoin de nourriture ou de jeu.',
       'sound': 'Son',
       'muteSound': 'Couper le son',
       'unmuteSound': 'Activer le son',
@@ -992,7 +1082,7 @@ class AppStrings {
       'newRecord': '🎆 Nouveau record !',
       'chooseStyle': 'Choisir un style',
       'assignStyles': 'Touche une position pour lui attribuer l’un de tes styles.',
-      'coinsEarned': '+{coins} pièces',
+      'coinsEarned': '+{coins}',
       'purchased': '{name} débloqué !',
       'pet': 'Animal',
       'choosePet': 'Choisis ton animal',
@@ -1008,7 +1098,7 @@ class AppStrings {
       'themeSystem': 'Thème de l’appareil',
       'themeLight': 'Mode clair',
       'themeDark': 'Mode sombre',
-      'coinBalance': 'Solde : {coins} pièces',
+      'coinBalance': 'Solde : {coins}',
       'cat': 'Chat',
       'dog': 'Chien',
       'panda': 'Panda',
@@ -1076,6 +1166,15 @@ class AppStrings {
       'shop': 'ショップ',
       'customize': 'ボタンをカスタマイズ',
       'settings': '設定',
+      'notifications': '通知',
+      'notificationsAllowed': '通知は許可されています',
+      'notificationsBlocked': '通知はまだ許可されていません',
+      'enableNotifications': '通知を許可',
+      'notificationWindow': 'リマインダー時間',
+      'notificationFrom': '開始',
+      'notificationTo': '終了',
+      'petNotificationTitle': 'ペットのお世話が必要です',
+      'petNotificationBody': '{name} のペットにごはんか遊びが必要です。',
       'sound': 'サウンド',
       'muteSound': '音を消す',
       'unmuteSound': '音を出す',
@@ -1087,7 +1186,7 @@ class AppStrings {
       'newRecord': '🎆 新記録！',
       'chooseStyle': 'スタイルを選ぶ',
       'assignStyles': '位置をタップして、持っているスタイルを割り当てます。',
-      'coinsEarned': '+{coins} コイン',
+      'coinsEarned': '+{coins}',
       'purchased': '{name} を解放しました！',
       'pet': 'ペット',
       'choosePet': 'ペットを選ぶ',
@@ -1103,7 +1202,7 @@ class AppStrings {
       'themeSystem': '端末のテーマ',
       'themeLight': 'ライトモード',
       'themeDark': 'ダークモード',
-      'coinBalance': '残高: {coins} コイン',
+      'coinBalance': '残高: {coins}',
       'cat': 'ネコ',
       'dog': 'イヌ',
       'panda': 'パンダ',
@@ -1162,6 +1261,14 @@ class AppStrings {
   String get shop => _text('shop');
   String get customize => _text('customize');
   String get settings => _text('settings');
+  String get notifications => _text('notifications');
+  String get notificationsAllowed => _text('notificationsAllowed');
+  String get notificationsBlocked => _text('notificationsBlocked');
+  String get enableNotifications => _text('enableNotifications');
+  String get notificationWindow => _text('notificationWindow');
+  String get notificationFrom => _text('notificationFrom');
+  String get notificationTo => _text('notificationTo');
+  String get petNotificationTitle => _text('petNotificationTitle');
   String get sound => _text('sound');
   String get muteSound => _text('muteSound');
   String get unmuteSound => _text('unmuteSound');
@@ -1197,11 +1304,49 @@ class AppStrings {
   String get themeLight => _text('themeLight');
   String get themeDark => _text('themeDark');
 
-  String coinsEarnedLabel(int coins) =>
-      _format('coinsEarned', {'coins': '$coins'});
+  String petNotificationBody(String name) =>
+      _format('petNotificationBody', {'name': name});
+
+  String coinCount(int coins) => '$coins ${coinWord(coins)}';
+
+  String coinWord(int coins) {
+    switch (_languageCode) {
+      case 'sk':
+        if (coins == 1) return 'minca';
+        if (_usesFewSlavicForm(coins)) return 'mince';
+        return 'mincí';
+      case 'cs':
+        if (coins == 1) return 'mince';
+        if (_usesFewSlavicForm(coins)) return 'mince';
+        return 'mincí';
+      case 'ru':
+        if (_usesRussianOneForm(coins)) return 'монета';
+        if (_usesRussianFewForm(coins)) return 'монеты';
+        return 'монет';
+      case 'de':
+        return coins == 1 ? 'Münze' : 'Münzen';
+      case 'es':
+        return coins == 1 ? 'moneda' : 'monedas';
+      case 'fr':
+        return coins == 1 ? 'pièce' : 'pièces';
+      case 'zh':
+        return '金币';
+      case 'ko':
+        return '코인';
+      case 'tr':
+        return 'jeton';
+      case 'ja':
+        return 'コイン';
+      case 'en':
+      default:
+        return coins == 1 ? 'coin' : 'coins';
+    }
+  }
+
+  String coinsEarnedLabel(int coins) => '+${coinCount(coins)}';
 
   String coinBalanceLabel(int coins) =>
-      _format('coinBalance', {'coins': '$coins'});
+      '${_coinBalancePrefix()}: ${coinCount(coins)}';
 
   String purchasedStyle(String name) =>
       _format('purchased', {'name': name});
@@ -1248,6 +1393,34 @@ class AppStrings {
       case 'en':
       default:
         return 'English';
+    }
+  }
+
+  static String languageIcon(String code) {
+    switch (code) {
+      case 'sk':
+        return '🇸🇰';
+      case 'cs':
+        return '🇨🇿';
+      case 'ru':
+        return '🇷🇺';
+      case 'de':
+        return '🇩🇪';
+      case 'zh':
+        return '中文';
+      case 'es':
+        return '🇪🇸';
+      case 'ko':
+        return '🇰🇷';
+      case 'tr':
+        return '🇹🇷';
+      case 'fr':
+        return '🇫🇷';
+      case 'ja':
+        return '🇯🇵';
+      case 'en':
+      default:
+        return '🇬🇧';
     }
   }
 
@@ -1306,6 +1479,53 @@ class AppStrings {
       text = text.replaceAll('{${entry.key}}', entry.value);
     }
     return text;
+  }
+
+  String _coinBalancePrefix() {
+    switch (_languageCode) {
+      case 'sk':
+        return 'Zostatok';
+      case 'cs':
+        return 'Zůstatek';
+      case 'ru':
+        return 'Баланс';
+      case 'de':
+        return 'Guthaben';
+      case 'zh':
+        return '余额';
+      case 'es':
+        return 'Saldo';
+      case 'ko':
+        return '잔액';
+      case 'tr':
+        return 'Bakiye';
+      case 'fr':
+        return 'Solde';
+      case 'ja':
+        return '残高';
+      case 'en':
+      default:
+        return 'Balance';
+    }
+  }
+
+  bool _usesFewSlavicForm(int value) {
+    final absolute = value.abs();
+    return absolute >= 2 && absolute <= 4;
+  }
+
+  bool _usesRussianOneForm(int value) {
+    final absolute = value.abs();
+    final mod10 = absolute % 10;
+    final mod100 = absolute % 100;
+    return mod10 == 1 && mod100 != 11;
+  }
+
+  bool _usesRussianFewForm(int value) {
+    final absolute = value.abs();
+    final mod10 = absolute % 10;
+    final mod100 = absolute % 100;
+    return mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14);
   }
 }
 

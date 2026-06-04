@@ -255,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   value: _HomeMenuAction.shop,
                   child: _MenuItem(
                     icon: Icons.storefront_rounded,
-                    label: '${strings.shop}  $_coins ${strings.coins}',
+                    label: '${strings.shop}  ${strings.coinCount(_coins)}',
                   ),
                 ),
                 if (_player?.hasPet ?? false)

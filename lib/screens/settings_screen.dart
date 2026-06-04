@@ -5,6 +5,7 @@ import '../main.dart';
 import '../models/pet.dart';
 import '../models/player_profile.dart';
 import '../services/audio_service.dart';
+import '../services/notification_service.dart';
 import '../services/player_service.dart';
 import '../services/theme_service.dart';
 import '../theme.dart';
@@ -24,6 +25,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _muted = false;
   double _volume = 1.0;
   ThemeMode _themeMode = ThemeMode.system;
+  NotificationWindow _notificationWindow = NotificationService.defaultWindow;
+  bool _notificationsAllowed = false;
   PlayerProfile? _player;
 
   @override
@@ -35,12 +38,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _loadSettings() async {
     final settings = await AudioService.loadSettings();
     final themeMode = await ThemeService.loadThemeMode();
+    final notificationWindow = await NotificationService().loadWindow();
+    final notificationsAllowed =
+        await NotificationService().notificationsAllowed();
     final player = await _playerService.loadCurrent();
     if (!mounted) return;
     setState(() {
       _muted = settings.muted;
       _volume = settings.volume;
       _themeMode = themeMode;
+      _notificationWindow = notificationWindow;
+      _notificationsAllowed = notificationsAllowed;
       _player = player;
       _loading = false;
     });
@@ -85,6 +93,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final updated = await _playerService.setPet(player.name, pet);
     if (!mounted || updated == null) return;
     setState(() => _player = updated);
+    await NotificationService().scheduleForPlayer(updated);
+  }
+
+  Future<void> _requestNotifications() async {
+    final allowed = await NotificationService().requestPermissions();
+    if (!mounted) return;
+    setState(() => _notificationsAllowed = allowed);
+  }
+
+  Future<void> _setNotificationStart(int hour) async {
+    final window = _notificationWindow.copyWith(startHour: hour);
+    setState(() => _notificationWindow = window);
+    await NotificationService().saveWindow(window);
+  }
+
+  Future<void> _setNotificationEnd(int hour) async {
+    final window = _notificationWindow.copyWith(endHour: hour);
+    setState(() => _notificationWindow = window);
+    await NotificationService().saveWindow(window);
   }
 
   @override
@@ -124,8 +151,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               for (final locale in AppStrings.supportedLocales)
                                 DropdownMenuItem<String>(
                                   value: locale.languageCode,
-                                  child: Text(
-                                    AppStrings.languageName(locale.languageCode),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 32,
+                                        child: Text(
+                                          AppStrings.languageIcon(
+                                            locale.languageCode,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        AppStrings.languageName(
+                                          locale.languageCode,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                             ],
@@ -144,6 +187,56 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     const SizedBox(height: 12),
                   ],
+                  _SettingsCard(
+                    icon: Icons.notifications_rounded,
+                    title: strings.notifications,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          _notificationsAllowed
+                              ? strings.notificationsAllowed
+                              : strings.notificationsBlocked,
+                        ),
+                        const SizedBox(height: 12),
+                        if (!_notificationsAllowed)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: OutlinedButton.icon(
+                              onPressed: _requestNotifications,
+                              icon: const Icon(Icons.notifications_active),
+                              label: Text(strings.enableNotifications),
+                            ),
+                          ),
+                        const SizedBox(height: 12),
+                        Text(
+                          strings.notificationWindow,
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _HourDropdown(
+                                label: strings.notificationFrom,
+                                value: _notificationWindow.startHour,
+                                onChanged: _setNotificationStart,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _HourDropdown(
+                                label: strings.notificationTo,
+                                value: _notificationWindow.endHour,
+                                onChanged: _setNotificationEnd,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
                   _SettingsCard(
                     icon: Icons.brightness_6_rounded,
                     title: strings.theme,
@@ -255,6 +348,45 @@ class _ThemeModeTile extends StatelessWidget {
           ? Icon(Icons.check_circle_rounded, color: colorScheme.primary)
           : const Icon(Icons.circle_outlined),
       onTap: onTap,
+    );
+  }
+}
+
+class _HourDropdown extends StatelessWidget {
+  const _HourDropdown({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final String label;
+  final int value;
+  final ValueChanged<int> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return InputDecorator(
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(),
+        labelText: label,
+        isDense: true,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<int>(
+          isExpanded: true,
+          value: value,
+          onChanged: (hour) {
+            if (hour != null) onChanged(hour);
+          },
+          items: [
+            for (var hour = 0; hour < 24; hour++)
+              DropdownMenuItem<int>(
+                value: hour,
+                child: Text('${hour.toString().padLeft(2, '0')}:00'),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }
