@@ -34,11 +34,13 @@ class NotificationService {
 
   static final NotificationService _instance = NotificationService._();
   static const int _petCareNotificationId = 2101;
+  static const int _petCareLastChanceNotificationId = 2102;
   static const int _petCareThreshold = 19;
   static const String _startHourKey = 'pet_notification_start_hour_v1';
   static const String _endHourKey = 'pet_notification_end_hour_v1';
   static const String _permissionGrantedKey =
       'pet_notification_permission_granted_v1';
+  static const Duration _lastChanceOffset = Duration(minutes: 5);
   static const Duration _pluginTimeout = Duration(seconds: 2);
   static const NotificationWindow defaultWindow = NotificationWindow(
     startHour: 16,
@@ -173,23 +175,50 @@ class NotificationService {
     );
     if (thresholdAt == null) return;
 
-    final triggerAt = _nextTimeInWindow(
+    final firstTriggerAt = _nextTimeInWindow(
       thresholdAt.isAfter(now)
           ? thresholdAt
           : now.add(const Duration(minutes: 1)),
       window,
     );
-    final strings = AppStrings(Locale(currentPlayer.languageCode));
-    final triggerCare = currentPlayer.petCare(now: triggerAt);
+
+    await _schedulePetCareNotification(
+      id: _petCareNotificationId,
+      player: currentPlayer,
+      triggerAt: firstTriggerAt,
+    );
+
+    final lastChanceAt = _nextLastChanceInWindow(
+      now.add(const Duration(minutes: 1)),
+      window,
+    );
+    if (lastChanceAt == null || _isSameMinute(firstTriggerAt, lastChanceAt)) {
+      return;
+    }
+
+    await _schedulePetCareNotification(
+      id: _petCareLastChanceNotificationId,
+      player: currentPlayer,
+      triggerAt: lastChanceAt,
+    );
+  }
+
+  Future<void> _schedulePetCareNotification({
+    required int id,
+    required PlayerProfile player,
+    required DateTime triggerAt,
+  }) async {
+    final strings = AppStrings(Locale(player.languageCode));
+    final triggerCare = player.petCare(now: triggerAt);
     final mood = triggerCare.mood;
     if (mood == PetMood.happy) return;
     final scheduled = tz.TZDateTime.from(triggerAt, tz.local);
 
     try {
       await _plugin.zonedSchedule(
-        _petCareNotificationId,
+        id,
         strings.petNotificationTitle,
-        strings.petNotificationBody(mood, currentPlayer.name),
+        strings.petNotificationBody(mood, player.name),
         scheduled,
         const NotificationDetails(
           android: AndroidNotificationDetails(
@@ -211,6 +240,7 @@ class NotificationService {
   Future<void> cancelPetCareReminder() async {
     try {
       await _plugin.cancel(_petCareNotificationId);
+      await _plugin.cancel(_petCareLastChanceNotificationId);
     } on MissingPluginException {
       // Ignore in widget tests and unsupported platforms.
     }
@@ -237,6 +267,33 @@ class NotificationService {
     }
     return next;
   }
+
+  DateTime? _nextLastChanceInWindow(
+    DateTime after,
+    NotificationWindow window,
+  ) {
+    final start = window.startHour.clamp(0, 23);
+    final end = window.endHour.clamp(0, 23);
+    if (start == end) return null;
+
+    final today = DateTime(after.year, after.month, after.day);
+    for (var i = 0; i < 4; i++) {
+      final day = today.add(Duration(days: i));
+      final endBoundary = DateTime(day.year, day.month, day.day, end);
+      final lastChance = endBoundary.subtract(_lastChanceOffset);
+      if (!lastChance.isBefore(after) && _isInWindow(lastChance, start, end)) {
+        return lastChance;
+      }
+    }
+    return null;
+  }
+
+  bool _isSameMinute(DateTime first, DateTime second) =>
+      first.year == second.year &&
+      first.month == second.month &&
+      first.day == second.day &&
+      first.hour == second.hour &&
+      first.minute == second.minute;
 
   bool _isInWindow(DateTime value, int start, int end) {
     if (start == end) return true;
