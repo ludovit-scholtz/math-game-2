@@ -84,6 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final updated = await _playerService.setLanguage(player.name, code);
     if (!mounted || updated == null) return;
     setState(() => _player = updated);
+    await NotificationService().scheduleForCurrentPlayer();
     context.findAncestorStateOfType<MathGameAppState>()?.setLocale(Locale(code));
   }
 

@@ -53,6 +53,7 @@ class _PlayerSelectScreenState extends State<PlayerSelectScreen> {
 
   Future<void> _select(PlayerProfile profile) async {
     await _service.selectOrCreate(profile);
+    await NotificationService().scheduleForCurrentPlayer();
     if (!mounted) return;
     MathGameApp.of(context).setLocale(Locale(profile.languageCode));
     Navigator.of(context).pop(profile);
@@ -64,7 +65,6 @@ class _PlayerSelectScreenState extends State<PlayerSelectScreen> {
     final profile =
         PlayerProfile(name: name, languageCode: _newLanguage).withPet(_newPet);
     await NotificationService().requestPermissionsIfNeeded();
-    await NotificationService().scheduleForPlayer(profile);
     await _select(profile);
   }
 

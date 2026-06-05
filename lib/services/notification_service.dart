@@ -10,6 +10,7 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 import '../l10n/app_strings.dart';
+import '../models/pet.dart';
 import '../models/player_profile.dart';
 import 'player_service.dart';
 
@@ -33,7 +34,7 @@ class NotificationService {
 
   static final NotificationService _instance = NotificationService._();
   static const int _petCareNotificationId = 2101;
-  static const int _petCareThreshold = 20;
+  static const int _petCareThreshold = 19;
   static const String _startHourKey = 'pet_notification_start_hour_v1';
   static const String _endHourKey = 'pet_notification_end_hour_v1';
   static const String _permissionGrantedKey =
@@ -156,30 +157,39 @@ class NotificationService {
   Future<void> scheduleForPlayer(PlayerProfile player) async {
     await initialize();
     await cancelPetCareReminder();
-    if (!player.hasPet || !await notificationsAllowed()) return;
+    final currentPlayer = await _playerService.loadCurrent();
+    if (currentPlayer == null ||
+        currentPlayer.name != player.name ||
+        !currentPlayer.hasPet ||
+        !await notificationsAllowed()) {
+      return;
+    }
 
     final window = await loadWindow();
     final now = DateTime.now();
-    final thresholdAt = player.nextPetCareBelow(
+    final thresholdAt = currentPlayer.nextPetCareBelow(
       threshold: _petCareThreshold,
       now: now,
     );
     if (thresholdAt == null) return;
 
     final triggerAt = _nextTimeInWindow(
-      thresholdAt.isBefore(now)
-          ? now.add(const Duration(minutes: 1))
-          : thresholdAt,
+      thresholdAt.isAfter(now)
+          ? thresholdAt
+          : now.add(const Duration(minutes: 1)),
       window,
     );
-    final strings = AppStrings(Locale(player.languageCode));
+    final strings = AppStrings(Locale(currentPlayer.languageCode));
+    final triggerCare = currentPlayer.petCare(now: triggerAt);
+    final mood = triggerCare.mood;
+    if (mood == PetMood.happy) return;
     final scheduled = tz.TZDateTime.from(triggerAt, tz.local);
 
     try {
       await _plugin.zonedSchedule(
         _petCareNotificationId,
         strings.petNotificationTitle,
-        strings.petNotificationBody(player.name),
+        strings.petNotificationBody(mood, currentPlayer.name),
         scheduled,
         const NotificationDetails(
           android: AndroidNotificationDetails(
