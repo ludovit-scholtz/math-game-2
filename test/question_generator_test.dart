@@ -49,6 +49,7 @@ void main() {
         expect(q.operandA, inInclusiveRange(1, 100));
         expect(q.operandB, inInclusiveRange(1, 10));
         expect(q.correctAnswer, inInclusiveRange(1, 10));
+      }
     });
 
     test('each operation computes the correct answer', () {
