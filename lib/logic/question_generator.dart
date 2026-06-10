@@ -19,6 +19,9 @@ class QuestionGenerator {
   /// The largest value any operand or answer may take.
   static const int maxValue = 100;
 
+  /// Division questions are limited to basic facts up to 10.
+  static const int maxDivisionValue = 10;
+
   Question generate(Set<OperationType> allowed) {
     assert(allowed.isNotEmpty, 'At least one operation must be selected');
     final types = allowed.toList();
@@ -46,8 +49,8 @@ class QuestionGenerator {
         answer = a * b;
         break;
       case OperationType.division:
-        b = _rng.nextInt(10) + 1; // divisor 1..10
-        answer = _rng.nextInt(10) + 1; // quotient 1..10
+        b = _rng.nextInt(maxDivisionValue - 1) + 1; // divisor 1..10
+        answer = _rng.nextInt(maxDivisionValue) + 1; // quotient 1..10
         a = b * answer; // dividend stays <= 100 and divides evenly
         break;
     }

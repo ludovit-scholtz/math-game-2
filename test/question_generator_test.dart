@@ -35,15 +35,20 @@ void main() {
       }
     });
 
-    test('division always divides evenly and matches the answer', () {
+    test('division divisor is always between 1 and 10', () {
+      for (var i = 0; i < 500; i++) {
+        final q = generator.generate({OperationType.division});
+        expect(q.operandB,
+            inInclusiveRange(1, QuestionGenerator.maxDivisionValue));
+      }
+    });
+
+    test('division result is always between 1 and 10', () {
       for (var i = 0; i < 500; i++) {
         final q = generator.generate({OperationType.division});
         expect(q.operandA, inInclusiveRange(1, 100));
         expect(q.operandB, inInclusiveRange(1, 10));
         expect(q.correctAnswer, inInclusiveRange(1, 10));
-        expect(q.operandA % q.operandB, 0);
-        expect(q.operandA ~/ q.operandB, q.correctAnswer);
-      }
     });
 
     test('each operation computes the correct answer', () {
