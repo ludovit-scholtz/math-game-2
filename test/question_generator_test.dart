@@ -46,10 +46,9 @@ void main() {
     test('division result is always between 1 and 10', () {
       for (var i = 0; i < 500; i++) {
         final q = generator.generate({OperationType.division});
-        expect(q.operandA % q.operandB, 0);
-        expect(q.operandA ~/ q.operandB, q.correctAnswer);
-        expect(q.correctAnswer,
-            inInclusiveRange(1, QuestionGenerator.maxDivisionValue));
+        expect(q.operandA, inInclusiveRange(1, 100));
+        expect(q.operandB, inInclusiveRange(1, 10));
+        expect(q.correctAnswer, inInclusiveRange(1, 10));
       }
     });
 

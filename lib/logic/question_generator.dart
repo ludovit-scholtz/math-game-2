@@ -4,9 +4,10 @@ import '../models/operation_type.dart';
 import '../models/question.dart';
 
 /// Generates math questions whose operands and answers stay within 0..100 and,
-/// for division, always divide evenly. Each question comes with six answer
-/// cards: the correct answer plus five distractors modelled on the mistakes
-/// children commonly make for that operation.
+/// for division, always divide evenly with both quotient and divisor in 1..10.
+/// Each question comes with six answer cards: the correct answer plus five
+/// distractors modelled on the mistakes children commonly make for that
+/// operation.
 class QuestionGenerator {
   QuestionGenerator({Random? random}) : _rng = random ?? Random();
 

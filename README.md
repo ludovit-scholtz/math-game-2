@@ -65,7 +65,8 @@ so you get another chance to master them.
 
 ### Designed to be educative
 
-- Division questions always divide evenly (e.g. `99 ÷ 3`, never `98 ÷ 3`).
+- Division questions always divide evenly with both numbers in `1..10`
+  (e.g. `9 ÷ 3`, never `66 ÷ 3` or `66 ÷ 11`).
 - The five wrong answer cards are modelled on **common mistakes** for each
   operation (off-by-one, place-value slips, adding instead of multiplying, …),
   which helps children recognise and correct their own errors.
