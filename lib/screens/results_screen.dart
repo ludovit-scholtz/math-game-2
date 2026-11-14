@@ -108,13 +108,15 @@ class _ResultsScreenState extends State<ResultsScreen> {
       _newRecord = entry.score > 0 && entry.score > previousTop;
       entry = entry.copyWith(coinsEarned: _coinsEarned);
 
+      // History first: it feeds the coin baseline of later games, so it must
+      // never be missing for a game whose reward was already paid.
+      history = await _service.addScore(entry);
       final wallet = await _coinService.addReward(
         config.playerName,
         coins: _coinsEarned,
         gems: _gemsEarned,
       );
       _coinBalance = wallet.coins;
-      history = await _service.addScore(entry);
     } else {
       history = await _service.load();
     }

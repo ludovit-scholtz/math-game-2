@@ -35,10 +35,23 @@ class ParentalGateLockout {
 
   static DateTime? until;
 
-  static void lock([DateTime? now]) =>
-      until = (now ?? DateTime.now()).add(duration);
+  /// Wrong answers since the last correct one. Counted across openings of the
+  /// dialog, so closing and reopening it does not reset the limit.
+  static int failures = 0;
 
-  static void reset() => until = null;
+  /// Records a wrong answer; returns true when this one locked the gate.
+  static bool recordFailure([DateTime? now]) {
+    failures++;
+    if (failures < maxAttempts) return false;
+    failures = 0;
+    until = (now ?? DateTime.now()).add(duration);
+    return true;
+  }
+
+  static void reset() {
+    until = null;
+    failures = 0;
+  }
 }
 
 class ParentalGateDialog extends StatefulWidget {
@@ -55,7 +68,6 @@ class _ParentalGateDialogState extends State<ParentalGateDialog> {
   final TextEditingController _controller = TextEditingController();
   late ParentalChallenge _challenge;
   bool _wrong = false;
-  int _wrongInARow = 0;
 
   @override
   void initState() {
@@ -71,12 +83,11 @@ class _ParentalGateDialogState extends State<ParentalGateDialog> {
 
   void _submit() {
     if (_challenge.check(_controller.text)) {
+      ParentalGateLockout.failures = 0;
       Navigator.of(context).pop(true);
       return;
     }
-    _wrongInARow++;
-    if (_wrongInARow >= ParentalGateLockout.maxAttempts) {
-      ParentalGateLockout.lock();
+    if (ParentalGateLockout.recordFailure()) {
       Navigator.of(context).pop(false);
       return;
     }

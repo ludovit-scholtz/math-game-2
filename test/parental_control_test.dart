@@ -383,6 +383,17 @@ void main() {
       expect(find.text('Grown-ups only'), findsOneWidget);
     });
 
+    test('the attempt limit counts across openings of the gate', () {
+      ParentalGateLockout.reset();
+      addTearDown(ParentalGateLockout.reset);
+      for (var i = 0; i < ParentalGateLockout.maxAttempts - 1; i++) {
+        expect(ParentalGateLockout.recordFailure(), isFalse);
+      }
+      expect(ParentalGateLockout.recordFailure(), isTrue);
+      expect(ParentalGateLockout.until, isNotNull);
+      expect(ParentalGateLockout.failures, 0);
+    });
+
     testWidgets('cancel keeps the panel closed', (tester) async {
       await tester.pumpWidget(_app(const HomeScreen()));
       await tester.pumpAndSettle();
