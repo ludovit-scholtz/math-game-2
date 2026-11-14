@@ -146,11 +146,16 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
     if (selected != null && mounted) {
-      setState(() => _player = selected);
+      // Show the player together with their restrictions, so a game can never
+      // start with the previous player's settings.
+      final settings = await _parentalService.load(selected.name);
+      if (!mounted) return selected;
+      setState(() {
+        _player = selected;
+        _applySettings(settings);
+      });
       _loadCoins(selected.name);
       MathGameApp.of(context).setLocale(Locale(selected.languageCode));
-      // Wait for this player's restrictions before a game can be started.
-      await _loadSettings(selected.name);
     }
     return selected;
   }

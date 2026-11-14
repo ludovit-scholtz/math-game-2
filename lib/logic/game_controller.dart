@@ -58,7 +58,8 @@ class GameController {
   double _score = 0;
   int _answered = 0;
   int _correct = 0;
-  int _streak = 0;
+  int _streak = 0; // towards the next gem, resets when a gem is earned
+  int _run = 0; // correct answers in a row, resets only on a wrong answer
   int _bestStreak = 0;
   int _gems = 0;
   double _totalSeconds = 0;
@@ -67,8 +68,10 @@ class GameController {
   int get answeredCount => _answered;
   int get correctCount => _correct;
 
-  /// Correct answers in a row right now (towards the next gem).
+  /// Correct answers in a row towards the next gem (back to 0 after a gem).
   int get streak => _streak;
+
+  /// The longest run of correct answers in a row during this game.
   int get bestStreak => _bestStreak;
   int get gemsEarned => _gems;
 
@@ -113,7 +116,8 @@ class GameController {
       points = Scoring.pointsForCorrect(seconds);
       // A slow answer is still a correct one, so it keeps the streak alive.
       _streak++;
-      if (_streak > _bestStreak) _bestStreak = _streak;
+      _run++;
+      if (_run > _bestStreak) _bestStreak = _run;
       if (_streak >= Gems.streakLength) {
         _gems++;
         _streak = 0;
@@ -122,6 +126,7 @@ class GameController {
     } else {
       points = Scoring.wrongPenalty;
       _streak = 0;
+      _run = 0;
       _scheduleReask(question);
       _rememberMiss(question.prompt);
     }

@@ -272,6 +272,36 @@ void main() {
       }
     }
 
+    test('"always cross" subtraction within 10 is exact', () {
+      final gen = QuestionGenerator(random: Random(8));
+      final settings = PracticeSettings(
+        range: NumberRange.within10,
+        crossing: CrossingMode.only,
+      );
+      for (var i = 0; i < 300; i++) {
+        final q = gen.generate({OperationType.subtraction}, settings: settings);
+        expect(QuestionGenerator.crosses(q.type, q.operandA, q.operandB),
+            isTrue,
+            reason: q.prompt);
+      }
+    });
+
+    test('operations and drills each get about half of the questions', () {
+      final gen = QuestionGenerator(random: Random(21));
+      var drills = 0;
+      for (var i = 0; i < 2000; i++) {
+        final q = gen.generate(
+          {OperationType.multiplication},
+          drills: Drill.values.toSet(),
+        );
+        if (q.type != OperationType.multiplication ||
+            q.unknown != UnknownPart.result) {
+          drills++;
+        }
+      }
+      expect(drills, inInclusiveRange(850, 1150));
+    });
+
     test('an impossible rule falls back to valid questions', () {
       final gen = QuestionGenerator(random: Random(1));
       // Normalisation forbids this, but the generator must not hang or crash.
@@ -330,6 +360,7 @@ void main() {
           expect(q.type, OperationType.division);
           expect(q.operandB, 2);
           expect(q.operandA.isEven, isTrue);
+          expect(q.correctAnswer, inInclusiveRange(1, 10));
         }
         _expectValidCards(q);
       }

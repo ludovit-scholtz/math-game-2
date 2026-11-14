@@ -44,29 +44,34 @@ class QuestionGenerator {
       'At least one operation or drill must be selected',
     );
     final config = settings ?? PracticeSettings.defaults();
-    final pools = <Object>[...operations, ...drills];
-    final pick = pools[_rng.nextInt(pools.length)];
-    if (pick is Drill) return _drill(pick, config);
-    return _standard(pick as OperationType, config);
+    // Operations and drills each get half of the questions when both are
+    // chosen, so a few drills cannot drown out the selected operations.
+    final useDrill =
+        operations.isEmpty || (drills.isNotEmpty && _rng.nextBool());
+    if (useDrill) {
+      final list = drills.toList();
+      return _drill(list[_rng.nextInt(list.length)], config);
+    }
+    final list = operations.toList();
+    return _standard(list[_rng.nextInt(list.length)], config);
   }
 
   /// Whether `a ∘ b` carries (addition) or borrows (subtraction) in one of the
   /// lowest [columns] digit columns, e.g. `15 + 16` or `32 − 13`.
   static bool crosses(OperationType type, int a, int b, {int columns = 1}) {
+    if (type != OperationType.addition && type != OperationType.subtraction) {
+      return false;
+    }
     var x = a;
     var y = b;
-    var carry = 0;
+    // The first column that carries or borrows decides, so no carry has to be
+    // propagated into the next column.
     for (var i = 0; i < columns; i++) {
       final da = x % 10;
       final db = y % 10;
-      if (type == OperationType.addition) {
-        carry = da + db + carry >= 10 ? 1 : 0;
-      } else if (type == OperationType.subtraction) {
-        carry = da - db - carry < 0 ? 1 : 0;
-      } else {
-        return false;
+      if (type == OperationType.addition ? da + db >= 10 : da < db) {
+        return true;
       }
-      if (carry == 1) return true;
       x ~/= 10;
       y ~/= 10;
     }
@@ -119,10 +124,35 @@ class QuestionGenerator {
           ? _rng.nextInt(max - a + 1) // keeps a + b <= max
           : _rng.nextInt(a + 1); // 0..a, so the result is never negative
       if (s.crossing == CrossingMode.mixed) break;
-      final crossing = crosses(type, a, b, columns: columns);
-      if (crossing == (s.crossing == CrossingMode.only)) break;
+      if (_matchesCrossing(type, a, b, s, columns)) return (a, b);
+    }
+    // Rare for large ranges, but narrow ones (e.g. "always cross" in
+    // subtraction within 10) can miss: pick from every valid pair instead.
+    if (max <= 100) {
+      final valid = <(int, int)>[
+        for (var x = 0; x <= max; x++)
+          for (
+            var y = 0;
+            y <= (type == OperationType.addition ? max - x : x);
+            y++
+          )
+            if (_matchesCrossing(type, x, y, s, columns)) (x, y),
+      ];
+      if (valid.isNotEmpty) return valid[_rng.nextInt(valid.length)];
     }
     return (a, b);
+  }
+
+  static bool _matchesCrossing(
+    OperationType type,
+    int a,
+    int b,
+    PracticeSettings s,
+    int columns,
+  ) {
+    if (s.crossing == CrossingMode.mixed) return true;
+    final crossing = crosses(type, a, b, columns: columns);
+    return crossing == (s.crossing == CrossingMode.only);
   }
 
   // ---------------------------------------------------------------------------
@@ -141,11 +171,12 @@ class QuestionGenerator {
         final a = delta + _rng.nextInt(max - delta + 1);
         return _build(OperationType.subtraction, a, delta, max);
       case Drill.doubles:
-        final cap = min(max ~/ 2, 50);
-        final x = 1 + _rng.nextInt(cap);
         if (_rng.nextBool()) {
-          return _build(OperationType.division, 2 * x, 2, max); // halves
+          // Halves obey the division rule: the quotient stays in 1..10.
+          final half = 1 + _rng.nextInt(min(max ~/ 2, maxDivisionValue));
+          return _build(OperationType.division, 2 * half, 2, max);
         }
+        final x = 1 + _rng.nextInt(min(max ~/ 2, 50));
         return _build(OperationType.addition, x, x, max);
       case Drill.nearDoubles:
         final cap = min((max - 1) ~/ 2, 50);
@@ -192,8 +223,9 @@ class QuestionGenerator {
             ? OperationType.addition
             : OperationType.subtraction;
         final pair = _addSubPair(type, s);
-        final hidden =
-            _rng.nextBool() ? UnknownPart.operandA : UnknownPart.operandB;
+        final hidden = _rng.nextBool()
+            ? UnknownPart.operandA
+            : UnknownPart.operandB;
         return _build(type, pair.$1, pair.$2, max, unknown: hidden);
     }
   }
@@ -255,10 +287,11 @@ class QuestionGenerator {
     required bool large,
   }) {
     final options = <int>{answer};
-    final candidates = (unknown == UnknownPart.result
-        ? _mistakeCandidates(type, a, b, answer, large)
-        : _missingCandidates(a, b, answer, large))
-      ..shuffle(_rng);
+    final candidates =
+        (unknown == UnknownPart.result
+              ? _mistakeCandidates(type, a, b, answer, large)
+              : _missingCandidates(a, b, answer, large))
+          ..shuffle(_rng);
 
     for (final candidate in candidates) {
       if (options.length >= optionCount) break;

@@ -57,6 +57,20 @@ void main() {
       expect(c.bestStreak, 5);
     });
 
+    test('best streak is the longest run, not capped by the gem streak', () {
+      final c = _controller();
+      for (var i = 0; i < 12; i++) {
+        _answer(c, correct: true);
+      }
+      expect(c.streak, 2);
+      expect(c.bestStreak, 12);
+      _answer(c, correct: false);
+      for (var i = 0; i < 3; i++) {
+        _answer(c, correct: true);
+      }
+      expect(c.bestStreak, 12);
+    });
+
     test('a wrong answer resets the counter', () {
       final c = _controller();
       for (var i = 0; i < 4; i++) {
