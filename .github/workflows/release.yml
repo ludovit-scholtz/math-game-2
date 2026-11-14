@@ -38,7 +38,6 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          fetch-depth: 0
           fetch-tags: true
 
       - name: Resolve release version from git tag
@@ -434,7 +433,9 @@ jobs:
   build-windows:
     name: Build Windows
     runs-on: windows-latest
-    needs: resolve-version
+    # Wait for the Play upload: the GitHub Release must not get a Windows zip
+    # for a version whose Android build failed to publish.
+    needs: [resolve-version, build-signed-aab]
     # Publishing the zip to the GitHub Release needs write access to contents.
     permissions:
       contents: write

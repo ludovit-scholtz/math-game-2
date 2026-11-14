@@ -160,7 +160,7 @@ attaches `math-master-windows-x64-1.0.15.zip` to the GitHub Release of the tag
 (manual runs only store it as a workflow artifact).
 
 You can also start the workflow manually from **GitHub > Actions > Release
-(Google Play Internal Testing) > Run workflow**. Manual runs use the newest
+(Google Play Internal Testing + Windows) > Run workflow**. Manual runs use the newest
 `vX.Y.Z` tag in the repository.
 
 ---

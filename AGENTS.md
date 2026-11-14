@@ -183,7 +183,10 @@ languages, and `docs/description/*.md` if the store text mentions it.
 - Line endings are LF (enforced by `.gitattributes`); don't commit CRLF churn.
 - Releases: push a `vX.Y.Z` tag → `release.yml` builds a signed AAB and uploads
   it to Google Play internal testing, and builds a Windows zip attached to the
-  GitHub Release (see `docs/GOOGLE_PLAY_RELEASE.md`). The
-  version in `pubspec.yaml` is overwritten from the tag.
+  GitHub Release once the Play upload succeeded (see
+  `docs/GOOGLE_PLAY_RELEASE.md`). In CI the version *name* in `pubspec.yaml` is
+  overwritten from the tag and the build number (Play version code) from the
+  workflow run (`10000000 + run number * 10 + attempt - 1`), so don't predict it
+  from the tag. Only the newest plain `vX.Y.Z` tag can be released.
 - Never commit signing material (`*.jks`, `key.properties`) or secrets.
 - Use `/ship` for the branch → PR → review → fix → merge loop.
