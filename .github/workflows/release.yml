@@ -54,16 +54,18 @@ jobs:
             exit 1
           fi
 
-          MAJOR="${BASH_REMATCH[1]}"
-          MINOR="${BASH_REMATCH[2]}"
-          PATCH="${BASH_REMATCH[3]}"
-          # Google Play accepts every version code only once. A manual run (or a
-          # re-run) uses the same tag, so the code also carries the run number:
-          # SEMVER_CODE * 1000 + (run number % 1000). It still grows with every
-          # new version, stays below Google Play's limit of 2100000000 for
-          # versions up to 99.99.99, and is unique for every run.
-          SEMVER_CODE=$((10#$MAJOR * 10000 + 10#$MINOR * 100 + 10#$PATCH))
-          VERSION_CODE=$((SEMVER_CODE * 1000 + GITHUB_RUN_NUMBER % 1000))
+          # Google Play accepts every version code only once, and a higher code
+          # is what makes testers see an update. A manual run uses the latest
+          # tag and a re-run keeps its run number, so the code comes from the
+          # run, not from the tag: it grows with every run (run number * 10) and
+          # with every re-run of a run (attempt). The version *name* carries the
+          # semantic version. Codes start at 10000000, above anything uploaded
+          # before, and stay under Google Play's limit of 2100000000.
+          if [ "${GITHUB_RUN_ATTEMPT}" -gt 10 ]; then
+            echo "::error::More than 10 attempts of one run cannot get a unique version code. Start a new run."
+            exit 1
+          fi
+          VERSION_CODE=$((10000000 + GITHUB_RUN_NUMBER * 10 + GITHUB_RUN_ATTEMPT - 1))
 
           echo "Using release tag $TAG_NAME"
           echo "VERSION_NAME=$VERSION_NAME" >> "$GITHUB_ENV"
@@ -415,9 +417,10 @@ jobs:
             exit 1
           fi
 
-          # The Windows file version only allows 16-bit parts, so this build
-          # number keeps the plain semver code (no run number).
-          VERSION_CODE=$((10#${BASH_REMATCH[1]} * 10000 + 10#${BASH_REMATCH[2]} * 100 + 10#${BASH_REMATCH[3]}))
+          # The Windows file version (major.minor.patch.build) only allows
+          # 16-bit parts (0-65535), so the build number is the run number
+          # wrapped into that range.
+          VERSION_CODE=$((GITHUB_RUN_NUMBER % 65535))
 
           echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
           echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
