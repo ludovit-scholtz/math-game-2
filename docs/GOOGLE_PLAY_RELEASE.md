@@ -137,11 +137,20 @@ git push origin v1.0.15
 The workflow derives:
 
 - version name: `1.0.15`
-- version code: `10015`
+- version code: `10015000 + (run number % 1000)`, e.g. `10015027`
+
+Google Play accepts a version code only once, so the code is
+`(MAJOR*10000 + MINOR*100 + PATCH) * 1000 + (workflow run number % 1000)`. It
+grows with every new version and is unique for every run, which also makes
+manual runs and re-runs of the same tag work. (MINOR and PATCH must be < 100.)
 
 When the workflow succeeds, the release is uploaded to **Internal testing** in
 the Google Play Console. The workflow also stores the signed `.aab` as a GitHub
 Actions artifact named like `math-masters-1.0.15-signed-aab`.
+
+The same workflow builds the **Windows** app (`flutter build windows`) and
+attaches `math-master-windows-x64-1.0.15.zip` to the GitHub Release of the tag
+(manual runs only store it as a workflow artifact).
 
 You can also start the workflow manually from **GitHub > Actions > Release
 (Google Play Internal Testing) > Run workflow**. Manual runs use the latest git

@@ -57,7 +57,13 @@ jobs:
           MAJOR="${BASH_REMATCH[1]}"
           MINOR="${BASH_REMATCH[2]}"
           PATCH="${BASH_REMATCH[3]}"
-          VERSION_CODE=$((10#$MAJOR * 10000 + 10#$MINOR * 100 + 10#$PATCH))
+          # Google Play accepts every version code only once. A manual run (or a
+          # re-run) uses the same tag, so the code also carries the run number:
+          # SEMVER_CODE * 1000 + (run number % 1000). It still grows with every
+          # new version, stays below Google Play's limit of 2100000000 for
+          # versions up to 99.99.99, and is unique for every run.
+          SEMVER_CODE=$((10#$MAJOR * 10000 + 10#$MINOR * 100 + 10#$PATCH))
+          VERSION_CODE=$((SEMVER_CODE * 1000 + GITHUB_RUN_NUMBER % 1000))
 
           echo "Using release tag $TAG_NAME"
           echo "VERSION_NAME=$VERSION_NAME" >> "$GITHUB_ENV"
@@ -409,6 +415,8 @@ jobs:
             exit 1
           fi
 
+          # The Windows file version only allows 16-bit parts, so this build
+          # number keeps the plain semver code (no run number).
           VERSION_CODE=$((10#${BASH_REMATCH[1]} * 10000 + 10#${BASH_REMATCH[2]} * 100 + 10#${BASH_REMATCH[3]}))
 
           echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
