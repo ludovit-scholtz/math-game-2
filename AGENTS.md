@@ -92,7 +92,11 @@ Key conventions:
   non-negative answer cards.
 - Scoring (`Scoring`): `<1 s` → 3 pts; `1–10 s` → linear 3→1; `>10 s` or wrong →
   −1.
-- Missed questions return after `GameController.reaskAfter = 3` questions.
+- Missed questions return after 3 questions (`GameController`'s `reaskAfter`
+  constructor parameter, default `3`).
+- Shop (`BackgroundStyle`): 20 styles on offer; prices are deterministic per
+  style index — every fifth costs `budgetPrice = 50`, the rest 100–1000 in tens;
+  at least `minimumBudgetStyles = 4` budget styles are always shown.
 - Coins (`Coins.maxForDuration`): 1 min → 20, 2 min → 50, 5 min → 150, linear by
   score vs. the category's top score.
 - Pets: food −100/day, fun −20/day; feed = 20 coins/+30 food, toy = 100 coins/+50

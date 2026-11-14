@@ -34,8 +34,9 @@ details:
   distributed linearly down to 0 for fewer points.
 - Spend coins in the **shop** to unlock new answer-button background styles.
   There are always **20 styles** available to buy and the shop never runs dry —
-  fresh styles are generated on demand. Every style has a **fixed price
-  (100–1000 coins)** that is identical for every player.
+  fresh styles are generated on demand. Every style has a **fixed price**
+  that is identical for every player: most cost 100–1000 coins, and at least
+  four budget styles for **50 coins** are always on offer.
 - Use **Customize buttons** to assign any style you own to each of the **six**
   answer-button positions. Your choices are saved for your next game.
 

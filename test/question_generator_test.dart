@@ -74,6 +74,9 @@ void main() {
         expect(sub.correctAnswer, sub.operandA - sub.operandB);
         expect(sub.correctAnswer, greaterThanOrEqualTo(0));
 
+        final div = generator.generate({OperationType.division});
+        expect(div.correctAnswer * div.operandB, div.operandA);
+
         final mul = generator.generate({OperationType.multiplication});
         expect(mul.correctAnswer, mul.operandA * mul.operandB);
       }
