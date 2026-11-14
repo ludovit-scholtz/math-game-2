@@ -116,6 +116,13 @@ flutter build web --release        # Web
 The [`CI` workflow](.github/workflows/ci.yml) runs on every push and pull
 request and:
 
-1. checks formatting, runs `flutter analyze` and `flutter test`;
+1. runs `flutter analyze` and `flutter test`;
 2. builds the release **APK** and **App Bundle** and uploads them as artifacts;
 3. builds the **web** version and uploads it as an artifact.
+
+## Working with AI agents
+
+[`AGENTS.md`](AGENTS.md) describes the architecture, conventions and game rules
+for AI coding agents (`CLAUDE.md` imports it). Claude Code slash commands for
+common tasks (`/check`, `/add-string`, `/add-language`, `/change-rule`, `/ship`,
+`/release`) live in [`.claude/commands/`](.claude/commands/).
