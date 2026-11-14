@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Central place for the playful, kid-friendly colour palette and theme.
 class AppTheme {
