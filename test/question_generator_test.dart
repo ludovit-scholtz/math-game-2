@@ -43,11 +43,24 @@ void main() {
       }
     });
 
+    test('division reaches every divisor and quotient in 1..10', () {
+      final local = QuestionGenerator(random: Random(7));
+      final divisors = <int>{};
+      final quotients = <int>{};
+      for (var i = 0; i < 2000; i++) {
+        final q = local.generate({OperationType.division});
+        divisors.add(q.operandB);
+        quotients.add(q.correctAnswer);
+      }
+      final full = {for (var v = 1; v <= 10; v++) v};
+      expect(divisors, full);
+      expect(quotients, full);
+    });
+
     test('division result is always between 1 and 10', () {
       for (var i = 0; i < 500; i++) {
         final q = generator.generate({OperationType.division});
         expect(q.operandA, inInclusiveRange(1, 100));
-        expect(q.operandB, inInclusiveRange(1, 10));
         expect(q.correctAnswer, inInclusiveRange(1, 10));
       }
     });
@@ -60,6 +73,9 @@ void main() {
         final sub = generator.generate({OperationType.subtraction});
         expect(sub.correctAnswer, sub.operandA - sub.operandB);
         expect(sub.correctAnswer, greaterThanOrEqualTo(0));
+
+        final div = generator.generate({OperationType.division});
+        expect(div.correctAnswer * div.operandB, div.operandA);
 
         final mul = generator.generate({OperationType.multiplication});
         expect(mul.correctAnswer, mul.operandA * mul.operandB);

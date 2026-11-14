@@ -26,7 +26,8 @@ class GameController {
   final Set<OperationType> operations;
   final QuestionGenerator _generator;
 
-  /// How many fresh questions appear before a missed question returns.
+  /// How many [nextQuestion] calls after a miss the missed question returns
+  /// on (with the default 3, two fresh questions appear in between).
   final int reaskAfter;
 
   final List<_PendingReask> _pending = <_PendingReask>[];

@@ -34,8 +34,9 @@ details:
   distributed linearly down to 0 for fewer points.
 - Spend coins in the **shop** to unlock new answer-button background styles.
   There are always **20 styles** available to buy and the shop never runs dry —
-  fresh styles are generated on demand. Every style has a **fixed price
-  (100–1000 coins)** that is identical for every player.
+  fresh styles are generated on demand. Every style has a **fixed price**
+  that is identical for every player: most cost 100–1000 coins, and at least
+  four budget styles for **50 coins** are always on offer.
 - Use **Customize buttons** to assign any style you own to each of the **six**
   answer-button positions. Your choices are saved for your next game.
 
@@ -116,6 +117,13 @@ flutter build web --release        # Web
 The [`CI` workflow](.github/workflows/ci.yml) runs on every push and pull
 request and:
 
-1. checks formatting, runs `flutter analyze` and `flutter test`;
+1. runs `flutter analyze` and `flutter test`;
 2. builds the release **APK** and **App Bundle** and uploads them as artifacts;
 3. builds the **web** version and uploads it as an artifact.
+
+## Working with AI agents
+
+[`AGENTS.md`](AGENTS.md) describes the architecture, conventions and game rules
+for AI coding agents (`CLAUDE.md` imports it). Claude Code slash commands for
+common tasks (`/check`, `/add-string`, `/add-language`, `/change-rule`, `/ship`,
+`/release`) live in [`.claude/commands/`](.claude/commands/).
