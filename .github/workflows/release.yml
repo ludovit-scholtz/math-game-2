@@ -1,7 +1,10 @@
-name: Release (Google Play Internal Testing)
+name: Release (Google Play Internal Testing + Windows)
 
 # Builds a Google Play production-signed Android App Bundle (.aab) and uploads
 # it to the Google Play internal testing track.
+#
+# A second job builds the Windows desktop app (`flutter build windows`), zips
+# it and attaches it to the GitHub Release of the tag.
 #
 # Triggered by pushing a version tag (e.g. v1.0.0) or manually via the
 # "Run workflow" button. Requires the following repository secrets to be set
@@ -376,3 +379,109 @@ jobs:
           name: math-masters-${{ steps.release_version.outputs.version_name }}-signed-aab
           path: build/app/outputs/bundle/release/app-release.aab
           if-no-files-found: error
+
+  build-windows:
+    name: Build Windows
+    runs-on: windows-latest
+    # Publishing the zip to the GitHub Release needs write access to contents.
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Resolve release version from git tag
+        id: release_version
+        shell: bash
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            TAG_NAME="${GITHUB_REF_NAME}"
+          else
+            TAG_NAME="$(git describe --tags --abbrev=0)"
+          fi
+
+          VERSION_NAME="${TAG_NAME#v}"
+
+          if ! [[ "$VERSION_NAME" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            echo "::error::Release tag must use semantic versioning like v1.2.3. Found: $TAG_NAME"
+            exit 1
+          fi
+
+          VERSION_CODE=$((10#${BASH_REMATCH[1]} * 10000 + 10#${BASH_REMATCH[2]} * 100 + 10#${BASH_REMATCH[3]}))
+
+          echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
+          echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
+          echo "version_code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate platform folders
+        run: flutter create --platforms=windows --org io.biatec --project-name math_master .
+
+      - name: Apply Windows app metadata
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          main_cpp = Path("windows/runner/main.cpp")
+          main_cpp.write_text(
+              main_cpp.read_text().replace('L"math_master"', 'L"Math Master"', 1)
+          )
+
+          rc = Path("windows/runner/Runner.rc")
+          text = rc.read_text()
+          for key in ("FileDescription", "ProductName"):
+              text = re.sub(
+                  r'(VALUE "%s", )"math_master"' % key,
+                  r'\1"Math Master"',
+                  text,
+                  count=1,
+              )
+          rc.write_text(text)
+          PY
+
+      - name: Generate Windows icon
+        run: dart run flutter_launcher_icons -f flutter_launcher_icons-windows.yaml
+
+      - name: Build Windows (release)
+        run: >
+          flutter build windows --release
+          --build-name "${{ steps.release_version.outputs.version_name }}"
+          --build-number "${{ steps.release_version.outputs.version_code }}"
+
+      - name: Zip the Windows build
+        shell: pwsh
+        run: |
+          $zip = "math-master-windows-x64-${{ steps.release_version.outputs.version_name }}.zip"
+          Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath $zip
+          "ZIP_NAME=$zip" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Upload Windows zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: math-masters-${{ steps.release_version.outputs.version_name }}-windows
+          path: ${{ env.ZIP_NAME }}
+          if-no-files-found: error
+
+      - name: Attach the zip to the GitHub Release
+        if: github.ref_type == 'tag'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ steps.release_version.outputs.tag_name }}
+        run: |
+          gh release view "$TAG_NAME" >/dev/null 2>&1 \
+            || gh release create "$TAG_NAME" --title "Math Master $TAG_NAME" --generate-notes
+          gh release upload "$TAG_NAME" "$ZIP_NAME" --clobber

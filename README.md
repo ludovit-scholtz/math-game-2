@@ -142,7 +142,19 @@ flutter run           # launch on a connected device, emulator or browser
 flutter build apk --release        # Android APK
 flutter build appbundle --release  # Android App Bundle (for Google Play)
 flutter build web --release        # Web
+flutter build windows --release    # Windows desktop (needs Visual Studio, Windows only)
 ```
+
+For Windows, generate the platform folder first and (optionally) the icon:
+
+```bash
+flutter create --platforms=windows --org io.biatec --project-name math_master .
+dart run flutter_launcher_icons -f flutter_launcher_icons-windows.yaml
+flutter build windows --release   # -> build/windows/x64/runner/Release/math_master.exe
+```
+
+Pet reminder notifications are available on Android and iOS only; on the web and
+on Windows the game works without them.
 
 > The platform folders (`android/`, `ios/`, `web/`, …) are generated with
 > `flutter create .` and are intentionally not committed; the CI pipeline
@@ -155,7 +167,13 @@ request and:
 
 1. runs `flutter analyze` and `flutter test`;
 2. builds the release **APK** and **App Bundle** and uploads them as artifacts;
-3. builds the **web** version and uploads it as an artifact.
+3. builds the **web** version and uploads it as an artifact;
+4. builds the **Windows** desktop app (`flutter build windows`) and uploads the
+   `Release` folder as an artifact.
+
+Pushing a `vX.Y.Z` tag also runs the [`Release` workflow](.github/workflows/release.yml),
+which uploads the signed App Bundle to Google Play internal testing and attaches a
+**Windows zip** (`math-master-windows-x64-X.Y.Z.zip`) to the GitHub Release.
 
 ## Working with AI agents
 
