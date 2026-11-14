@@ -1,7 +1,7 @@
 # Zásady ochrany osobních údajů pro Math Master
 
-Datum účinnosti: 2. června 2026
-Poslední aktualizace: 2. června 2026
+Datum účinnosti: 14. listopadu 2026
+Poslední aktualizace: 14. listopadu 2026
 
 Tyto Zásady ochrany osobních údajů popisují, jak Scholtz & Company, jsa, IČO 51882272 ("vývojář", "my", "nás" nebo "naše společnost") nakládá s informacemi v souvislosti s aplikací Math Master ("aplikace"). Aplikace je vzdělávací matematická hra určená pro děti a rodiny. Je navržena tak, aby byla bezpečná pro děti: neobsahuje reklamu, behaviorální sledování, funkce sociálních sítí, veřejný chat, zveřejňování osobních údajů v aplikaci ani žádnou funkci, která by měla dítě vést ke sdílení osobních údajů s námi nebo s jinými uživateli.
 
@@ -25,8 +25,9 @@ Aplikace lokálně v zařízení zpracovává tyto omezené informace:
 
 - Přezdívka hráče: jméno zvolené uživatelem pro identifikaci lokálního profilu.
 - Preferovaný jazyk: jazyk vybraný pro hráče nebo zařízení.
-- Herní aktivita: zodpovězené matematické úlohy, zvolený herní režim, výsledky, skóre, chyby, výkon podle času, záznamy v lokálním žebříčku, historie her, získané mince, odemčené vizuální styly, nastavení tlačítek a podobné údaje o pokroku potřebné pro herní zážitek.
+- Herní aktivita: zodpovězené matematické úlohy, zvolený herní režim, výsledky, skóre, chyby, výkon podle času, záznamy v lokálním žebříčku, historie her, získané mince a drahokamy, seznam chybně zodpovězených otázek, průměrný čas odpovědi, nejlepší série správných odpovědí v každé hře, odemčené vizuální styly, nastavení tlačítek a podobné údaje o pokroku potřebné pro herní zážitek.
 - Nastavení aplikace: lokální předvolby, díky kterým si aplikace pamatuje, jak má v zařízení vypadat nebo fungovat.
+- Nastavení rodičovské kontroly: možnosti procvičování, které rodič vybere pro každého lokálního hráče (například rozsah čísel, typy příkladů a násobilky), a informace, zda bylo dokončeno úvodní nastavení. Chrání je pouze matematická otázka pro dospělé a nejde o bezpečnostní funkci.
 
 Tyto informace se používají pouze k poskytování vzdělávací hry, zapamatování pokroku, zobrazení historie a žebříčků v zařízení, podpoře lokálního přizpůsobení a pohodlnému opakovanému používání aplikace.
 

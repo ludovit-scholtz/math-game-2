@@ -94,8 +94,10 @@ Key conventions:
   keep their leaderboards. Never let different modes share a leaderboard or the
   top score that decides coins.
 - Practice settings (`PracticeSettings`) are chosen in the parental control
-  panel, stored per player by name with a "template" (last saved) for new
-  players, and **defaults equal the classic game**. The first-run setup is shown
+  panel and stored per player by name. Players without their own settings use
+  the "template" (first-run setup or "apply to all players"); editing one
+  player never changes another. **Defaults equal the classic game** except
+  that `÷ 1` is no longer asked (divisors come from tables `2..10`). The first-run setup is shown
   once on a fresh install (`onboarding_done_v1`); installs that already have
   players skip it.
 

@@ -196,7 +196,8 @@ class _GameRow extends StatelessWidget {
     final strings = context.strings;
     final localizations = MaterialLocalizations.of(context);
     final date = DateTime.fromMillisecondsSinceEpoch(entry.dateMillis);
-    final when = '${localizations.formatShortDate(date)} '
+    final when =
+        '${localizations.formatShortDate(date)} '
         '${localizations.formatTimeOfDay(TimeOfDay.fromDateTime(date))}';
     final mode = [
       strings.durationLabel(entry.duration),
@@ -221,18 +222,18 @@ class _GameRow extends StatelessWidget {
         onTap: entry.missed.isEmpty
             ? null
             : () => showDialog<void>(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                    title: Text(strings.missedQuestions),
-                    content: Text(entry.missed.join('\n')),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text(strings.close),
-                      ),
-                    ],
-                  ),
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: Text(strings.missedQuestions),
+                  content: Text(entry.missed.join('\n')),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(strings.close),
+                    ),
+                  ],
                 ),
+              ),
       ),
     );
   }

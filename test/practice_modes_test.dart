@@ -58,7 +58,9 @@ void main() {
     });
 
     test('always allows something to practise', () {
-      final s = PracticeSettings.defaults().copyWith(operations: <OperationType>{});
+      final s = PracticeSettings.defaults().copyWith(
+        operations: <OperationType>{},
+      );
       expect(s.hasAnythingToPractise, isTrue);
       // Drills can carry the settings on their own.
       final drillsOnly = PracticeSettings(
@@ -67,6 +69,23 @@ void main() {
       );
       expect(drillsOnly.hasAnythingToPractise, isTrue);
       expect(drillsOnly.operations, isEmpty);
+    });
+
+    test('choosing a preset keeps the tables and challenge lengths', () {
+      final restricted = PracticeSettings(
+        tables: {2, 5},
+        durations: {ChallengeDuration.oneMinute},
+      );
+      final within20 = restricted.withPreset(PracticePreset.within20);
+      expect(within20.range, NumberRange.within20);
+      expect(within20.drills, contains(Drill.bridgeTen));
+      expect(within20.tables, {2, 5});
+      expect(within20.durations, {ChallengeDuration.oneMinute});
+      expect(within20.matchingPreset, PracticePreset.within20);
+
+      final back = within20.withPreset(PracticePreset.within100);
+      expect(back.drills, isEmpty);
+      expect(back.tables, {2, 5});
     });
 
     test('"always cross a ten" is not allowed within 5', () {
@@ -78,13 +97,15 @@ void main() {
     });
 
     test('the classic mode has an empty mode key, other modes differ', () {
-      String key(PracticeSettings s, Set<OperationType> ops,
-              [Set<Drill> drills = const {}]) =>
-          PracticeSettings.modeKeyFor(
-            operations: ops,
-            drills: drills,
-            settings: s,
-          );
+      String key(
+        PracticeSettings s,
+        Set<OperationType> ops, [
+        Set<Drill> drills = const {},
+      ]) => PracticeSettings.modeKeyFor(
+        operations: ops,
+        drills: drills,
+        settings: s,
+      );
       expect(key(PracticeSettings.defaults(), _addSub), '');
       expect(
         key(PracticeSettings(range: NumberRange.within20), _addSub),
@@ -92,8 +113,9 @@ void main() {
       );
       // The range does not matter when only multiplication is practised.
       expect(
-        key(PracticeSettings(range: NumberRange.within20),
-            {OperationType.multiplication}),
+        key(PracticeSettings(range: NumberRange.within20), {
+          OperationType.multiplication,
+        }),
         '',
       );
       expect(
@@ -109,23 +131,25 @@ void main() {
 
   group('ScoreEntry game types', () {
     ScoreEntry entry({String modeKey = ''}) => ScoreEntry(
-          name: 'A',
-          score: 1,
-          duration: ChallengeDuration.oneMinute,
-          operations: const [OperationType.addition],
-          correct: 1,
-          answered: 1,
-          dateMillis: 1,
-          modeKey: modeKey,
-        );
+      name: 'A',
+      score: 1,
+      duration: ChallengeDuration.oneMinute,
+      operations: const [OperationType.addition],
+      correct: 1,
+      answered: 1,
+      dateMillis: 1,
+      modeKey: modeKey,
+    );
 
     test('classic games keep their original game type key', () {
       expect(entry().gameTypeKey, '0|addition');
     });
 
     test('different modes never share a leaderboard', () {
-      expect(entry(modeKey: 'within20').gameTypeKey,
-          isNot(entry().gameTypeKey));
+      expect(
+        entry(modeKey: 'within20').gameTypeKey,
+        isNot(entry().gameTypeKey),
+      );
     });
 
     test('old stored games without the new fields still load', () {
@@ -195,12 +219,19 @@ void main() {
   group('QuestionGenerator crossing ten', () {
     test('crosses() detects carrying and borrowing', () {
       expect(QuestionGenerator.crosses(OperationType.addition, 15, 16), isTrue);
-      expect(QuestionGenerator.crosses(OperationType.addition, 23, 14), isFalse);
+      expect(
+        QuestionGenerator.crosses(OperationType.addition, 23, 14),
+        isFalse,
+      );
       expect(QuestionGenerator.crosses(OperationType.addition, 8, 5), isTrue);
       expect(
-          QuestionGenerator.crosses(OperationType.subtraction, 32, 13), isTrue);
+        QuestionGenerator.crosses(OperationType.subtraction, 32, 13),
+        isTrue,
+      );
       expect(
-          QuestionGenerator.crosses(OperationType.subtraction, 38, 15), isFalse);
+        QuestionGenerator.crosses(OperationType.subtraction, 38, 15),
+        isFalse,
+      );
       // The hundreds column only counts when two columns are checked.
       expect(
         QuestionGenerator.crosses(OperationType.addition, 50, 50),
@@ -231,8 +262,11 @@ void main() {
               q.operandB,
               columns: columns,
             );
-            expect(crossed, mode == CrossingMode.only,
-                reason: '${q.prompt} within ${range.max}');
+            expect(
+              crossed,
+              mode == CrossingMode.only,
+              reason: '${q.prompt} within ${range.max}',
+            );
           }
         });
       }
@@ -257,14 +291,14 @@ void main() {
       final gen = QuestionGenerator(random: Random(5));
       final settings = PracticeSettings(tables: {3, 7});
       for (var i = 0; i < 300; i++) {
-        final mul = gen.generate({OperationType.multiplication},
-            settings: settings);
+        final mul = gen.generate({
+          OperationType.multiplication,
+        }, settings: settings);
         expect({mul.operandA, mul.operandB}.intersection({3, 7}), isNotEmpty);
         expect(mul.result, lessThanOrEqualTo(100));
         _expectValidCards(mul);
 
-        final div =
-            gen.generate({OperationType.division}, settings: settings);
+        final div = gen.generate({OperationType.division}, settings: settings);
         expect({3, 7}, contains(div.operandB));
         expect(div.operandA % div.operandB, 0);
         expect(div.correctAnswer, inInclusiveRange(1, 10));
@@ -336,12 +370,32 @@ void main() {
       final g = gen();
       for (var i = 0; i < 400; i++) {
         final q = g.generate(none, drills: {Drill.bridgeTen});
-        expect(QuestionGenerator.crosses(q.type, q.operandA, q.operandB),
-            isTrue,
-            reason: q.prompt);
+        expect(
+          QuestionGenerator.crosses(q.type, q.operandA, q.operandB),
+          isTrue,
+          reason: q.prompt,
+        );
         expect(q.operandA, lessThanOrEqualTo(18));
         expect(q.result, greaterThanOrEqualTo(2));
         _expectValidCards(q);
+      }
+    });
+
+    test('bridging through ten stays inside a range below 20', () {
+      for (final range in [NumberRange.within5, NumberRange.within10]) {
+        final g = QuestionGenerator(random: Random(range.max));
+        final settings = PracticeSettings(range: range);
+        for (var i = 0; i < 200; i++) {
+          final q = g.generate(
+            none,
+            drills: {Drill.bridgeTen},
+            settings: settings,
+          );
+          expect(q.operandA, lessThanOrEqualTo(range.max));
+          expect(q.operandB, lessThanOrEqualTo(range.max));
+          expect(q.result, lessThanOrEqualTo(range.max));
+          _expectValidCards(q);
+        }
       }
     });
 
@@ -353,34 +407,37 @@ void main() {
         seen.add(q.unknown);
         expect(q.prompt, contains('?'));
         expect(q.prompt, contains('= ${q.result}'));
-        final hidden =
-            q.unknown == UnknownPart.operandA ? q.operandA : q.operandB;
+        final hidden = q.unknown == UnknownPart.operandA
+            ? q.operandA
+            : q.operandB;
         expect(q.correctAnswer, hidden);
         _expectValidCards(q);
       }
       expect(seen, {UnknownPart.operandA, UnknownPart.operandB});
     });
 
-    test('a missed missing-number question is told apart from the plain one',
-        () {
-      final plain = Question(
-        operandA: 3,
-        operandB: 5,
-        type: OperationType.addition,
-        correctAnswer: 8,
-        options: const [8],
-      );
-      final missing = Question(
-        operandA: 3,
-        operandB: 5,
-        type: OperationType.addition,
-        correctAnswer: 5,
-        options: const [5],
-        unknown: UnknownPart.operandB,
-      );
-      expect(plain == missing, isFalse);
-      expect(missing.prompt, '3 + ? = 8');
-    });
+    test(
+      'a missed missing-number question is told apart from the plain one',
+      () {
+        final plain = Question(
+          operandA: 3,
+          operandB: 5,
+          type: OperationType.addition,
+          correctAnswer: 8,
+          options: const [8],
+        );
+        final missing = Question(
+          operandA: 3,
+          operandB: 5,
+          type: OperationType.addition,
+          correctAnswer: 5,
+          options: const [5],
+          unknown: UnknownPart.operandB,
+        );
+        expect(plain == missing, isFalse);
+        expect(missing.prompt, '3 + ? = 8');
+      },
+    );
 
     test('drills mix with operations', () {
       final g = gen();
@@ -400,8 +457,11 @@ void main() {
         final g = QuestionGenerator(random: Random(range.max));
         final settings = PracticeSettings(range: range);
         for (var i = 0; i < 200; i++) {
-          final q = g.generate(none,
-              drills: Drill.values.toSet(), settings: settings);
+          final q = g.generate(
+            none,
+            drills: Drill.values.toSet(),
+            settings: settings,
+          );
           _expectValidCards(q);
         }
       }

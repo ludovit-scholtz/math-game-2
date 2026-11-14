@@ -110,24 +110,24 @@ class PracticeSettings {
     Set<Drill>? drills,
     Set<int>? tables,
     Set<ChallengeDuration>? durations,
-  })  : operations = Set.unmodifiable(operations ?? OperationType.values),
-        drills = Set.unmodifiable(drills ?? const <Drill>{}),
-        tables = Set.unmodifiable(
-          (tables == null || tables.isEmpty) ? defaultTables : tables,
-        ),
-        durations = Set.unmodifiable(
-          (durations == null || durations.isEmpty)
-              ? ChallengeDuration.values
-              : durations,
-        );
+  }) : operations = Set.unmodifiable(operations ?? OperationType.values),
+       drills = Set.unmodifiable(drills ?? const <Drill>{}),
+       tables = Set.unmodifiable(
+         (tables == null || tables.isEmpty) ? defaultTables : tables,
+       ),
+       durations = Set.unmodifiable(
+         (durations == null || durations.isEmpty)
+             ? ChallengeDuration.values
+             : durations,
+       );
 
   /// Multiplication tables a parent can switch on (`×1` is not offered).
   static const int minTable = 2;
   static const int maxTable = 10;
 
   static Set<int> get defaultTables => {
-        for (var t = minTable; t <= maxTable; t++) t,
-      };
+    for (var t = minTable; t <= maxTable; t++) t,
+  };
 
   /// The operations the child may pick on the home screen.
   final Set<OperationType> operations;
@@ -172,10 +172,25 @@ class PracticeSettings {
     }
   }
 
-  /// The preset these settings equal, if any.
+  /// These settings with [preset]'s operations, range, crossing and drills.
+  /// The parent's tables and challenge lengths are kept, so choosing a preset
+  /// never silently drops those restrictions.
+  PracticeSettings withPreset(PracticePreset preset) {
+    final base = PracticeSettings.preset(preset);
+    return PracticeSettings(
+      operations: base.operations,
+      range: base.range,
+      crossing: base.crossing,
+      drills: base.drills,
+      tables: tables,
+      durations: durations,
+    );
+  }
+
+  /// The preset these settings match (ignoring tables and challenge lengths).
   PracticePreset? get matchingPreset {
     for (final preset in PracticePreset.values) {
-      if (this == PracticeSettings.preset(preset)) return preset;
+      if (this == withPreset(preset)) return preset;
     }
     return null;
   }
@@ -190,15 +205,14 @@ class PracticeSettings {
     Set<Drill>? drills,
     Set<int>? tables,
     Set<ChallengeDuration>? durations,
-  }) =>
-      PracticeSettings(
-        operations: operations ?? this.operations,
-        range: range ?? this.range,
-        crossing: crossing ?? this.crossing,
-        drills: drills ?? this.drills,
-        tables: tables ?? this.tables,
-        durations: durations ?? this.durations,
-      ).normalized();
+  }) => PracticeSettings(
+    operations: operations ?? this.operations,
+    range: range ?? this.range,
+    crossing: crossing ?? this.crossing,
+    drills: drills ?? this.drills,
+    tables: tables ?? this.tables,
+    durations: durations ?? this.durations,
+  ).normalized();
 
   /// Repairs combinations that cannot produce questions.
   PracticeSettings normalized() {
@@ -229,7 +243,8 @@ class PracticeSettings {
     required PracticeSettings settings,
   }) {
     final parts = <String>[];
-    final usesRange = operations.contains(OperationType.addition) ||
+    final usesRange =
+        operations.contains(OperationType.addition) ||
         operations.contains(OperationType.subtraction) ||
         drills.isNotEmpty;
     if (usesRange) {
@@ -244,7 +259,8 @@ class PracticeSettings {
       final ids = drills.map((d) => d.id).toList()..sort();
       parts.add('d-${ids.join('+')}');
     }
-    final usesTables = operations.contains(OperationType.multiplication) ||
+    final usesTables =
+        operations.contains(OperationType.multiplication) ||
         operations.contains(OperationType.division);
     if (usesTables && !_sameSet(settings.tables, defaultTables)) {
       final sorted = settings.tables.toList()..sort();
@@ -254,13 +270,13 @@ class PracticeSettings {
   }
 
   Map<String, dynamic> toJson() => {
-        'operations': operations.map((o) => o.storageKey).toList(),
-        'range': range.id,
-        'crossing': crossing.id,
-        'drills': drills.map((d) => d.id).toList(),
-        'tables': (tables.toList()..sort()),
-        'durations': durations.map((d) => d.index).toList(),
-      };
+    'operations': operations.map((o) => o.storageKey).toList(),
+    'range': range.id,
+    'crossing': crossing.id,
+    'drills': drills.map((d) => d.id).toList(),
+    'tables': (tables.toList()..sort()),
+    'durations': durations.map((d) => d.index).toList(),
+  };
 
   factory PracticeSettings.fromJson(Map<String, dynamic> json) {
     final ops = <OperationType>{};
@@ -294,9 +310,11 @@ class PracticeSettings {
       // A stored list that is missing or empty falls back to the defaults,
       // unless drills carry the settings.
       operations: ops.isEmpty && drills.isEmpty ? null : ops,
-      range: NumberRangeX.fromId(json['range']?.toString()) ??
+      range:
+          NumberRangeX.fromId(json['range']?.toString()) ??
           NumberRange.within100,
-      crossing: CrossingModeX.fromId(json['crossing']?.toString()) ??
+      crossing:
+          CrossingModeX.fromId(json['crossing']?.toString()) ??
           CrossingMode.mixed,
       drills: drills,
       tables: tables,
@@ -316,13 +334,13 @@ class PracticeSettings {
 
   @override
   int get hashCode => Object.hash(
-        range,
-        crossing,
-        operations.length,
-        drills.length,
-        tables.length,
-        durations.length,
-      );
+    range,
+    crossing,
+    operations.length,
+    drills.length,
+    tables.length,
+    durations.length,
+  );
 
   static bool _sameSet<T>(Set<T> a, Set<T> b) =>
       a.length == b.length && a.containsAll(b);

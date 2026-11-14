@@ -108,7 +108,9 @@ class LeaderboardService {
     boards.sort((a, b) {
       final byDuration = a.duration.index.compareTo(b.duration.index);
       if (byDuration != 0) return byDuration;
-      return a.operationSymbols.compareTo(b.operationSymbols);
+      final bySymbols = a.operationSymbols.compareTo(b.operationSymbols);
+      if (bySymbols != 0) return bySymbols;
+      return a.gameTypeKey.compareTo(b.gameTypeKey);
     });
     return boards;
   }

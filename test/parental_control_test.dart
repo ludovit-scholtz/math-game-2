@@ -20,10 +20,10 @@ import 'package:math_game_2/services/player_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Widget _app(Widget home) => MaterialApp(
-      localizationsDelegates: AppStrings.localizationsDelegates,
-      supportedLocales: AppStrings.supportedLocales,
-      home: home,
-    );
+  localizationsDelegates: AppStrings.localizationsDelegates,
+  supportedLocales: AppStrings.supportedLocales,
+  home: home,
+);
 
 ScoreEntry _game(
   String name,
@@ -34,20 +34,19 @@ ScoreEntry _game(
   int avg = 0,
   int gems = 0,
   int streak = 0,
-}) =>
-    ScoreEntry(
-      name: name,
-      score: correct,
-      duration: ChallengeDuration.oneMinute,
-      operations: const [OperationType.addition],
-      correct: correct,
-      answered: answered,
-      dateMillis: millis,
-      missed: missed,
-      avgAnswerMillis: avg,
-      gemsEarned: gems,
-      bestStreak: streak,
-    );
+}) => ScoreEntry(
+  name: name,
+  score: correct,
+  duration: ChallengeDuration.oneMinute,
+  operations: const [OperationType.addition],
+  correct: correct,
+  answered: answered,
+  dateMillis: millis,
+  missed: missed,
+  avgAnswerMillis: avg,
+  gemsEarned: gems,
+  bestStreak: streak,
+);
 
 void main() {
   setUp(() {
@@ -62,7 +61,8 @@ void main() {
         expect(c.exponent, inInclusiveRange(5, 20));
         expect(c.factorA, inInclusiveRange(10000, 99999));
         expect(c.factorB, inInclusiveRange(10000, 99999));
-        final expected = (BigInt.two.pow(c.exponent) +
+        final expected =
+            (BigInt.two.pow(c.exponent) +
                 BigInt.from(c.factorA) * BigInt.from(c.factorB)) %
             BigInt.from(1000);
         expect(c.answer, expected.toInt());
@@ -98,13 +98,20 @@ void main() {
       final within20 = PracticeSettings.preset(PracticePreset.within20);
       await service.save(within20, 'Ann');
       expect(await service.load('Ann'), within20);
-      // Another player without own settings gets the latest as template.
-      expect(await service.load('Bob'), within20);
+      // Editing Ann never changes what a player without settings gets.
+      expect(await service.load('Bob'), PracticeSettings.defaults());
 
       final starting = PracticeSettings.preset(PracticePreset.starting);
-      await service.save(starting, 'Bob');
-      expect(await service.load('Ann'), within20);
+      await service.save(starting); // the template (first-run setup)
       expect(await service.load('Bob'), starting);
+      expect(await service.load('Ann'), within20);
+
+      await service.save(
+        PracticeSettings(range: NumberRange.within1000),
+        'Bob',
+      );
+      expect(await service.load('Ann'), within20);
+      expect(await service.load('Cy'), starting);
     });
 
     test('apply to all', () async {
@@ -119,8 +126,10 @@ void main() {
       SharedPreferences.setMockInitialValues({
         'practice_settings_v1': 'not json',
       });
-      expect(await ParentalSettingsService().load('Ann'),
-          PracticeSettings.defaults());
+      expect(
+        await ParentalSettingsService().load('Ann'),
+        PracticeSettings.defaults(),
+      );
     });
 
     test('onboarding flag', () async {
@@ -135,10 +144,25 @@ void main() {
   group('HistorySummary', () {
     test('aggregates accuracy, time, streak, gems and most missed', () {
       final summary = HistorySummary.from([
-        _game('A', 1, correct: 8, answered: 10, avg: 2000, gems: 1, streak: 5,
-            missed: ['8 + 5', '7 × 8']),
-        _game('A', 2, correct: 2, answered: 10, avg: 4000, streak: 2,
-            missed: ['8 + 5']),
+        _game(
+          'A',
+          1,
+          correct: 8,
+          answered: 10,
+          avg: 2000,
+          gems: 1,
+          streak: 5,
+          missed: ['8 + 5', '7 × 8'],
+        ),
+        _game(
+          'A',
+          2,
+          correct: 2,
+          answered: 10,
+          avg: 4000,
+          streak: 2,
+          missed: ['8 + 5'],
+        ),
         _game('B', 3, correct: 10, answered: 10), // no timing recorded
       ]);
       expect(summary.games, 3);
@@ -169,8 +193,10 @@ void main() {
       }
       await service.addScore(_game('Quiet', 1));
       final all = await service.load();
-      expect(all.where((e) => e.name == 'Busy').length,
-          LeaderboardService.maxHistory);
+      expect(
+        all.where((e) => e.name == 'Busy').length,
+        LeaderboardService.maxHistory,
+      );
       expect(all.where((e) => e.name == 'Quiet').length, 1);
     }, timeout: const Timeout(Duration(minutes: 2)));
   });
@@ -202,8 +228,9 @@ void main() {
       expect(find.text('Set up for your child'), findsNothing);
     });
 
-    testWidgets('is skipped for installations that already have players',
-        (tester) async {
+    testWidgets('is skipped for installations that already have players', (
+      tester,
+    ) async {
       SharedPreferences.setMockInitialValues({});
       await PlayerService().selectOrCreate(
         PlayerProfile(name: 'Ann', languageCode: 'en'),
@@ -217,8 +244,9 @@ void main() {
   });
 
   group('home screen follows the parental settings', () {
-    testWidgets('offers only enabled operations, drills and lengths',
-        (tester) async {
+    testWidgets('offers only enabled operations, drills and lengths', (
+      tester,
+    ) async {
       await ParentalSettingsService().save(
         PracticeSettings(
           operations: {OperationType.addition},
@@ -232,16 +260,19 @@ void main() {
       expect(find.textContaining('Add'), findsOneWidget);
       expect(find.textContaining('Subtract'), findsNothing);
       expect(find.textContaining('Multiply'), findsNothing);
-      expect(find.byKey(const ValueKey('home-drill-pairsToTen')),
-          findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('home-drill-pairsToTen')),
+        findsOneWidget,
+      );
       expect(find.text('2 min'), findsOneWidget);
       expect(find.text('1 min'), findsNothing);
     });
   });
 
   group('parental gate in the menu', () {
-    testWidgets('a wrong answer shows a new problem, a right one opens it',
-        (tester) async {
+    testWidgets('a wrong answer shows a new problem, a right one opens it', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(1080, 2400);
       tester.view.devicePixelRatio = 3.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -255,8 +286,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Grown-ups only'), findsOneWidget);
-      String expression() =>
-          tester.widget<Text>(find.byKey(const ValueKey('parental-expression'))).data!;
+      String expression() => tester
+          .widget<Text>(find.byKey(const ValueKey('parental-expression')))
+          .data!;
       int answerOf(String text) {
         final m = RegExp(r'2\^(\d+) \+ (\d+) × (\d+)').firstMatch(text)!;
         return ParentalChallenge(
@@ -269,14 +301,18 @@ void main() {
       final first = expression();
       final wrong = (answerOf(first) + 1) % 1000;
       await tester.enterText(
-          find.byKey(const ValueKey('parental-answer')), '$wrong');
+        find.byKey(const ValueKey('parental-answer')),
+        '$wrong',
+      );
       await tester.tap(find.byKey(const ValueKey('parental-check')));
       await tester.pumpAndSettle();
       expect(find.textContaining('Not quite'), findsOneWidget);
       expect(find.byType(ParentalControlScreen), findsNothing);
 
-      await tester.enterText(find.byKey(const ValueKey('parental-answer')),
-          '${answerOf(expression())}');
+      await tester.enterText(
+        find.byKey(const ValueKey('parental-answer')),
+        '${answerOf(expression())}',
+      );
       await tester.tap(find.byKey(const ValueKey('parental-check')));
       await tester.pumpAndSettle();
       expect(find.byType(ParentalControlScreen), findsOneWidget);
@@ -303,8 +339,12 @@ void main() {
       addTearDown(tester.view.resetDevicePixelRatio);
 
       final players = PlayerService();
-      await players.selectOrCreate(PlayerProfile(name: 'Bob', languageCode: 'en'));
-      await players.selectOrCreate(PlayerProfile(name: 'Ann', languageCode: 'en'));
+      await players.selectOrCreate(
+        PlayerProfile(name: 'Bob', languageCode: 'en'),
+      );
+      await players.selectOrCreate(
+        PlayerProfile(name: 'Ann', languageCode: 'en'),
+      );
 
       await tester.pumpWidget(
         _app(const ParentalControlScreen(initialPlayerName: 'Ann')),
@@ -326,12 +366,11 @@ void main() {
       expect(ann.crossing, CrossingMode.only);
       expect(ann.drills, {Drill.doubles});
       expect(ann.tables.contains(10), isFalse);
-      // Bob has no own settings yet, so he gets the latest as template.
-      expect((await service.load('Bob')).range, NumberRange.within20);
+      // Editing Ann does not change Bob, who has no own settings yet.
+      expect((await service.load('Bob')).range, NumberRange.within100);
     });
 
-    testWidgets('the last enabled option cannot be turned off',
-        (tester) async {
+    testWidgets('the last enabled option cannot be turned off', (tester) async {
       tester.view.physicalSize = const Size(1080, 12000);
       tester.view.devicePixelRatio = 3.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -346,8 +385,9 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('op-addition')));
       await tester.pumpAndSettle();
       expect(find.text('Keep at least one option turned on.'), findsOneWidget);
-      expect((await ParentalSettingsService().load()).operations,
-          {OperationType.addition});
+      expect((await ParentalSettingsService().load()).operations, {
+        OperationType.addition,
+      });
     });
 
     testWidgets('"always cross a ten" is disabled within 5', (tester) async {
@@ -373,10 +413,16 @@ void main() {
       addTearDown(tester.view.resetDevicePixelRatio);
 
       final players = PlayerService();
-      await players.selectOrCreate(PlayerProfile(name: 'Bob', languageCode: 'en'));
-      await players.selectOrCreate(PlayerProfile(name: 'Ann', languageCode: 'en'));
-      await ParentalSettingsService()
-          .save(PracticeSettings(range: NumberRange.within1000), 'Bob');
+      await players.selectOrCreate(
+        PlayerProfile(name: 'Bob', languageCode: 'en'),
+      );
+      await players.selectOrCreate(
+        PlayerProfile(name: 'Ann', languageCode: 'en'),
+      );
+      await ParentalSettingsService().save(
+        PracticeSettings(range: NumberRange.within1000),
+        'Bob',
+      );
 
       await tester.pumpWidget(
         _app(const ParentalControlScreen(initialPlayerName: 'Ann')),
@@ -395,8 +441,7 @@ void main() {
   });
 
   group('parental history', () {
-    testWidgets('lists every game of every player with stats',
-        (tester) async {
+    testWidgets('lists every game of every player with stats', (tester) async {
       tester.view.physicalSize = const Size(1080, 12000);
       tester.view.devicePixelRatio = 3.0;
       addTearDown(tester.view.resetPhysicalSize);

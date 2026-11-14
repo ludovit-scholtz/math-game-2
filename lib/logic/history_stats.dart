@@ -69,8 +69,9 @@ class HistorySummary {
       games: entries.length,
       practiceSeconds: seconds,
       accuracyPercent: answered == 0 ? 0 : (correct / answered * 100).round(),
-      averageAnswerMillis:
-          timedAnswers == 0 ? 0 : (timedMillis / timedAnswers).round(),
+      averageAnswerMillis: timedAnswers == 0
+          ? 0
+          : (timedMillis / timedAnswers).round(),
       bestStreak: bestStreak,
       gems: gems,
       coins: coins,

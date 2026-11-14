@@ -17,14 +17,15 @@ import 'package:math_game_2/services/leaderboard_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 GameController _controller() => GameController(
-      operations: {OperationType.addition},
-      generator: QuestionGenerator(random: Random(9)),
-    );
+  operations: {OperationType.addition},
+  generator: QuestionGenerator(random: Random(9)),
+);
 
 AnswerResult _answer(GameController c, {required bool correct, double s = 2}) {
   final q = c.nextQuestion();
-  final value =
-      correct ? q.correctAnswer : q.options.firstWhere((o) => o != q.correctAnswer);
+  final value = correct
+      ? q.correctAnswer
+      : q.options.firstWhere((o) => o != q.correctAnswer);
   return c.submitAnswer(q, value, s);
 }
 
@@ -116,15 +117,18 @@ void main() {
   });
 
   group('selling gems', () {
-    test('gems persist per player and old wallets load with zero gems', () async {
-      final service = CoinService();
-      expect((await service.load('Ann')).gems, 0);
-      await service.addGems('Ann', 3);
-      expect((await service.load('Ann')).gems, 3);
-      expect((await service.load('Bob')).gems, 0);
+    test(
+      'gems persist per player and old wallets load with zero gems',
+      () async {
+        final service = CoinService();
+        expect((await service.load('Ann')).gems, 0);
+        await service.addGems('Ann', 3);
+        expect((await service.load('Ann')).gems, 3);
+        expect((await service.load('Bob')).gems, 0);
 
-      expect(CoinWallet.fromJson({'coins': 4}).gems, 0);
-    });
+        expect(CoinWallet.fromJson({'coins': 4}).gems, 0);
+      },
+    );
 
     test('selling adds 10 coins per gem', () async {
       final service = CoinService();
@@ -146,10 +150,10 @@ void main() {
   });
 
   Widget app(Widget home) => MaterialApp(
-        localizationsDelegates: AppStrings.localizationsDelegates,
-        supportedLocales: AppStrings.supportedLocales,
-        home: home,
-      );
+    localizationsDelegates: AppStrings.localizationsDelegates,
+    supportedLocales: AppStrings.supportedLocales,
+    home: home,
+  );
 
   testWidgets('shop sells gems for coins', (tester) async {
     SharedPreferences.setMockInitialValues({});
@@ -203,8 +207,9 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('results save earned gems, stats and the game mode',
-      (tester) async {
+  testWidgets('results save earned gems, stats and the game mode', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(1080, 1920);
     tester.view.devicePixelRatio = 3.0;
     addTearDown(tester.view.resetPhysicalSize);

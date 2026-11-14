@@ -1,7 +1,7 @@
 # Zásady ochrany osobných údajov pre Math Master
 
-Dátum účinnosti: 2. jún 2026
-Posledná aktualizácia: 2. jún 2026
+Dátum účinnosti: 14. november 2026
+Posledná aktualizácia: 14. november 2026
 
 Tieto Zásady ochrany osobných údajov opisujú, ako Scholtz & Company, jsa, IČO 51882272 ("vývojár", "my", "nás" alebo "naša spoločnosť") nakladá s informáciami v súvislosti s aplikáciou Math Master ("aplikácia"). Aplikácia je vzdelávacia matematická hra určená pre deti a rodiny. Je navrhnutá tak, aby bola bezpečná pre deti: neobsahuje reklamu, behaviorálne sledovanie, funkcie sociálnych sietí, verejný chat, zverejňovanie osobných údajov v aplikácii ani žiadnu funkciu, ktorej cieľom by bolo viesť dieťa k zdieľaniu osobných údajov s nami alebo s inými používateľmi.
 
@@ -25,8 +25,9 @@ Aplikácia lokálne v zariadení spracúva tieto obmedzené informácie:
 
 - Prezývka hráča: meno zvolené používateľom na identifikáciu lokálneho profilu.
 - Preferovaný jazyk: jazyk vybraný pre hráča alebo zariadenie.
-- Herná aktivita: zodpovedané matematické úlohy, vybraný herný režim, výsledky, skóre, chyby, výkon podľa času, záznamy v lokálnom rebríčku, história hier, získané mince, odomknuté vizuálne štýly, nastavenia tlačidiel a podobné údaje o pokroku potrebné pre herný zážitok.
+- Herná aktivita: zodpovedané matematické úlohy, vybraný herný režim, výsledky, skóre, chyby, výkon podľa času, záznamy v lokálnom rebríčku, história hier, získané mince a drahokamy, zoznam nesprávne zodpovedaných otázok, priemerný čas odpovede, najlepšia séria správnych odpovedí v každej hre, odomknuté vizuálne štýly, nastavenia tlačidiel a podobné údaje o pokroku potrebné pre herný zážitok.
 - Nastavenia aplikácie: lokálne predvoľby, vďaka ktorým si aplikácia pamätá, ako má v zariadení vyzerať alebo fungovať.
+- Nastavenia rodičovskej kontroly: možnosti precvičovania, ktoré rodič vyberie pre každého lokálneho hráča (napríklad rozsah čísel, typy príkladov a násobilky), a informácia, či bolo dokončené úvodné nastavenie. Chráni ich iba matematická otázka pre dospelých a nejde o bezpečnostnú funkciu.
 
 Tieto informácie sa používajú iba na poskytovanie vzdelávacej hry, zapamätanie pokroku, zobrazenie histórie a rebríčkov v zariadení, podporu lokálneho prispôsobenia a pohodlné opakované používanie aplikácie.
 

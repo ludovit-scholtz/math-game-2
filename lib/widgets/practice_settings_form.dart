@@ -1,9 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../l10n/app_strings.dart';
+import '../models/game_config.dart';
 import '../models/operation_type.dart';
 import '../models/practice_settings.dart';
-import '../models/game_config.dart';
 
 /// The form a parent uses to choose what a child practises. Shared by the
 /// first-run setup and the parental control panel. It is stateless: every
@@ -75,9 +75,9 @@ class PracticeSettingsForm extends StatelessWidget {
   }
 
   void _keepOne(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(context.strings.keepOneOptionOn)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.strings.keepOneOptionOn)));
   }
 
   @override
@@ -97,8 +97,7 @@ class PracticeSettingsForm extends StatelessWidget {
                   key: ValueKey('preset-${preset.name}'),
                   label: Text(strings.presetLabel(preset)),
                   selected: settings.matchingPreset == preset,
-                  onSelected: (_) =>
-                      onChanged(PracticeSettings.preset(preset)),
+                  onSelected: (_) => onChanged(settings.withPreset(preset)),
                 ),
             ],
           ),
@@ -130,8 +129,7 @@ class PracticeSettingsForm extends StatelessWidget {
                   key: ValueKey('range-${range.id}'),
                   label: Text(range.label),
                   selected: settings.range == range,
-                  onSelected: (_) =>
-                      onChanged(settings.copyWith(range: range)),
+                  onSelected: (_) => onChanged(settings.copyWith(range: range)),
                 ),
             ],
           ),
@@ -148,7 +146,8 @@ class PracticeSettingsForm extends StatelessWidget {
                   label: Text(strings.crossingLabel(mode)),
                   selected: settings.crossing == mode,
                   // Nothing within 5 reaches a ten.
-                  onSelected: mode == CrossingMode.only &&
+                  onSelected:
+                      mode == CrossingMode.only &&
                           settings.range == NumberRange.within5
                       ? null
                       : (_) => onChanged(settings.copyWith(crossing: mode)),
@@ -165,7 +164,9 @@ class PracticeSettingsForm extends StatelessWidget {
               for (final drill in Drill.values)
                 FilterChip(
                   key: ValueKey('drill-${drill.id}'),
-                  label: Text('${strings.drillLabel(drill)} (${drill.example})'),
+                  label: Text(
+                    '${strings.drillLabel(drill)} (${drill.example})',
+                  ),
                   selected: settings.drills.contains(drill),
                   onSelected: (_) => _toggleDrill(context, drill),
                 ),
@@ -178,9 +179,11 @@ class PracticeSettingsForm extends StatelessWidget {
             spacing: 10,
             runSpacing: 8,
             children: [
-              for (var t = PracticeSettings.minTable;
-                  t <= PracticeSettings.maxTable;
-                  t++)
+              for (
+                var t = PracticeSettings.minTable;
+                t <= PracticeSettings.maxTable;
+                t++
+              )
                 FilterChip(
                   key: ValueKey('table-$t'),
                   label: Text('×$t'),
@@ -226,10 +229,9 @@ class _Section extends StatelessWidget {
         children: [
           Text(
             title,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           child,

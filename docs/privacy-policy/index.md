@@ -1,7 +1,7 @@
 # Privacy Policy for Math Master
 
-Effective date: 2 June 2026  
-Last updated: 2 June 2026
+Effective date: 14 November 2026  
+Last updated: 14 November 2026
 
 This Privacy Policy describes how Scholtz & Company, jsa, ICO 51882272
 ("Developer", "we", "us", or "our") handles information in connection with
@@ -52,10 +52,16 @@ The App processes the following limited information locally on the user's device
 - Preferred language: the language selected for that player or device.
 - Game activity: math questions answered, selected game mode, results, score,
   mistakes, time-based performance, leaderboard entries, game history, earned
-  coins, unlocked visual styles, button customization choices, and similar
+  coins and gems, the list of questions answered incorrectly, average answer
+  time, best answer streak of each game, unlocked visual styles, button customization choices, and similar
   progress information needed for the game experience.
 - App settings: local preferences that make the App remember how it should look
   or behave on the device.
+- Parental control settings: the practice options a parent chooses for each
+  local player (such as number range, exercise types and multiplication
+  tables) and whether the first-time setup has been completed. They are
+  protected only by a math question for grown-ups and are not a security
+  feature.
 
 This information is used only to provide the App's educational gameplay,
 remember progress, show history and leaderboard information on the device,

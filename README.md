@@ -54,8 +54,9 @@ answer still counts. In the **shop** gems can be sold: every gem gives
 The **Parental control** panel (menu → *Parental control*) is protected by a
 grown-ups-only question — `(2^a + b × c) mod 1000` with `a` in 5–20 and `b`, `c`
 in 10000–99999, answered with the last three digits. It is also shown as a
-**first-run setup**. Settings are stored per player (new players start from the
-most recently saved settings) and a parent can choose:
+**first-run setup**. Settings are stored per player (players without their own
+settings use the ones from the first-run setup or "apply to all players") and a
+parent can choose:
 
 - **Number range** for + and −: up to **5, 10, 20, 100 or 1000**.
 - **Crossing ten** (carrying/borrowing, e.g. `15 + 16`, `32 − 13`): never,

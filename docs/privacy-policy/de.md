@@ -1,7 +1,7 @@
 # Datenschutzerklärung für Math Master
 
-Gültig ab: 2. Juni 2026
-Zuletzt aktualisiert: 2. Juni 2026
+Gültig ab: 14. November 2026
+Zuletzt aktualisiert: 14. November 2026
 
 Diese Datenschutzerklärung beschreibt, wie Scholtz & Company, jsa, IČO 51882272 ("Entwickler", "wir", "uns" oder "unser") Informationen im Zusammenhang mit der Anwendung Math Master (die "App") behandelt. Die App ist ein pädagogisches Mathematikspiel für Kinder und Familien. Sie ist so konzipiert, dass sie für Kinder sicher ist: Sie enthält keine Werbung, kein verhaltensbezogenes Tracking, keine sozialen Netzwerkfunktionen, keinen öffentlichen Chat, keine Veröffentlichung personenbezogener Daten innerhalb der App und keine Funktion, die darauf abzielt, ein Kind zur Weitergabe personenbezogener Daten an uns oder an andere Nutzer zu veranlassen.
 
@@ -25,8 +25,9 @@ Die App verarbeitet die folgenden begrenzten Informationen lokal auf dem Gerät 
 
 - Spielername: ein vom Nutzer gewählter Name zur Identifizierung eines lokalen Spielerprofils.
 - Bevorzugte Sprache: die für den Spieler oder das Gerät ausgewählte Sprache.
-- Spielaktivität: beantwortete Mathematikaufgaben, ausgewählter Spielmodus, Ergebnisse, Punktestand, Fehler, zeitbezogene Leistung, Einträge in lokalen Bestenlisten, Spielverlauf, verdiente Münzen, freigeschaltete visuelle Stile, Schaltflächen-Anpassungen und ähnliche Fortschrittsinformationen, die für das Spielerlebnis erforderlich sind.
+- Spielaktivität: beantwortete Mathematikaufgaben, ausgewählter Spielmodus, Ergebnisse, Punktestand, Fehler, zeitbezogene Leistung, Einträge in lokalen Bestenlisten, Spielverlauf, verdiente Münzen und Edelsteine, die Liste falsch beantworteter Fragen, durchschnittliche Antwortzeit, beste Serie richtiger Antworten je Spiel, freigeschaltete visuelle Stile, Schaltflächen-Anpassungen und ähnliche Fortschrittsinformationen, die für das Spielerlebnis erforderlich sind.
 - App-Einstellungen: lokale Präferenzen, mit denen sich die App merkt, wie sie auf dem Gerät aussehen oder funktionieren soll.
+- Einstellungen der Kindersicherung: die Übungsoptionen, die ein Elternteil für jeden lokalen Spieler wählt (z. B. Zahlenbereich, Aufgabenarten und Einmaleinsreihen), sowie ob die erstmalige Einrichtung abgeschlossen wurde. Sie sind nur durch eine Mathematikfrage für Erwachsene geschützt und keine Sicherheitsfunktion.
 
 Diese Informationen werden ausschließlich verwendet, um das pädagogische Spielerlebnis bereitzustellen, Fortschritte zu speichern, Verlauf und Bestenlisten auf dem Gerät anzuzeigen, lokale Anpassungen zu unterstützen und die wiederholte Nutzung der App komfortabler zu machen.
 

@@ -175,6 +175,8 @@ class QuestionGenerator {
           unknown: UnknownPart.operandB,
         );
       case Drill.bridgeTen:
+        // Sums reach 18, so below 20 stay inside the range with pairs to ten.
+        if (max < 20) return _drill(Drill.pairsToTen, s);
         if (_rng.nextBool()) {
           final a = 2 + _rng.nextInt(8); // 2..9
           final low = _larger(2, 11 - a); // a + b must reach 11 or more

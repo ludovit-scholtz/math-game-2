@@ -9,7 +9,8 @@ import '../models/practice_settings.dart';
 /// like everything else.
 ///
 /// Settings are kept per player (by name). A player without their own settings
-/// uses the **template**: the settings that were saved most recently.
+/// uses the **template**: the settings chosen in the first-run setup or applied
+/// with "apply to all players". Editing one player never changes another.
 class ParentalSettingsService {
   static const String _settingsKey = 'practice_settings_v1';
   static const String _onboardingKey = 'onboarding_done_v1';
@@ -52,16 +53,20 @@ class ParentalSettingsService {
     return _parse(data['template']) ?? PracticeSettings.defaults();
   }
 
-  /// Saves [settings] for [playerName] (or only as the template when `null`)
-  /// and makes them the template for players added later.
+  /// Saves [settings] for [playerName]. With no name they become the
+  /// template that players without their own settings use. Saving for one
+  /// player never changes what other players get.
   Future<void> save(PracticeSettings settings, [String? playerName]) async {
     final data = await _loadRaw();
-    final players = data['players'] is Map
-        ? Map<String, dynamic>.from(data['players'] as Map)
-        : <String, dynamic>{};
-    if (playerName != null) players[playerName] = settings.toJson();
-    data['players'] = players;
-    data['template'] = settings.toJson();
+    if (playerName == null) {
+      data['template'] = settings.toJson();
+    } else {
+      final players = data['players'] is Map
+          ? Map<String, dynamic>.from(data['players'] as Map)
+          : <String, dynamic>{};
+      players[playerName] = settings.toJson();
+      data['players'] = players;
+    }
     await _saveRaw(data);
   }
 

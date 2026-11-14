@@ -114,13 +114,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadPlayer() async {
     final player = await _playerService.loadCurrent();
+    // Player and restrictions are shown together, so Start never runs with
+    // settings that are still loading.
+    final settings = await _parentalService.load(player?.name);
     if (!mounted) return;
     setState(() {
       _player = player;
+      _applySettings(settings);
       _loadingPlayer = false;
     });
-    await _loadSettings(player?.name);
-    if (!mounted) return;
     if (player != null) {
       _loadCoins(player.name);
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -146,8 +148,9 @@ class _HomeScreenState extends State<HomeScreen> {
     if (selected != null && mounted) {
       setState(() => _player = selected);
       _loadCoins(selected.name);
-      _loadSettings(selected.name);
       MathGameApp.of(context).setLocale(Locale(selected.languageCode));
+      // Wait for this player's restrictions before a game can be started.
+      await _loadSettings(selected.name);
     }
     return selected;
   }

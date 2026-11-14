@@ -13,14 +13,14 @@ void main() {
   final later = selectedAt.add(const Duration(days: 1, hours: 12));
 
   PlayerProfile neglected() => PlayerProfile(
-        name: 'Ann',
-        languageCode: 'en',
-        petType: PetType.cat,
-        petFeedingPoints: 100,
-        petEnjoymentPoints: 100,
-        petFeedingUpdatedAt: selectedAt,
-        petEnjoymentUpdatedAt: selectedAt,
-      );
+    name: 'Ann',
+    languageCode: 'en',
+    petType: PetType.cat,
+    petFeedingPoints: 100,
+    petEnjoymentPoints: 100,
+    petFeedingUpdatedAt: selectedAt,
+    petEnjoymentUpdatedAt: selectedAt,
+  );
 
   test('withPetType keeps care exactly as it is', () {
     final before = neglected();
@@ -31,17 +31,17 @@ void main() {
     expect(after.petEnjoymentPoints, before.petEnjoymentPoints);
     expect(after.petFeedingUpdatedAt, before.petFeedingUpdatedAt);
     expect(after.petEnjoymentUpdatedAt, before.petEnjoymentUpdatedAt);
-    expect(after.petCare(now: later).feedingPoints,
-        before.petCare(now: later).feedingPoints);
+    expect(
+      after.petCare(now: later).feedingPoints,
+      before.petCare(now: later).feedingPoints,
+    );
     expect(after.petCare(now: later).mood, PetMood.hungry);
   });
 
   test('switching again and again cannot freeze the decay', () {
     var profile = neglected();
     for (var i = 0; i < 20; i++) {
-      profile = profile.withPetType(
-        i.isEven ? PetType.dog : PetType.rabbit,
-      );
+      profile = profile.withPetType(i.isEven ? PetType.dog : PetType.rabbit);
     }
     expect(profile.petCare(now: later).feedingPoints, 0);
     expect(profile.petCare(now: later).mood, PetMood.hungry);

@@ -70,9 +70,9 @@ class _ParentalControlScreenState extends State<ParentalControlScreen> {
   Future<void> _applyToAll() async {
     await _service.saveForAll(_settings, _players.map((p) => p.name));
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(context.strings.appliedToAll)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.strings.appliedToAll)));
   }
 
   void _openHistory() {
@@ -109,10 +109,9 @@ class _ParentalControlScreenState extends State<ParentalControlScreen> {
                   if (_players.isNotEmpty) ...[
                     Text(
                       strings.settingsFor,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     DropdownButton<String>(
