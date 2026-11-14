@@ -43,6 +43,19 @@ void main() {
       }
     });
 
+    test('division reaches both ends of the 1..10 range', () {
+      final divisors = <int>{};
+      final quotients = <int>{};
+      for (var i = 0; i < 2000; i++) {
+        final q = generator.generate({OperationType.division});
+        divisors.add(q.operandB);
+        quotients.add(q.correctAnswer);
+      }
+      final full = {for (var v = 1; v <= 10; v++) v};
+      expect(divisors, full);
+      expect(quotients, full);
+    });
+
     test('division result is always between 1 and 10', () {
       for (var i = 0; i < 500; i++) {
         final q = generator.generate({OperationType.division});

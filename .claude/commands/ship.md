@@ -18,7 +18,9 @@ Ship the current work: $ARGUMENTS
 6. **Fix** — apply valid findings in a new commit, re-run `/check`, push.
 7. **Re-review** — repeat steps 5–6 until no actionable findings remain.
 8. **CI** — `gh pr checks --watch`; fix failures.
-9. **Merge** — `gh pr merge --squash --delete-branch`, then
+9. **Merge** — unless the user explicitly asked you to merge in this request,
+   show the PR summary and **ask for confirmation first**. Then
+   `gh pr merge --squash --delete-branch`, then
    `git switch main && git pull --ff-only`.
 
 Summarise the PR URL, review findings and how each was resolved.

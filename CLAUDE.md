@@ -11,7 +11,7 @@ Project commands live in `.claude/commands/`:
 
 | Command | Purpose |
 | --- | --- |
-| `/check` | Run `flutter analyze` + `flutter test` and fix anything that fails |
+| `/check [test path]` | Run `flutter analyze` + `flutter test` and fix anything that fails |
 | `/add-string <key> <English text>` | Add a translated UI string to all 11 languages |
 | `/add-language <code>` | Add a new supported language end-to-end |
 | `/change-rule <description>` | Change a game rule and keep code, tests, README and Guide in sync |

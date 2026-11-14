@@ -49,7 +49,7 @@ class QuestionGenerator {
         answer = a * b;
         break;
       case OperationType.division:
-        b = _rng.nextInt(maxDivisionValue - 1) + 1; // divisor 1..10
+        b = _rng.nextInt(maxDivisionValue) + 1; // divisor 1..10
         answer = _rng.nextInt(maxDivisionValue) + 1; // quotient 1..10
         a = b * answer; // dividend stays <= 100 and divides evenly
         break;

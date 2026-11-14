@@ -35,7 +35,8 @@ flutter run -d chrome      # run locally (web) — or -d windows / a device
   change (`dart format path/to/file.dart`) and keep unrelated files untouched.
 - Platform folders (`android/`, `ios/`, `web/`, …) are **git-ignored** and
   generated in CI by `flutter create`. Never commit them. Run
-  `flutter create --platforms=web,android --org io.biatec --project-name math_master .`
+  `flutter create --platforms=android,ios,web --org io.biatec --project-name math_master .`
+  (same as CI)
   locally if you need them. Native config changes (manifest, Gradle, Info.plist)
   must be made in the Python patch steps inside the workflows, not in files.
 
@@ -85,8 +86,8 @@ Key conventions:
 
 - Operands and answers stay in `0..100`; subtraction is never negative;
   multiplication factors are `2..10`.
-- Division always divides evenly; quotient and divisor are basic facts
-  (`QuestionGenerator.maxDivisionValue = 10`).
+- Division always divides evenly; divisor and quotient are both in `1..10`
+  (`QuestionGenerator.maxDivisionValue = 10`), so the dividend is at most 100.
 - Every question has exactly `QuestionGenerator.optionCount = 6` distinct,
   non-negative answer cards.
 - Scoring (`Scoring`): `<1 s` → 3 pts; `1–10 s` → linear 3→1; `>10 s` or wrong →
