@@ -24,20 +24,20 @@ flutter pub get
 flutter analyze            # must report "No issues found!"
 flutter test               # all tests must pass
 flutter test test/question_generator_test.dart   # single file
-flutter run -d chrome      # run locally (web) — or -d windows / a device
+flutter run -d chrome      # run locally (web) — needs platform folders, see below
 ```
 
 - CI (`.github/workflows/ci.yml`) runs `flutter analyze` and `flutter test`
   with Flutter **3.44.0**, then builds APK/AAB and web.
 - **Formatting is not enforced by CI.** The local Dart formatter may be newer
   than the one the code was written with and would reformat many files. Do
-  **not** run `dart format .` on the whole repo; format only the files you
-  change (`dart format path/to/file.dart`) and keep unrelated files untouched.
+  **not** run `dart format` on existing files — it rewrites them wholesale.
+  Match the surrounding style by hand; only format brand-new files.
 - Platform folders (`android/`, `ios/`, `web/`, …) are **git-ignored** and
-  generated in CI by `flutter create`. Never commit them. Run
+  generated in CI by `flutter create`. Never commit them. To create them
+  locally, use the same command as CI:
   `flutter create --platforms=android,ios,web --org io.biatec --project-name math_master .`
-  (same as CI)
-  locally if you need them. Native config changes (manifest, Gradle, Info.plist)
+  (add `windows` to the list to run as a Windows desktop app). Native config changes (manifest, Gradle, Info.plist)
   must be made in the Python patch steps inside the workflows, not in files.
 
 ## Architecture

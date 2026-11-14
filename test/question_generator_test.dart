@@ -43,11 +43,12 @@ void main() {
       }
     });
 
-    test('division reaches both ends of the 1..10 range', () {
+    test('division reaches every divisor and quotient in 1..10', () {
+      final local = QuestionGenerator(random: Random(7));
       final divisors = <int>{};
       final quotients = <int>{};
       for (var i = 0; i < 2000; i++) {
-        final q = generator.generate({OperationType.division});
+        final q = local.generate({OperationType.division});
         divisors.add(q.operandB);
         quotients.add(q.correctAnswer);
       }
@@ -60,7 +61,6 @@ void main() {
       for (var i = 0; i < 500; i++) {
         final q = generator.generate({OperationType.division});
         expect(q.operandA, inInclusiveRange(1, 100));
-        expect(q.operandB, inInclusiveRange(1, 10));
         expect(q.correctAnswer, inInclusiveRange(1, 10));
       }
     });

@@ -5,7 +5,8 @@ argument-hint: <x.y.z>
 
 Release version `$ARGUMENTS`.
 
-1. Ensure you are on an up-to-date `main` with a clean tree
+1. Fetch all tags (`git fetch --tags origin`) and ensure you are on an
+   up-to-date `main` with a clean tree
    (`git switch main && git pull --ff-only && git status`).
 2. Verify the version is semver `X.Y.Z` and greater than the latest tag
    (`git tag --sort=-v:refname | head -5`). The version code is derived as
