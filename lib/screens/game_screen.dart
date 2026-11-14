@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../l10n/app_strings.dart';
 import '../logic/game_controller.dart';
+import '../logic/gems.dart';
 import '../models/background_style.dart';
 import '../models/game_config.dart';
 import '../models/question.dart';
@@ -44,10 +45,18 @@ class _GameScreenState extends State<GameScreen> {
   String _feedback = '';
   bool _feedbackIsNegative = false;
 
+  /// True while the answer that completed a gem streak is being shown, so the
+  /// streak bar can show all dots lit before it starts over.
+  bool _gemJustEarned = false;
+
   @override
   void initState() {
     super.initState();
-    _controller = GameController(operations: widget.config.operations);
+    _controller = GameController(
+      operations: widget.config.operations,
+      drills: widget.config.drills,
+      settings: widget.config.settings,
+    );
     _remainingSeconds = widget.config.duration.seconds;
     _question = _controller.nextQuestion();
     _questionStart = DateTime.now();
@@ -85,7 +94,11 @@ class _GameScreenState extends State<GameScreen> {
     setState(() {
       _locked = true;
       _selectedAnswer = value;
-      if (result.correct) {
+      _gemJustEarned = result.gemEarned;
+      if (result.gemEarned) {
+        _feedback = strings.gemEarnedFeedback;
+        _feedbackIsNegative = false;
+      } else if (result.correct) {
         final pts = result.pointsAwarded;
         _feedback = pts > 0
             ? strings.niceFeedback(
@@ -99,7 +112,8 @@ class _GameScreenState extends State<GameScreen> {
       }
     });
 
-    if (result.correct && result.pointsAwarded > 0) {
+    // A gem is a reward, even when the last answer of the streak was slow.
+    if (result.gemEarned || (result.correct && result.pointsAwarded > 0)) {
       unawaited(_audio.playCorrect());
     } else {
       unawaited(_audio.playIncorrect());
@@ -112,6 +126,7 @@ class _GameScreenState extends State<GameScreen> {
       _questionStart = DateTime.now();
       _selectedAnswer = null;
       _locked = false;
+      _gemJustEarned = false;
       _feedback = '';
       _feedbackIsNegative = false;
     });
@@ -129,6 +144,10 @@ class _GameScreenState extends State<GameScreen> {
           finalScore: score,
           correctCount: _controller.correctCount,
           answeredCount: _controller.answeredCount,
+          gemsEarned: _controller.gemsEarned,
+          bestStreak: _controller.bestStreak,
+          avgAnswerMillis: _controller.averageAnswerMillis,
+          missed: _controller.missedPrompts,
         ),
       ),
     );
@@ -183,14 +202,22 @@ class _GameScreenState extends State<GameScreen> {
                         Navigator.of(context).pop();
                       },
                     ),
+                    const SizedBox(height: 12),
+                    _StreakBar(
+                      streak: _gemJustEarned ? Gems.streakLength : _controller.streak,
+                      gems: _controller.gemsEarned,
+                    ),
                     SizedBox(height: verticalGap),
-                    Text(
-                      _question.prompt,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: questionFontSize,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.primary,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        _question.prompt,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: questionFontSize,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primary,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -238,6 +265,42 @@ class _GameScreenState extends State<GameScreen> {
           },
         ),
       ),
+    );
+  }
+}
+
+/// Shows progress towards the next gem: one dot per correct answer in a row.
+class _StreakBar extends StatelessWidget {
+  const _StreakBar({required this.streak, required this.gems});
+
+  final int streak;
+  final int gems;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        for (var i = 0; i < Gems.streakLength; i++)
+          Container(
+            key: ValueKey('streak-dot-$i'),
+            width: 14,
+            height: 14,
+            margin: const EdgeInsets.symmetric(horizontal: 3),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: i < streak
+                  ? AppTheme.secondary
+                  : AppTheme.primary.withValues(alpha: 0.15),
+            ),
+          ),
+        const SizedBox(width: 10),
+        Text(
+          '💎 $gems',
+          key: const ValueKey('gem-count'),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      ],
     );
   }
 }

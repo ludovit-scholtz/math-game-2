@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../logic/gems.dart';
 import '../models/background_style.dart';
 
 /// A player's coin balance together with the button styles they own and how
@@ -11,11 +12,15 @@ class CoinWallet {
     required this.coins,
     required List<String> purchasedStyleIds,
     required List<String> assignments,
+    this.gems = 0,
   })  : purchasedStyleIds = List.unmodifiable(purchasedStyleIds),
         assignments = List.unmodifiable(_normalizeAssignments(assignments));
 
   /// Current coin balance.
   final int coins;
+
+  /// Gems earned by answering correctly in a row; sellable for coins.
+  final int gems;
 
   /// Ids of the (non-default) styles the player has bought.
   final List<String> purchasedStyleIds;
@@ -46,8 +51,10 @@ class CoinWallet {
     int? coins,
     List<String>? purchasedStyleIds,
     List<String>? assignments,
+    int? gems,
   }) =>
       CoinWallet(
+        gems: gems ?? this.gems,
         coins: coins ?? this.coins,
         purchasedStyleIds: purchasedStyleIds ?? this.purchasedStyleIds,
         assignments: assignments ?? this.assignments,
@@ -57,6 +64,7 @@ class CoinWallet {
         'coins': coins,
         'purchased': purchasedStyleIds,
         'assignments': assignments,
+        'gems': gems,
       };
 
   factory CoinWallet.fromJson(Map<String, dynamic> json) {
@@ -70,6 +78,7 @@ class CoinWallet {
         defaultAssignments();
     return CoinWallet(
       coins: (json['coins'] as num?)?.toInt() ?? 0,
+      gems: ((json['gems'] as num?)?.toInt() ?? 0).clamp(0, 1 << 30),
       purchasedStyleIds: purchased,
       assignments: assignments,
     );
@@ -136,6 +145,47 @@ class CoinService {
     if (amount <= 0) return load(playerName);
     final wallet = await load(playerName);
     return _update(playerName, wallet.copyWith(coins: wallet.coins + amount));
+  }
+
+  /// Adds the coins and gems earned in one game in a single save, so a game
+  /// can never pay out only half of its reward.
+  Future<CoinWallet> addReward(
+    String playerName, {
+    int coins = 0,
+    int gems = 0,
+  }) async {
+    final wallet = await load(playerName);
+    if (coins <= 0 && gems <= 0) return wallet;
+    return _update(
+      playerName,
+      wallet.copyWith(
+        coins: wallet.coins + (coins > 0 ? coins : 0),
+        gems: wallet.gems + (gems > 0 ? gems : 0),
+      ),
+    );
+  }
+
+  /// Adds [amount] gems to [playerName]'s collection.
+  Future<CoinWallet> addGems(String playerName, int amount) async {
+    if (amount <= 0) return load(playerName);
+    final wallet = await load(playerName);
+    return _update(playerName, wallet.copyWith(gems: wallet.gems + amount));
+  }
+
+  /// Sells [count] gems for [Gems.coinValue] coins each in one save. Returns
+  /// the updated wallet, or `null` if [count] is not positive or the player
+  /// owns fewer gems.
+  Future<CoinWallet?> sellGems(String playerName, int count) async {
+    if (count <= 0) return null;
+    final wallet = await load(playerName);
+    if (wallet.gems < count) return null;
+    return _update(
+      playerName,
+      wallet.copyWith(
+        gems: wallet.gems - count,
+        coins: wallet.coins + Gems.coinsFor(count),
+      ),
+    );
   }
 
   /// Attempts to spend [amount] coins. Returns the updated wallet on success,

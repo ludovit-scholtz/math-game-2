@@ -6,7 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   setUp(() {
-    SharedPreferences.setMockInitialValues({});
+    // The first-run setup has its own test; skip it here.
+    SharedPreferences.setMockInitialValues({'onboarding_done_v1': true});
   });
 
   testWidgets('home screen shows updated English title and actions', (

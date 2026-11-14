@@ -1,7 +1,7 @@
 # Politique de confidentialité de Math Master
 
-Date d'entrée en vigueur : 2 juin 2026
-Dernière mise à jour : 2 juin 2026
+Date d'entrée en vigueur : 14 novembre 2026
+Dernière mise à jour : 14 novembre 2026
 
 Cette Politique de confidentialité décrit la manière dont Scholtz & Company, jsa, IČO 51882272 ("Développeur", "nous" ou "notre") traite les informations liées à l'application Math Master (l'"Application"). L'Application est un jeu éducatif de mathématiques destiné aux enfants et aux familles. Elle est conçue pour être sûre pour les enfants : elle ne contient pas de publicité, de suivi comportemental, de fonctions de réseau social, de chat public, de divulgation d'informations personnelles dans l'application, ni de fonction destinée à pousser un enfant à partager des données personnelles avec nous ou avec d'autres utilisateurs.
 
@@ -25,8 +25,9 @@ L'Application traite localement sur l'appareil les informations limitées suivan
 
 - Surnom du joueur : nom choisi par l'utilisateur pour identifier un profil local.
 - Langue préférée : langue choisie pour ce joueur ou cet appareil.
-- Activité de jeu : questions de mathématiques répondues, mode de jeu choisi, résultats, score, erreurs, performance liée au temps, entrées de classement local, historique des parties, pièces gagnées, styles visuels débloqués, choix de personnalisation des boutons et informations similaires nécessaires à l'expérience de jeu.
+- Activité de jeu : questions de mathématiques répondues, mode de jeu choisi, résultats, score, erreurs, performance liée au temps, entrées de classement local, historique des parties, pièces et gemmes gagnées, liste des questions auxquelles on a mal répondu, temps de réponse moyen et meilleure série de réponses de chaque partie, styles visuels débloqués, choix de personnalisation des boutons et informations similaires nécessaires à l'expérience de jeu.
 - Paramètres de l'Application : préférences locales permettant à l'Application de mémoriser son apparence ou son comportement sur l'appareil.
+- Paramètres du contrôle parental : les options d'entraînement qu'un parent choisit pour chaque joueur local (comme la plage de nombres, les types d'exercices et les tables de multiplication) et l'indication que la configuration initiale est terminée. Ils sont protégés uniquement par une question de mathématiques pour adultes et ne constituent pas une fonction de sécurité.
 
 Ces informations sont utilisées uniquement pour fournir le jeu éducatif, mémoriser la progression, afficher l'historique et le classement sur l'appareil, prendre en charge la personnalisation locale et rendre l'utilisation répétée de l'Application plus pratique.
 

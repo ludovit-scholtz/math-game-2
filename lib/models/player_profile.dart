@@ -73,6 +73,12 @@ class PlayerProfile {
     );
   }
 
+  /// Switches to another kind of pet **without** touching its care. Feeding,
+  /// enjoyment and their timestamps stay exactly as they are, so a hungry or
+  /// sad pet is still hungry or sad afterwards and switching can never be used
+  /// to dodge the daily decay or to get a fresh, happy pet.
+  PlayerProfile withPetType(PetType type) => copyWith(petType: type);
+
   PetCare petCare({DateTime? now}) {
     final current = now ?? DateTime.now();
     return PetCare(

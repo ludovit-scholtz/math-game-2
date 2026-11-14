@@ -7,7 +7,7 @@ import 'package:math_game_2/main.dart';
 
 void main() {
   setUp(() {
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferences.setMockInitialValues({'onboarding_done_v1': true});
   });
 
   testWidgets('app boots and shows the home screen', (tester) async {

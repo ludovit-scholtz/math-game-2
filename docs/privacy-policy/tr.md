@@ -1,7 +1,7 @@
 # Math Master Gizlilik Politikası
 
-Yürürlük tarihi: 2 Haziran 2026
-Son güncelleme: 2 Haziran 2026
+Yürürlük tarihi: 14 Kasım 2026
+Son güncelleme: 14 Kasım 2026
 
 Bu Gizlilik Politikası, Scholtz & Company, jsa, IČO 51882272'nin ("Geliştirici", "biz" veya "bizim") Math Master uygulamasıyla ("Uygulama") bağlantılı bilgileri nasıl ele aldığını açıklar. Uygulama çocuklar ve aileler için eğitici bir matematik oyunudur. Çocuklar için güvenli olacak şekilde tasarlanmıştır: reklam, davranışsal izleme, sosyal ağ özellikleri, genel sohbet, uygulama içinde kişisel bilgi açıklama veya bir çocuğu bizimle ya da diğer kullanıcılarla kişisel veri paylaşmaya yöneltecek herhangi bir özellik içermez.
 
@@ -25,8 +25,9 @@ Uygulama aşağıdaki sınırlı bilgileri kullanıcının cihazında yerel olar
 
 - Oyuncu takma adı: yerel profili tanımlamak için kullanıcının seçtiği ad.
 - Tercih edilen dil: oyuncu veya cihaz için seçilen dil.
-- Oyun etkinliği: cevaplanan matematik soruları, seçilen oyun modu, sonuçlar, puan, hatalar, süreye dayalı performans, yerel lider tablosu kayıtları, oyun geçmişi, kazanılan jetonlar, açılan görsel stiller, düğme özelleştirme seçimleri ve oyun deneyimi için gerekli benzer ilerleme bilgileri.
+- Oyun etkinliği: cevaplanan matematik soruları, seçilen oyun modu, sonuçlar, puan, hatalar, süreye dayalı performans, yerel lider tablosu kayıtları, oyun geçmişi, kazanılan jetonlar ve mücevherler, yanlış cevaplanan soruların listesi, her oyunun ortalama cevap süresi ve en iyi doğru cevap serisi, açılan görsel stiller, düğme özelleştirme seçimleri ve oyun deneyimi için gerekli benzer ilerleme bilgileri.
 - Uygulama ayarları: Uygulamanın cihazda nasıl görüneceğini veya davranacağını hatırlamasını sağlayan yerel tercihler.
+- Ebeveyn denetimi ayarları: ebeveynin her yerel oyuncu için seçtiği alıştırma seçenekleri (sayı aralığı, alıştırma türleri ve çarpım tabloları gibi) ve ilk kurulumun tamamlanıp tamamlanmadığı. Yalnızca yetişkinlere yönelik bir matematik sorusuyla korunurlar ve bir güvenlik özelliği değildir.
 
 Bu bilgiler yalnızca eğitici oyunu sunmak, ilerlemeyi hatırlamak, geçmişi ve lider tablosunu cihazda göstermek, yerel özelleştirmeyi desteklemek ve Uygulamanın tekrar kullanımını kolaylaştırmak için kullanılır.
 

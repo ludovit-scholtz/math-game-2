@@ -19,7 +19,10 @@ Rodiče, kteří chtějí pro své děti pravidelné procvičování matematiky,
 Hlavní funkce:
 
 - Procvičování sčítání, odčítání, násobení a dělení.
-- Všechna čísla jsou do 100, což je vhodné pro mladší žáky.
+- Čísla jsou ve výchozím nastavení do 100 a rodiče mohou zvolit jiný rozsah: do 5, 10, 20, 100 nebo 1000.
+- Režimy procvičování podle toho, jak se děti učí ve škole: přechod přes desítku (např. 15 + 16 nebo 32 − 13), dvojnásobky, dvojice dávající 10, přechod přes desítku po krocích, chybějící čísla a vybraná násobilka.
+- Rodičovská kontrola chráněná příkladem jen pro dospělé: vyberte, co dítě procvičuje, vše nastavte při prvním spuštění a prohlížejte každou odehranou hru s datem, časem a výsledky.
+- Získávejte drahokamy za 5 správných odpovědí v řadě a v obchodě je prodejte za mince.
 - Výzvy na 1, 2 nebo 5 minut.
 - Možnost procvičovat jednu operaci nebo více operací v jednom kole.
 - Šest možností odpovědi dělá hru rychlou a přehlednou.

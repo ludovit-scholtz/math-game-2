@@ -12,11 +12,15 @@ class GameTypeLeaderboard {
     required this.duration,
     required this.operationSymbols,
     required this.entries,
+    this.modeLabel = '',
   });
 
   final String gameTypeKey;
   final ChallengeDuration duration;
   final String operationSymbols;
+
+  /// Language independent description of the difficulty, empty for classic.
+  final String modeLabel;
 
   /// One entry per player (their best score), highest first.
   final List<ScoreEntry> entries;
@@ -28,7 +32,8 @@ class GameTypeLeaderboard {
 class LeaderboardService {
   static const String _key = 'history_v2';
 
-  /// Maximum number of games kept in storage.
+  /// Maximum number of games kept in storage **per player**, so one busy
+  /// player cannot push another player's history out.
   static const int maxHistory = 500;
 
   /// Returns all stored games, most recent first.
@@ -51,7 +56,13 @@ class LeaderboardService {
   /// Stores [entry] and returns the full, updated history (most recent first).
   Future<List<ScoreEntry>> addScore(ScoreEntry entry) async {
     final entries = await load()..insert(0, entry);
-    final trimmed = entries.take(maxHistory).toList();
+    final perPlayer = <String, int>{};
+    final trimmed = <ScoreEntry>[];
+    for (final e in entries) {
+      final count = (perPlayer[e.name] ?? 0) + 1;
+      perPlayer[e.name] = count;
+      if (count <= maxHistory) trimmed.add(e);
+    }
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
       _key,
@@ -88,6 +99,7 @@ class LeaderboardService {
           gameTypeKey: first.gameTypeKey,
           duration: first.duration,
           operationSymbols: first.operationSymbols,
+          modeLabel: first.modeLabel,
           entries: ranked,
         ),
       );
@@ -96,7 +108,9 @@ class LeaderboardService {
     boards.sort((a, b) {
       final byDuration = a.duration.index.compareTo(b.duration.index);
       if (byDuration != 0) return byDuration;
-      return a.operationSymbols.compareTo(b.operationSymbols);
+      final bySymbols = a.operationSymbols.compareTo(b.operationSymbols);
+      if (bySymbols != 0) return bySymbols;
+      return a.gameTypeKey.compareTo(b.gameTypeKey);
     });
     return boards;
   }

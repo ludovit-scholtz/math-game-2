@@ -19,7 +19,10 @@ Parents who want regular math practice for their children will find a clean educ
 Key features:
 
 - Practice addition, subtraction, multiplication and division.
-- All numbers stay under 100, making the game suitable for early learners.
+- Numbers stay under 100 by default, and parents can choose other ranges: up to 5, 10, 20, 100 or 1000.
+- Practice modes that follow how children learn at school: crossing over ten (like 15 + 16 or 32 − 13), doubles, pairs that make 10, bridging through ten, missing numbers and chosen multiplication tables.
+- Parental control, protected by a grown-ups-only math question: choose what your child practises, set up everything on first start, and see every game played with date, time and results.
+- Earn gems for 5 correct answers in a row and sell them in the shop for coins.
 - Choose 1, 2 or 5 minute challenges.
 - Practise one operation or combine several operations in the same round.
 - Six answer choices make each question quick and easy to play.

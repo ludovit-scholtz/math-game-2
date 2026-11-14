@@ -35,15 +35,17 @@ void main() {
       }
     });
 
-    test('division divisor is always between 1 and 10', () {
+    test('division divisor is always an enabled table (2..10 by default)',
+        () {
       for (var i = 0; i < 500; i++) {
         final q = generator.generate({OperationType.division});
         expect(q.operandB,
-            inInclusiveRange(1, QuestionGenerator.maxDivisionValue));
+            inInclusiveRange(2, QuestionGenerator.maxDivisionValue));
       }
     });
 
-    test('division reaches every divisor and quotient in 1..10', () {
+    test('division reaches every table as divisor and every quotient 1..10',
+        () {
       final local = QuestionGenerator(random: Random(7));
       final divisors = <int>{};
       final quotients = <int>{};
@@ -52,9 +54,8 @@ void main() {
         divisors.add(q.operandB);
         quotients.add(q.correctAnswer);
       }
-      final full = {for (var v = 1; v <= 10; v++) v};
-      expect(divisors, full);
-      expect(quotients, full);
+      expect(divisors, {for (var v = 2; v <= 10; v++) v});
+      expect(quotients, {for (var v = 1; v <= 10; v++) v});
     });
 
     test('division result is always between 1 and 10', () {

@@ -23,6 +23,10 @@ class ResultsScreen extends StatefulWidget {
     this.finalScore,
     this.correctCount,
     this.answeredCount,
+    this.gemsEarned,
+    this.bestStreak,
+    this.avgAnswerMillis,
+    this.missed,
   });
 
   /// Non-null when arriving from a finished game.
@@ -30,6 +34,10 @@ class ResultsScreen extends StatefulWidget {
   final int? finalScore;
   final int? correctCount;
   final int? answeredCount;
+  final int? gemsEarned;
+  final int? bestStreak;
+  final int? avgAnswerMillis;
+  final List<String>? missed;
 
   @override
   State<ResultsScreen> createState() => _ResultsScreenState();
@@ -45,6 +53,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
   String? _highlightGameType;
   bool _initialized = false;
   int _coinsEarned = 0;
+  int _gemsEarned = 0;
   int? _coinBalance;
   bool _newRecord = false;
 
@@ -60,14 +69,21 @@ class _ResultsScreenState extends State<ResultsScreen> {
     List<ScoreEntry> history;
     if (widget.finalScore != null && widget.finishedConfig != null) {
       final config = widget.finishedConfig!;
-      final entry = ScoreEntry(
+      _gemsEarned = widget.gemsEarned ?? 0;
+      var entry = ScoreEntry(
         name: config.playerName,
         score: widget.finalScore!,
         duration: config.duration,
         operations: config.operations.toList(),
+        drills: config.drills.toList(),
+        modeKey: config.modeKey,
         correct: widget.correctCount ?? 0,
         answered: widget.answeredCount ?? 0,
         dateMillis: DateTime.now().millisecondsSinceEpoch,
+        gemsEarned: _gemsEarned,
+        bestStreak: widget.bestStreak ?? 0,
+        avgAnswerMillis: widget.avgAnswerMillis ?? 0,
+        missed: widget.missed ?? const <String>[],
       );
       _highlightDate = entry.dateMillis;
       _highlightGameType = entry.gameTypeKey;
@@ -78,18 +94,29 @@ class _ResultsScreenState extends State<ResultsScreen> {
       final previousTop = previous
           .where((e) => e.gameTypeKey == entry.gameTypeKey)
           .fold<int>(0, (best, e) => e.score > best ? e.score : best);
+      // A category nobody has played yet has no top score. Scale against the
+      // best score of that challenge length instead, so switching modes or
+      // drills cannot be used to collect the full reward again and again.
+      final lengthTop = previous
+          .where((e) => e.duration == config.duration)
+          .fold<int>(0, (best, e) => e.score > best ? e.score : best);
       _coinsEarned = Coins.forScore(
         entry.score,
-        previousTop,
+        previousTop > 0 ? previousTop : lengthTop,
         duration: config.duration,
       );
       _newRecord = entry.score > 0 && entry.score > previousTop;
+      entry = entry.copyWith(coinsEarned: _coinsEarned);
 
-      if (_coinsEarned > 0) {
-        await _coinService.addCoins(config.playerName, _coinsEarned);
-      }
-      _coinBalance = (await _coinService.load(config.playerName)).coins;
+      // History first: it feeds the coin baseline of later games, so it must
+      // never be missing for a game whose reward was already paid.
       history = await _service.addScore(entry);
+      final wallet = await _coinService.addReward(
+        config.playerName,
+        coins: _coinsEarned,
+        gems: _gemsEarned,
+      );
+      _coinBalance = wallet.coins;
     } else {
       history = await _service.load();
     }
@@ -262,6 +289,16 @@ class _ResultsScreenState extends State<ResultsScreen> {
               ],
             ),
           ),
+          if (_gemsEarned > 0) ...[
+            const SizedBox(height: 8),
+            Text(
+              '💎 ${strings.gemsEarnedLabel(_gemsEarned)}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
           if (_coinBalance != null) ...[
             const SizedBox(height: 8),
             Text(
@@ -346,8 +383,11 @@ class _LeaderboardSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final strings = context.strings;
-    final title =
-        '${strings.durationLabel(board.duration)} ${board.operationSymbols}';
+    final title = [
+      strings.durationLabel(board.duration),
+      board.operationSymbols,
+      board.modeLabel,
+    ].where((part) => part.isNotEmpty).join(' ');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

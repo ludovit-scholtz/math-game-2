@@ -19,7 +19,10 @@ Oyun alıştırmayı sade, odaklı ve motive edici tutar. Bir oyuncu seçin, mey
 Temel özellikler:
 
 - Toplama, çıkarma, çarpma ve bölme çalışması.
-- Tüm sayılar 100'ün altındadır, erken öğrenenler için uygundur.
+- Sayılar varsayılan olarak 100'ün altındadır ve ebeveynler başka aralıklar seçebilir: 5, 10, 20, 100 veya 1000'e kadar.
+- Çocukların okulda öğrenme biçimini izleyen alıştırma modları: onluğu geçme (15 + 16 veya 32 − 13 gibi), katlar, toplamı 10 olan çiftler, onluk üzerinden geçiş, eksik sayılar ve seçilen çarpım tabloları.
+- Yalnızca yetişkinlere özel bir matematik sorusuyla korunan ebeveyn denetimi: çocuğunuzun neyi çalışacağını seçin, her şeyi ilk açılışta ayarlayın ve oynanan her oyunu tarih, saat ve sonuçlarla görün.
+- Üst üste 5 doğru cevap için mücevher kazanın ve mağazada jetonla değiştirin.
 - 1, 2 veya 5 dakikalık meydan okumalar.
 - Tek bir işlemi çalışın veya aynı turda birkaç işlemi birleştirin.
 - Altı cevap seçeneği her soruyu hızlı ve kolay oynanır yapar.
