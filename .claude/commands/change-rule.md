@@ -18,7 +18,7 @@ section of AGENTS.md for the current values.
 3. Update every place that describes the rule:
    - `AGENTS.md` → "Game rules"
    - `README.md`
-   - in-app Guide strings (`doc*Body`, `score*` keys) in **all 11** languages in
+   - in-app Guide strings (`doc*Body`, `score*` keys) for **every locale** in `AppStrings.supportedLocales` in
      `lib/l10n/app_strings.dart`
    - `docs/description/*.md` if store text mentions it
 4. Run `/check`.

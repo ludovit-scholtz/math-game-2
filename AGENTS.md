@@ -8,7 +8,7 @@ truth.
 
 A Flutter math-practice game for **2nd-grade children** ("Kids Math Practice |
 Biatec" in stores, package `math_game_2`, Android id `io.biatec.math_master`).
-Players answer timed +, −, ×, ÷ questions under 100, earn coins, buy button
+Players answer timed +, −, ×, ÷ questions with numbers up to 100, earn coins, buy button
 styles and care for a pet. Everything is stored **locally on the device**
 (`shared_preferences`); there is no backend and no network code.
 
@@ -46,7 +46,7 @@ flutter run -d chrome      # run locally (web) — needs platform folders, see b
 lib/
   main.dart          app bootstrap; MathGameApp(State) owns locale + theme mode
   theme.dart         AppTheme light/dark ThemeData
-  l10n/app_strings.dart   ALL user-facing text, 11 languages (see below)
+  l10n/app_strings.dart   ALL user-facing text, every supported language
   models/            plain data: Question, GameConfig/ChallengeDuration,
                      OperationType, ScoreEntry, PlayerProfile, Pet, BackgroundStyle
   logic/             pure Dart, no Flutter imports, fully unit tested
@@ -92,8 +92,9 @@ Key conventions:
   non-negative answer cards.
 - Scoring (`Scoring`): `<1 s` → 3 pts; `1–10 s` → linear 3→1; `>10 s` or wrong →
   −1.
-- Missed questions return after 3 questions (`GameController`'s `reaskAfter`
-  constructor parameter, default `3`).
+- A missed question is re-asked as the 3rd question after the miss (2 fresh
+  questions in between) — `GameController`'s `reaskAfter` constructor
+  parameter, default `3`, counts `nextQuestion()` calls until it returns.
 - Shop (`BackgroundStyle`): 20 styles on offer; prices are deterministic per
   style index — every fifth costs `budgetPrice = 50`, the rest 100–1000 in tens;
   at least `minimumBudgetStyles = 4` budget styles are always shown.

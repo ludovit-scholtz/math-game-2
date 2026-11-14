@@ -5,8 +5,8 @@ argument-hint: <key> <English text>
 
 Add a new user-facing string: `$ARGUMENTS`
 
-1. Read `lib/l10n/app_strings.dart`. Note the 11 language maps in
-   `_localizedValues` (`en sk cs ru de zh es ko tr fr ja` — confirm the order
+1. Read `lib/l10n/app_strings.dart`. Note the language maps (one per `AppStrings.supportedLocales` entry) in
+   `_localizedValues` (currently `en sk cs ru de zh es ko tr fr ja` — confirm the order
    in the file) and `AppStrings.supportedLocales`.
 2. Add the key next to related keys in **every** language map with a natural,
    child-friendly translation (the audience is ~7-year-olds). Keep placeholders

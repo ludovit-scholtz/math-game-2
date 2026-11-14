@@ -11,7 +11,8 @@ Verify the working tree is healthy.
 3. Run `flutter test` (or only `$ARGUMENTS` if a test path/name was given).
 4. Formatting: run `dart format <file>` only on **newly added** `.dart` files
    (`git fetch -q origin main` then
-   `git diff --name-only --diff-filter=A origin/main...HEAD -- '*.dart'`, plus
+   `git diff --name-only --diff-filter=A origin/main...HEAD -- '*.dart'`, plus staged
+   ones from `git diff --cached --name-only --diff-filter=A -- '*.dart'` and
    untracked ones from `git ls-files --others --exclude-standard -- '*.dart'`). For existing files, match the surrounding style by hand —
    the local formatter is newer than the code's and would rewrite whole files
    (see AGENTS.md → Commands).

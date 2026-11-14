@@ -13,7 +13,7 @@ Ship the current work: $ARGUMENTS
 4. **PR** — `git push -u origin HEAD` then `gh pr create --base main` with a
    summary, a test-plan checklist and any user-visible rule changes.
 5. **Review** — run `/code-review` on the branch. Also check against AGENTS.md:
-   all 11 languages updated, rules/docs in sync, `lib/logic` stays Flutter-free,
+   every locale in `AppStrings.supportedLocales` updated, rules/docs in sync, `lib/logic` stays Flutter-free,
    storage keys backward compatible, tests cover the change.
 6. **Fix** — apply valid findings in a new commit, re-run `/check`, push.
 7. **Re-review** — repeat steps 5–6 until no actionable findings remain.
