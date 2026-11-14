@@ -146,7 +146,10 @@ and re-runs of the same tag work. (A single run supports at most 10 attempts.)
 
 Because the code no longer follows the tag, the workflow refuses a tag that is
 not the **newest plain `vX.Y.Z` tag** (so an older tag can never replace a newer
-build). Pre-release tags such as `v1.2.0-rc1` are ignored.
+build). Only plain `vX.Y.Z` tags start the workflow; tags such as `v1.2.0-rc1`
+are ignored. Manual runs are only allowed on `main`. Do not delete or recreate
+`release.yml`: workflow run numbers would restart and the version codes would
+fall below the ones already on Google Play.
 
 When the workflow succeeds, the release is uploaded to **Internal testing** in
 the Google Play Console. The workflow also stores the signed `.aab` as a GitHub

@@ -18,7 +18,7 @@ name: Release (Google Play Internal Testing + Windows)
 on:
   push:
     tags:
-      - "v*"
+      - "v[0-9]+.[0-9]+.[0-9]+"
   workflow_dispatch:
 
 permissions:
@@ -35,8 +35,6 @@ jobs:
     outputs:
       tag_name: ${{ steps.resolve.outputs.tag_name }}
       version_name: ${{ steps.resolve.outputs.version_name }}
-      version_code: ${{ steps.resolve.outputs.version_code }}
-      build_number: ${{ steps.resolve.outputs.build_number }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -66,37 +64,21 @@ jobs:
               exit 1
             fi
           else
-            # Manual runs use the newest version tag.
+            # A manual run publishes whatever is checked out under the newest
+            # tag's name, so it is only allowed from main.
+            if [ "${GITHUB_REF}" != "refs/heads/main" ]; then
+              echo "::error::Manual runs are only allowed on main (this run is on ${GITHUB_REF})."
+              exit 1
+            fi
             TAG_NAME="$LATEST_TAG"
           fi
 
           VERSION_NAME="${TAG_NAME#v}"
 
-          # Google Play accepts every version code only once, and a higher code
-          # is what makes testers see an update. A manual run uses the newest
-          # tag and a re-run keeps its run number, so the code comes from the
-          # run, not from the tag: it grows with every run (run number * 10) and
-          # with every re-run of a run (attempt). The version *name* carries the
-          # semantic version. Codes start at 10000000, above the codes of the
-          # earlier tag-derived scheme (MAJOR*10000 + MINOR*100 + PATCH), and
-          # stay under Google Play's limit of 2100000000.
-          if [ "${GITHUB_RUN_ATTEMPT}" -gt 10 ]; then
-            echo "::error::More than 10 attempts of one run cannot get a unique version code. Start a new run."
-            exit 1
-          fi
-          VERSION_CODE=$((10000000 + GITHUB_RUN_NUMBER * 10 + GITHUB_RUN_ATTEMPT - 1))
-
-          # The Windows file version (major.minor.patch.build) only allows
-          # 16-bit parts (0-65535), so its build number is the run number
-          # wrapped into that range.
-          BUILD_NUMBER=$((GITHUB_RUN_NUMBER % 65536))
-
-          echo "Using release tag $TAG_NAME (version code $VERSION_CODE)"
+          echo "Using release tag $TAG_NAME"
           {
             echo "tag_name=$TAG_NAME"
             echo "version_name=$VERSION_NAME"
-            echo "version_code=$VERSION_CODE"
-            echo "build_number=$BUILD_NUMBER"
           } >> "$GITHUB_OUTPUT"
 
   build-signed-aab:
@@ -105,16 +87,30 @@ jobs:
     needs: resolve-version
     steps:
       - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-          fetch-tags: true
 
       - name: Use the resolved release version
         id: release_version
         env:
           VERSION_NAME: ${{ needs.resolve-version.outputs.version_name }}
-          VERSION_CODE: ${{ needs.resolve-version.outputs.version_code }}
         run: |
+          # Google Play accepts every version code only once, and a higher code
+          # is what makes testers see an update. A manual run uses the newest
+          # tag and a re-run keeps its run number, so the code comes from the
+          # run, not from the tag: it grows with every run (run number * 10) and
+          # with every re-run of a run (attempt). It is computed here, in the
+          # job that builds, because "Re-run failed jobs" does not re-run the
+          # resolve job. The version *name* carries the semantic version. Codes
+          # start at 10000000, above the codes of the earlier tag-derived scheme
+          # (MAJOR*10000 + MINOR*100 + PATCH), and stay under Google Play's limit
+          # of 2100000000. Do not delete or recreate this workflow file: run
+          # numbers would restart and the codes would fall below existing ones.
+          if [ "${GITHUB_RUN_ATTEMPT}" -gt 10 ]; then
+            echo "::error::More than 10 attempts of one run cannot get a unique version code. Start a new run."
+            exit 1
+          fi
+          VERSION_CODE=$((10000000 + GITHUB_RUN_NUMBER * 10 + GITHUB_RUN_ATTEMPT - 1))
+          echo "Using version $VERSION_NAME ($VERSION_CODE)"
+
           echo "VERSION_NAME=$VERSION_NAME" >> "$GITHUB_ENV"
           echo "VERSION_CODE=$VERSION_CODE" >> "$GITHUB_ENV"
           echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
@@ -444,9 +440,6 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-          fetch-tags: true
 
       - name: Use the resolved release version
         id: release_version
@@ -454,8 +447,11 @@ jobs:
         env:
           TAG_NAME: ${{ needs.resolve-version.outputs.tag_name }}
           VERSION_NAME: ${{ needs.resolve-version.outputs.version_name }}
-          BUILD_NUMBER: ${{ needs.resolve-version.outputs.build_number }}
         run: |
+          # The Windows file version (major.minor.patch.build) only allows
+          # 16-bit parts (0-65535), so its build number is the run number
+          # wrapped into that range.
+          BUILD_NUMBER=$((GITHUB_RUN_NUMBER % 65536))
           {
             echo "tag_name=$TAG_NAME"
             echo "version_name=$VERSION_NAME"
