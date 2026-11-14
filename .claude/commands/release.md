@@ -9,8 +9,10 @@ Release version `$ARGUMENTS`.
    up-to-date `main` with a clean tree
    (`git switch main && git pull --ff-only && git status`).
 2. Verify the version is semver `X.Y.Z` and greater than the latest tag
-   (`git tag --sort=-v:refname | head -5`). The version code is derived as
-   `MAJOR*10000 + MINOR*100 + PATCH`, so MINOR and PATCH must be < 100.
+   (`git tag --sort=-v:refname | head -5`). The Play version code is derived
+   from the workflow run (`10000000 + run number * 10 + attempt - 1`), not from
+   the tag, so every run gets a code Google Play has not seen. CI rejects a tag
+   that is not the newest plain `vX.Y.Z` tag, so check this before step 5.
 3. Confirm CI is green on `main`: `gh run list --branch main --limit 3`.
 4. **Ask the user to confirm** before pushing the tag — it publishes to Google Play.
 5. `git tag v$ARGUMENTS && git push origin v$ARGUMENTS`
