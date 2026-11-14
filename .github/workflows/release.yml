@@ -38,6 +38,9 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
+          # `fetch-tags` only takes effect with a full-depth fetch; without it
+          # no tags are available and the version cannot be resolved.
+          fetch-depth: 0
           fetch-tags: true
 
       - name: Resolve release version from git tag
