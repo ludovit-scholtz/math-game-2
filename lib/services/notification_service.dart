@@ -53,8 +53,16 @@ class NotificationService {
 
   bool _initialized = false;
 
+  /// Pet reminders are only implemented for Android and iOS. On the web and on
+  /// desktop (e.g. Windows) the service does nothing, and the app works
+  /// without reminders.
+  static bool get _supported =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS);
+
   Future<void> initialize() async {
-    if (kIsWeb || _initialized) return;
+    if (!_supported || _initialized) return;
     _initialized = true;
     tz.initializeTimeZones();
     await _setLocalTimeZone();
@@ -90,7 +98,7 @@ class NotificationService {
   }
 
   Future<bool> notificationsAllowed() async {
-    if (kIsWeb) return false;
+    if (!_supported) return false;
     try {
       await initialize().timeout(_pluginTimeout);
     } catch (_) {
@@ -110,7 +118,7 @@ class NotificationService {
   }
 
   Future<bool> requestPermissions() async {
-    if (kIsWeb) return false;
+    if (!_supported) return false;
     await initialize();
     try {
       var granted = true;
@@ -157,6 +165,7 @@ class NotificationService {
   }
 
   Future<void> scheduleForPlayer(PlayerProfile player) async {
+    if (!_supported) return;
     await initialize();
     await cancelPetCareReminder();
     final currentPlayer = await _playerService.loadCurrent();
@@ -238,6 +247,7 @@ class NotificationService {
   }
 
   Future<void> cancelPetCareReminder() async {
+    if (!_supported) return;
     try {
       await _plugin.cancel(id: _petCareNotificationId);
       await _plugin.cancel(id: _petCareLastChanceNotificationId);

@@ -220,3 +220,60 @@ jobs:
           name: math-masters-web
           path: build/web
           if-no-files-found: error
+
+  build-windows:
+    name: Build Windows
+    runs-on: windows-latest
+    needs: analyze-and-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate platform folders
+        run: flutter create --platforms=windows --org io.biatec --project-name math_master .
+
+      - name: Apply Windows app metadata
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          main_cpp = Path("windows/runner/main.cpp")
+          main_cpp.write_text(
+              main_cpp.read_text().replace('L"math_master"', 'L"Math Master"', 1)
+          )
+
+          rc = Path("windows/runner/Runner.rc")
+          text = rc.read_text()
+          for key in ("FileDescription", "ProductName"):
+              text = re.sub(
+                  r'(VALUE "%s", )"math_master"' % key,
+                  r'\1"Math Master"',
+                  text,
+                  count=1,
+              )
+          rc.write_text(text)
+          PY
+
+      - name: Generate Windows icon
+        run: dart run flutter_launcher_icons -f flutter_launcher_icons-windows.yaml
+
+      - name: Build Windows (release)
+        run: flutter build windows --release
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: math-masters-windows
+          path: build/windows/x64/runner/Release
+          if-no-files-found: error

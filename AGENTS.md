@@ -38,7 +38,10 @@ flutter run -d chrome      # run locally (web) — needs platform folders, see b
   generated in CI by `flutter create`. Never commit them. To create them
   locally, use the same command as CI:
   `flutter create --platforms=android,ios,web --org io.biatec --project-name math_master .`
-  (add `windows` to the list to run as a Windows desktop app). Native config changes (manifest, Gradle, Info.plist)
+  (add `windows` to the list to run as a Windows desktop app; CI and the release
+  workflow build it with `flutter build windows --release` and brand the
+  runner via the "Apply Windows app metadata" step, icon config in
+  `flutter_launcher_icons-windows.yaml`). Native config changes (manifest, Gradle, Info.plist)
   must be made in the Python patch steps inside the workflows, not in files.
 
 ## Architecture
@@ -69,6 +72,8 @@ lib/
 
 Key conventions:
 
+- **Notifications** (pet reminders) only exist on Android and iOS; on the web and
+  on desktop `NotificationService` is a no-op.
 - **UI imports**: Flutter 3.50 deprecates `package:flutter/material.dart`.
   Import `package:material_ui/material_ui.dart` (and `cupertino_ui` only for
   Cupertino localizations) instead.
@@ -177,7 +182,8 @@ languages, and `docs/description/*.md` if the store text mentions it.
 - Before committing: `flutter analyze` clean and `flutter test` green.
 - Line endings are LF (enforced by `.gitattributes`); don't commit CRLF churn.
 - Releases: push a `vX.Y.Z` tag → `release.yml` builds a signed AAB and uploads
-  it to Google Play internal testing (see `docs/GOOGLE_PLAY_RELEASE.md`). The
+  it to Google Play internal testing, and builds a Windows zip attached to the
+  GitHub Release (see `docs/GOOGLE_PLAY_RELEASE.md`). The
   version in `pubspec.yaml` is overwritten from the tag.
 - Never commit signing material (`*.jks`, `key.properties`) or secrets.
 - Use `/ship` for the branch → PR → review → fix → merge loop.
