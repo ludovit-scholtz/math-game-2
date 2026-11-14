@@ -28,7 +28,7 @@ flutter run -d chrome      # run locally (web) — needs platform folders, see b
 ```
 
 - CI (`.github/workflows/ci.yml`) runs `flutter analyze` and `flutter test`
-  with Flutter **3.44.0**, then builds APK/AAB and web.
+  with Flutter **3.50.0**, then builds APK/AAB and web.
 - **Formatting is not enforced by CI.** The local Dart formatter may be newer
   than the one the code was written with and would reformat many files. Do
   **not** run `dart format` on existing files — it rewrites them wholesale.
@@ -64,6 +64,9 @@ lib/
 
 Key conventions:
 
+- **UI imports**: Flutter 3.50 deprecates `package:flutter/material.dart`.
+  Import `package:material_ui/material_ui.dart` (and `cupertino_ui` only for
+  Cupertino localizations) instead.
 - **State management** is plain `StatefulWidget` + `setState`. Screens create
   their services directly (`final _service = PlayerService();`). Don't introduce
   Provider/Riverpod/Bloc or a router unless asked.

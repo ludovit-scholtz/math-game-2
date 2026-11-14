@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A celebratory fireworks animation drawn on top of the screen, used when the
 /// player sets a new record in a game category. It loops a handful of colourful

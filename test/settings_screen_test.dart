@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:math_game_2/l10n/app_strings.dart';
 import 'package:math_game_2/screens/settings_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';

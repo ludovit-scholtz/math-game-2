@@ -67,7 +67,7 @@ class NotificationService {
     );
     const settings = InitializationSettings(android: android, iOS: darwin);
     try {
-      await _plugin.initialize(settings).timeout(_pluginTimeout);
+      await _plugin.initialize(settings: settings).timeout(_pluginTimeout);
     } catch (_) {
       // Widget tests and unsupported platforms do not register the plugin.
     }
@@ -216,11 +216,11 @@ class NotificationService {
 
     try {
       await _plugin.zonedSchedule(
-        id,
-        strings.petNotificationTitle,
-        strings.petNotificationBody(mood, player.name),
-        scheduled,
-        const NotificationDetails(
+        id: id,
+        title: strings.petNotificationTitle,
+        body: strings.petNotificationBody(mood, player.name),
+        scheduledDate: scheduled,
+        notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
             'pet_care',
             'Pet care',
@@ -239,8 +239,8 @@ class NotificationService {
 
   Future<void> cancelPetCareReminder() async {
     try {
-      await _plugin.cancel(_petCareNotificationId);
-      await _plugin.cancel(_petCareLastChanceNotificationId);
+      await _plugin.cancel(id: _petCareNotificationId);
+      await _plugin.cancel(id: _petCareLastChanceNotificationId);
     } on MissingPluginException {
       // Ignore in widget tests and unsupported platforms.
     }
@@ -249,7 +249,7 @@ class NotificationService {
   Future<void> _setLocalTimeZone() async {
     try {
       final timezone = await FlutterTimezone.getLocalTimezone();
-      tz.setLocalLocation(tz.getLocation(timezone));
+      tz.setLocalLocation(tz.getLocation(timezone.identifier));
     } catch (_) {
       tz.setLocalLocation(tz.UTC);
     }
