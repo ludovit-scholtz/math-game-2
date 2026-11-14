@@ -15,7 +15,10 @@ class DocsScreen extends StatelessWidget {
       _DocSection('🪙', strings.docCoinsTitle, strings.docCoinsBody),
       _DocSection('🛍️', strings.docShopTitle, strings.docShopBody),
       _DocSection('🎨', strings.docCustomizeTitle, strings.docCustomizeBody),
+      _DocSection('💎', strings.docGemsTitle, strings.docGemsBody),
       _DocSection('🐾', strings.docPetsTitle, strings.docPetsBody),
+      _DocSection('🧮', strings.docModesTitle, strings.docModesBody),
+      _DocSection('🔒', strings.docParentalTitle, strings.docParentalBody),
       _DocSection('🎆', strings.docRecordsTitle, strings.docRecordsBody),
     ];
     return Scaffold(

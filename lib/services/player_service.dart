@@ -38,17 +38,34 @@ class PlayerService {
     return null;
   }
 
-  /// Adds [profile] (or updates the one with the same name, case-insensitive),
-  /// moves it to the front of the list and marks it as the current player.
+  /// Adds [profile], moves it to the front of the list and marks it as the
+  /// current player.
+  ///
+  /// When a player with the same name (case-insensitive) already exists, that
+  /// player is **kept** - name, pet and pet care included - and only takes the
+  /// new language. Re-adding a name must never reset a pet or orphan the
+  /// player's coins, which are stored under the original spelling. The
+  /// profile that ended up selected is returned.
   Future<PlayerProfile> selectOrCreate(PlayerProfile profile) async {
     final players = await loadPlayers();
-    players.removeWhere(
-      (p) => p.name.toLowerCase() == profile.name.toLowerCase(),
-    );
-    players.insert(0, profile);
+    PlayerProfile? existing;
+    for (final player in players) {
+      if (player.name.toLowerCase() == profile.name.toLowerCase()) {
+        existing = player;
+        break;
+      }
+    }
+    var selected = profile;
+    if (existing != null) {
+      players.remove(existing);
+      selected = existing.hasPet
+          ? existing.copyWith(languageCode: profile.languageCode)
+          : profile.copyWith(name: existing.name);
+    }
+    players.insert(0, selected);
     await _savePlayers(players);
-    await _setCurrent(profile.name);
-    return profile;
+    await _setCurrent(selected.name);
+    return selected;
   }
 
   /// Updates the language of [name] and returns the updated profile.
@@ -66,9 +83,16 @@ class PlayerService {
     return updated;
   }
 
-  /// Gives [name] a pet, resetting care points because this is a new companion.
+  /// Gives [name] a pet. A player who has no pet yet gets a fresh, happy one;
+  /// a player who already has one only changes its kind and keeps its care
+  /// levels, so switching pets cannot be used to dodge feeding and toys.
   Future<PlayerProfile?> setPet(String name, PetType petType) async {
-    return _updatePlayer(name, (player) => player.withPet(petType));
+    return _updatePlayer(
+      name,
+      (player) => player.hasPet
+          ? player.withPetType(petType)
+          : player.withPet(petType),
+    );
   }
 
   /// Feeds the player's pet and returns the updated profile.

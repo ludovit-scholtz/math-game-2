@@ -52,11 +52,11 @@ class _PlayerSelectScreenState extends State<PlayerSelectScreen> {
   }
 
   Future<void> _select(PlayerProfile profile) async {
-    await _service.selectOrCreate(profile);
+    final selected = await _service.selectOrCreate(profile);
     await NotificationService().scheduleForCurrentPlayer();
     if (!mounted) return;
-    MathGameApp.of(context).setLocale(Locale(profile.languageCode));
-    Navigator.of(context).pop(profile);
+    MathGameApp.of(context).setLocale(Locale(selected.languageCode));
+    Navigator.of(context).pop(selected);
   }
 
   Future<void> _addNew() async {

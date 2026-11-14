@@ -1,8 +1,9 @@
 # 🧮 Math Master
 
 A fun, kid-friendly math game that helps **2nd-grade** students practise the four
-basic operations — addition, subtraction, multiplication and division — with all
-numbers kept **under 100**. Built with **Flutter**, so the same code base runs on
+basic operations — addition, subtraction, multiplication and division — with
+numbers **under 100 by default**; parents can choose other ranges and
+school-style exercises in the **parental control** panel. Built with **Flutter**, so the same code base runs on
 **Android, iOS, web and desktop**.
 
 ## How to play
@@ -10,8 +11,9 @@ numbers kept **under 100**. Built with **Flutter**, so the same code base runs o
 1. On the home screen choose your player. Players you've used before are
    remembered, so you can switch between them without retyping a name — and each
   player keeps their own **language** and **pet**.
-2. Pick a challenge length (**1, 2 or 5 minutes**) and choose which operations to
-   practise.
+2. Pick a challenge length (**1, 2 or 5 minutes**) and choose which operations
+   and special exercises to practise (only what a parent has enabled is offered).
+   The first time the app starts, a parent is asked to set this up.
 3. Answer as many questions as you can before the timer runs out by tapping one
    of the six answer cards. The game adapts to **portrait and landscape**
    orientation.
@@ -40,12 +42,44 @@ details:
 - Use **Customize buttons** to assign any style you own to each of the **six**
   answer-button positions. Your choices are saved for your next game.
 
+### Gems
+
+Answer **5 questions correctly in a row** to earn a **gem** 💎; the counter then
+starts again from 0. A wrong answer also resets the counter. A slow but correct
+answer still counts. In the **shop** gems can be sold: every gem gives
+**10 coins**.
+
+### Practice modes & parental control
+
+The **Parental control** panel (menu → *Parental control*) is protected by a
+grown-ups-only question — `(2^a + b × c) mod 1000` with `a` in 5–20 and `b`, `c`
+in 10000–99999, answered with the last three digits. It is also shown as a
+**first-run setup**. Settings are stored per player (new players start from the
+most recently saved settings) and a parent can choose:
+
+- **Number range** for + and −: up to **5, 10, 20, 100 or 1000**.
+- **Crossing ten** (carrying/borrowing, e.g. `15 + 16`, `32 − 13`): never,
+  sometimes or always.
+- **Special exercises**: plus/minus 1 or 2, doubles and halves, near doubles,
+  pairs that make 10 or 100, bridging through ten (`8 + 5`) and missing numbers
+  (`7 + ? = 10`).
+- **Multiplication tables** (×2 … ×10), also used as divisors.
+- Which **challenge lengths** are offered, and quick presets ("Starting out",
+  "Within 20", "Within 100", "Within 1000").
+
+Games with different settings have separate leaderboards. The panel also lists
+**every game of every player** with date, time, score, accuracy, answer time,
+best streak, gems/coins and missed questions.
+
 ### Pets
 
 Each player can choose a cat, dog, panda or rabbit. The pet appears on the home
 screen and reacts to care: when food drops below 20 points it looks hungry, and
 when fun drops below 20 points it looks sad. Food drops by **100 points per day**
 and fun drops by **20 points per day**.
+
+Changing the pet type keeps its current food and fun, so switching pets does
+not refill them.
 
 Players can spend coins to care for their pet:
 
@@ -66,8 +100,9 @@ so you get another chance to master them.
 
 ### Designed to be educative
 
-- Division questions always divide evenly with both numbers in `1..10`
-  (e.g. `9 ÷ 3`, never `66 ÷ 3` or `66 ÷ 11`).
+- Division questions always divide evenly; the divisor is one of the enabled
+  tables (`2..10`) and the quotient is in `1..10` (e.g. `9 ÷ 3`, never
+  `66 ÷ 3` or `66 ÷ 11`).
 - The five wrong answer cards are modelled on **common mistakes** for each
   operation (off-by-one, place-value slips, adding instead of multiplying, …),
   which helps children recognise and correct their own errors.

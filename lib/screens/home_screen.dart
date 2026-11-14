@@ -5,14 +5,19 @@ import '../main.dart';
 import '../models/game_config.dart';
 import '../models/operation_type.dart';
 import '../models/player_profile.dart';
+import '../models/practice_settings.dart';
 import '../services/coin_service.dart';
+import '../services/parental_settings_service.dart';
 import '../services/player_service.dart';
 import '../theme.dart';
 import '../widgets/pet_widgets.dart';
 import 'customization_screen.dart';
 import 'docs_screen.dart';
+import 'first_run_setup_screen.dart';
 import 'game_screen.dart';
 import 'history_screen.dart';
+import 'parental_control_screen.dart';
+import 'parental_gate_dialog.dart';
 import 'pet_screen.dart';
 import 'player_select_screen.dart';
 import 'privacy_policy_screen.dart';
@@ -32,8 +37,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final PlayerService _playerService = PlayerService();
   final CoinService _coinService = CoinService();
+  final ParentalSettingsService _parentalService = ParentalSettingsService();
 
   PlayerProfile? _player;
+  PracticeSettings _settings = PracticeSettings.defaults();
   bool _loadingPlayer = true;
   int _coins = 0;
 
@@ -42,11 +49,67 @@ class _HomeScreenState extends State<HomeScreen> {
     OperationType.addition,
     OperationType.subtraction,
   };
+  final Set<Drill> _drills = <Drill>{};
 
   @override
   void initState() {
     super.initState();
-    _loadPlayer();
+    _start();
+  }
+
+  /// Shows the first-run setup when needed, then loads the player.
+  Future<void> _start() async {
+    await _maybeShowSetup();
+    if (!mounted) return;
+    await _loadPlayer();
+  }
+
+  /// A parent chooses what the child practises the first time the app starts.
+  /// Installations that already have players predate the setup and keep the
+  /// classic behaviour, so they are not interrupted.
+  Future<void> _maybeShowSetup() async {
+    if (await _parentalService.isOnboarded()) return;
+    final players = await _playerService.loadPlayers();
+    if (players.isNotEmpty) {
+      await _parentalService.markOnboarded();
+      return;
+    }
+    if (!mounted) return;
+    await Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(
+        fullscreenDialog: true,
+        builder: (_) => const FirstRunSetupScreen(),
+      ),
+    );
+  }
+
+  /// Keeps the child's current choices where the parent still allows them.
+  void _applySettings(PracticeSettings settings) {
+    _settings = settings;
+    if (!settings.durations.contains(_duration)) {
+      _duration = ChallengeDuration.values
+          .firstWhere(settings.durations.contains);
+    }
+    _operations.retainWhere(settings.operations.contains);
+    _drills.retainWhere(settings.drills.contains);
+    if (_operations.isEmpty && _drills.isEmpty) {
+      final classic = settings.operations.intersection(
+        {OperationType.addition, OperationType.subtraction},
+      );
+      if (classic.isNotEmpty) {
+        _operations.addAll(classic);
+      } else if (settings.operations.isNotEmpty) {
+        _operations.add(settings.operations.first);
+      } else {
+        _drills.add(settings.drills.first);
+      }
+    }
+  }
+
+  Future<void> _loadSettings(String? playerName) async {
+    final settings = await _parentalService.load(playerName);
+    if (!mounted) return;
+    setState(() => _applySettings(settings));
   }
 
   Future<void> _loadPlayer() async {
@@ -56,6 +119,8 @@ class _HomeScreenState extends State<HomeScreen> {
       _player = player;
       _loadingPlayer = false;
     });
+    await _loadSettings(player?.name);
+    if (!mounted) return;
     if (player != null) {
       _loadCoins(player.name);
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -81,6 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (selected != null && mounted) {
       setState(() => _player = selected);
       _loadCoins(selected.name);
+      _loadSettings(selected.name);
       MathGameApp.of(context).setLocale(Locale(selected.languageCode));
     }
     return selected;
@@ -102,11 +168,35 @@ class _HomeScreenState extends State<HomeScreen> {
   void _toggleOperation(OperationType type) {
     setState(() {
       if (_operations.contains(type)) {
-        if (_operations.length > 1) _operations.remove(type);
+        if (_operations.length + _drills.length > 1) _operations.remove(type);
       } else {
         _operations.add(type);
       }
     });
+  }
+
+  void _toggleDrill(Drill drill) {
+    setState(() {
+      if (_drills.contains(drill)) {
+        if (_operations.length + _drills.length > 1) _drills.remove(drill);
+      } else {
+        _drills.add(drill);
+      }
+    });
+  }
+
+  Future<void> _openParentalControl() async {
+    final passed = await showParentalGate(context);
+    if (!passed || !mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => ParentalControlScreen(
+          initialPlayerName: _player?.name,
+        ),
+      ),
+    );
+    if (!mounted) return;
+    await _loadSettings(_player?.name);
   }
 
   Future<void> _startGame() async {
@@ -121,6 +211,8 @@ class _HomeScreenState extends State<HomeScreen> {
       playerName: player.name,
       duration: _duration,
       operations: Set<OperationType>.from(_operations),
+      drills: Set<Drill>.from(_drills),
+      settings: _settings,
     );
     await Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => GameScreen(config: config)),
@@ -204,6 +296,8 @@ class _HomeScreenState extends State<HomeScreen> {
         _openHistory();
       case _HomeMenuAction.settings:
         await _openSettings();
+      case _HomeMenuAction.parental:
+        await _openParentalControl();
       case _HomeMenuAction.docs:
         _openDocs();
       case _HomeMenuAction.privacyPolicy:
@@ -282,6 +376,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               PopupMenuItem(
+                value: _HomeMenuAction.parental,
+                child: _MenuItem(
+                  icon: Icons.lock_outline_rounded,
+                  label: strings.parentalControl,
+                ),
+              ),
+              PopupMenuItem(
                 value: _HomeMenuAction.docs,
                 child: _MenuItem(
                   icon: Icons.menu_book_rounded,
@@ -313,7 +414,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: strings.challengeLength,
                 child: Wrap(
                   spacing: 10,
-                  children: ChallengeDuration.values.map((d) {
+                  children: ChallengeDuration.values
+                      .where(_settings.durations.contains)
+                      .map((d) {
                     final selected = d == _duration;
                     return ChoiceChip(
                       label: Text(strings.durationLabel(d)),
@@ -329,7 +432,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Wrap(
                   spacing: 10,
                   runSpacing: 10,
-                  children: OperationType.values.map((op) {
+                  children: OperationType.values
+                      .where(_settings.operations.contains)
+                      .map((op) {
                     final selected = _operations.contains(op);
                     return FilterChip(
                       label: Text('${op.symbol}  ${strings.operationLabel(op)}'),
@@ -339,6 +444,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   }).toList(),
                 ),
               ),
+              if (_settings.drills.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                _SectionCard(
+                  title: strings.drillsTitle,
+                  child: Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: [
+                      for (final drill in Drill.values)
+                        if (_settings.drills.contains(drill))
+                          FilterChip(
+                            key: ValueKey('home-drill-${drill.id}'),
+                            label: Text(
+                              '${strings.drillLabel(drill)} (${drill.example})',
+                            ),
+                            selected: _drills.contains(drill),
+                            onSelected: (_) => _toggleDrill(drill),
+                          ),
+                    ],
+                  ),
+                ),
+              ],
               const SizedBox(height: 20),
               _PlayerGreeting(
                 loading: _loadingPlayer,
@@ -370,6 +497,7 @@ enum _HomeMenuAction {
   pet,
   customize,
   settings,
+  parental,
   docs,
   privacyPolicy,
 }

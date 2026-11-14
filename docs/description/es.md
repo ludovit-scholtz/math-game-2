@@ -19,7 +19,10 @@ Los padres que buscan práctica matemática regular para sus hijos encontrarán 
 Funciones principales:
 
 - Practica suma, resta, multiplicación y división.
-- Todos los números son menores de 100, ideal para primeros aprendizajes.
+- Los números son menores de 100 por defecto, y los padres pueden elegir otros rangos: hasta 5, 10, 20, 100 o 1000.
+- Modos de práctica que siguen cómo aprenden los niños en la escuela: pasar la decena (como 15 + 16 o 32 − 13), dobles, parejas que suman 10, puente por la decena, números que faltan y tablas de multiplicar elegidas.
+- Control parental protegido por una pregunta de matemáticas solo para adultos: elige qué practica tu hijo, configura todo en el primer inicio y consulta cada partida jugada con fecha, hora y resultados.
+- Gana gemas por 5 respuestas correctas seguidas y véndelas en la tienda por monedas.
 - Retos de 1, 2 o 5 minutos.
 - Practica una operación o combina varias en la misma ronda.
 - Seis opciones de respuesta hacen que cada pregunta sea rápida y clara.

@@ -19,7 +19,10 @@ Eltern, die regelmäßiges Mathetraining für ihre Kinder suchen, erhalten eine 
 Wichtige Funktionen:
 
 - Addition, Subtraktion, Multiplikation und Division üben.
-- Alle Zahlen bleiben unter 100.
+- Die Zahlen bleiben standardmäßig unter 100, und Eltern können andere Bereiche wählen: bis 5, 10, 20, 100 oder 1000.
+- Übungsmodi, die dem Lernen in der Schule folgen: Zehnerübergang (z. B. 15 + 16 oder 32 − 13), Verdoppeln, Paare, die 10 ergeben, Überbrücken der Zehn, fehlende Zahlen und ausgewählte Einmaleins-Reihen.
+- Elternbereich, geschützt durch eine Mathe-Frage nur für Erwachsene: Legen Sie fest, was Ihr Kind übt, richten Sie beim ersten Start alles ein und sehen Sie jedes gespielte Spiel mit Datum, Uhrzeit und Ergebnissen.
+- Verdiene Edelsteine für 5 richtige Antworten in Folge und verkaufe sie im Shop für Münzen.
 - Herausforderungen mit 1, 2 oder 5 Minuten.
 - Eine Rechenart oder mehrere Rechenarten in einer Runde üben.
 - Sechs Antwortmöglichkeiten machen jede Aufgabe schnell und übersichtlich.

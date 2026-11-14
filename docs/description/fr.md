@@ -19,7 +19,10 @@ Les parents qui souhaitent un entraînement régulier en maths pour leurs enfant
 Fonctionnalités clés :
 
 - S'entraîner à l'addition, la soustraction, la multiplication et la division.
-- Tous les nombres restent inférieurs à 100, ce qui convient aux jeunes apprenants.
+- Les nombres restent inférieurs à 100 par défaut, et les parents peuvent choisir d'autres plages : jusqu'à 5, 10, 20, 100 ou 1000.
+- Des modes d'entraînement qui suivent l'apprentissage à l'école : passage de la dizaine (comme 15 + 16 ou 32 − 13), doubles, paires qui font 10, passage par la dizaine, nombres manquants et tables de multiplication choisies.
+- Contrôle parental protégé par une question de maths réservée aux adultes : choisissez ce que votre enfant s'entraîne à faire, configurez tout au premier lancement et consultez chaque partie jouée avec la date, l'heure et les résultats.
+- Gagnez des gemmes pour 5 bonnes réponses d'affilée et vendez-les dans la boutique contre des pièces.
 - Défis de 1, 2 ou 5 minutes.
 - Travailler une seule opération ou en combiner plusieurs dans la même manche.
 - Six choix de réponse rendent chaque question rapide et facile à jouer.

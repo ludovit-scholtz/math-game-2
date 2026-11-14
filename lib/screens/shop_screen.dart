@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../l10n/app_strings.dart';
+import '../logic/gems.dart';
 import '../models/background_style.dart';
 import '../services/coin_service.dart';
 import '../theme.dart';
@@ -55,6 +56,24 @@ class _ShopScreenState extends State<ShopScreen> {
     );
   }
 
+  Future<void> _sell(int count) async {
+    final strings = context.strings;
+    final updated = await _service.sellGems(widget.playerName, count);
+    if (!mounted) return;
+    if (updated == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(strings.noGemsToSell)),
+      );
+      return;
+    }
+    setState(() => _wallet = updated);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(strings.gemsSold(count, Gems.coinsFor(count))),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final strings = context.strings;
@@ -72,7 +91,7 @@ class _ShopScreenState extends State<ShopScreen> {
             child: Padding(
               padding: const EdgeInsets.only(right: 16),
               child: Text(
-                '🪙 ${strings.coinCount(wallet?.coins ?? 0)}',
+                '💎 ${wallet?.gems ?? 0}   🪙 ${strings.coinCount(wallet?.coins ?? 0)}',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -85,28 +104,94 @@ class _ShopScreenState extends State<ShopScreen> {
       body: SafeArea(
         child: _loading
             ? const Center(child: CircularProgressIndicator())
-            : GridView.builder(
-                padding: const EdgeInsets.all(16),
-                gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 0.82,
-                ),
-                itemCount: available.length,
-                itemBuilder: (context, index) {
-                  final style = available[index];
-                  final canAfford = (wallet?.coins ?? 0) >= style.price;
-                  return _ShopTile(
-                    style: style,
-                    canAfford: canAfford,
-                    buyLabel: strings.buy,
-                    priceLabel: strings.coinCount(style.price),
-                    onBuy: canAfford ? () => _buy(style) : null,
-                  );
-                },
+            : Column(
+                children: [
+                  _SellGemsCard(
+                    gems: wallet?.gems ?? 0,
+                    onSellOne: () => _sell(1),
+                    onSellAll: () => _sell(wallet?.gems ?? 0),
+                  ),
+                  Expanded(child: _buildGrid(available, wallet)),
+                ],
               ),
+      ),
+    );
+  }
+
+  Widget _buildGrid(List<BackgroundStyle> available, CoinWallet? wallet) {
+    final strings = context.strings;
+    return GridView.builder(
+      padding: const EdgeInsets.all(16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        childAspectRatio: 0.82,
+      ),
+      itemCount: available.length,
+      itemBuilder: (context, index) {
+        final style = available[index];
+        final canAfford = (wallet?.coins ?? 0) >= style.price;
+        return _ShopTile(
+          style: style,
+          canAfford: canAfford,
+          buyLabel: strings.buy,
+          priceLabel: strings.coinCount(style.price),
+          onBuy: canAfford ? () => _buy(style) : null,
+        );
+      },
+    );
+  }
+}
+
+/// Lets the player sell gems for coins at a fixed price per gem.
+class _SellGemsCard extends StatelessWidget {
+  const _SellGemsCard({
+    required this.gems,
+    required this.onSellOne,
+    required this.onSellAll,
+  });
+
+  final int gems;
+  final VoidCallback onSellOne;
+  final VoidCallback onSellAll;
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = context.strings;
+    return Card(
+      margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '💎 ${strings.sellGemsTitle}  ·  ${strings.gemBalance(gems)}',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 4),
+            Text(strings.gemSellInfo(Gems.coinValue)),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 10,
+              runSpacing: 8,
+              children: [
+                ElevatedButton(
+                  key: const ValueKey('sell-one-gem'),
+                  onPressed: gems >= 1 ? onSellOne : null,
+                  child: Text(strings.sellOneGem),
+                ),
+                OutlinedButton(
+                  key: const ValueKey('sell-all-gems'),
+                  onPressed: gems >= 1 ? onSellAll : null,
+                  child: Text(strings.sellAllGems),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

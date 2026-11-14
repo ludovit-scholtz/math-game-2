@@ -8,7 +8,8 @@ truth.
 
 A Flutter math-practice game for **2nd-grade children** ("Kids Math Practice |
 Biatec" in stores, package `math_game_2`, Android id `io.biatec.math_master`).
-Players answer timed +, −, ×, ÷ questions with numbers up to 100, earn coins, buy button
+Players answer timed +, −, ×, ÷ questions (numbers up to 100 by default; a
+parent can choose other ranges and drills), earn coins and gems, buy button
 styles and care for a pet. Everything is stored **locally on the device**
 (`shared_preferences`); there is no backend and no network code.
 
@@ -48,18 +49,22 @@ lib/
   theme.dart         AppTheme light/dark ThemeData
   l10n/app_strings.dart   ALL user-facing text, every supported language
   models/            plain data: Question, GameConfig/ChallengeDuration,
-                     OperationType, ScoreEntry, PlayerProfile, Pet, BackgroundStyle
+                     OperationType, PracticeSettings (range, crossing, drills,
+                     tables), ScoreEntry, PlayerProfile, Pet, BackgroundStyle
   logic/             pure Dart, no Flutter imports, fully unit tested
     question_generator.dart  questions + 6 answer cards (mistake-based distractors)
     scoring.dart             points per answer by response time
-    game_controller.dart     a game session; spaced repetition of missed questions
+    game_controller.dart     a game session; spaced repetition, gem streak, stats
     coins.dart               coins earned per game
+    gems.dart                gem streak length and coin value
+    parental_gate.dart       the (2^a + b×c) mod 1000 grown-ups question
+    history_stats.dart       aggregated history statistics for parents
   services/          persistence + platform: PlayerService, LeaderboardService,
-                     CoinService (CoinWallet), AudioService, NotificationService,
-                     ThemeService
+                     CoinService (CoinWallet incl. gems), ParentalSettingsService,
+                     AudioService, NotificationService, ThemeService
   screens/           StatefulWidget screens; navigation via Navigator.push +
                      MaterialPageRoute (no router package, no state library)
-  widgets/           AnswerCard, Fireworks, pet widgets
+  widgets/           AnswerCard, Fireworks, pet widgets, PracticeSettingsForm
 ```
 
 Key conventions:
@@ -74,7 +79,8 @@ Key conventions:
   (e.g. `QuestionGenerator(random: Random(42))`) for deterministic tests.
 - **Persistence** uses JSON strings in `shared_preferences` under **versioned
   keys** (`players_v1`, `history_v2`, `wallets_v1`, `theme_mode_v1`,
-  `audio_muted_v1`, …). `fromJson` must tolerate missing/old fields with
+  `audio_muted_v1`, `practice_settings_v1`, `onboarding_done_v1`, …).
+  `fromJson` must tolerate missing/old fields with
   defaults. If you change a stored format incompatibly, bump the key suffix and
   migrate or default gracefully — never crash on old data.
 - Players are identified by **name**. Wallets (`CoinService`) and history
@@ -83,14 +89,34 @@ Key conventions:
   — except `ChallengeDuration`, which is stored by `index`, so **only append** new
   values to that enum.
 - Leaderboards group games by `ScoreEntry.gameTypeKey` (duration + sorted
-  operations).
+  operations + `modeKey`). `modeKey` describes non-classic difficulty (range,
+  crossing, drills, tables) and is **empty for the classic mode**, so old games
+  keep their leaderboards. Never let different modes share a leaderboard or the
+  top score that decides coins.
+- Practice settings (`PracticeSettings`) are chosen in the parental control
+  panel, stored per player by name with a "template" (last saved) for new
+  players, and **defaults equal the classic game**. The first-run setup is shown
+  once on a fresh install (`onboarding_done_v1`); installs that already have
+  players skip it.
 
 ## Game rules (keep code, README, in-app Guide and tests in sync)
 
-- Operands and answers stay in `0..100`; subtraction is never negative;
-  multiplication factors are `2..10`.
-- Division always divides evenly; divisor and quotient are both in `1..10`
-  (`QuestionGenerator.maxDivisionValue = 10`), so the dividend is at most 100.
+- Default (classic) mode: operands and answers stay in `0..100`; subtraction
+  is never negative; multiplication factors are `2..10`. Parents can pick
+  `NumberRange` within 5/10/20/100/1000 for + and −, a `CrossingMode`
+  (none/mixed/only, carry or borrow in the units column; also tens within 1000),
+  the multiplication tables, and `Drill`s (±1/2, doubles/halves, near doubles,
+  pairs to 10/100, bridging through ten, missing number).
+- Division always divides evenly; the divisor is an enabled table (`2..10`) and
+  the quotient is in `1..10` (`QuestionGenerator.maxDivisionValue = 10`), so the
+  dividend is at most 100.
+- Gems (`Gems`): every 5 correct answers in a row (slow-but-correct counts)
+  earns 1 gem; a wrong answer resets the streak; the streak does not carry over
+  between games. The shop buys gems back at 10 coins each.
+- Parental gate: `(2^a + b × c) mod 1000`, `a ∈ 5..20`, `b, c ∈ 10000..99999`;
+  a wrong answer shows a new problem.
+- Changing a pet's type keeps its feeding/enjoyment values and timestamps;
+  re-adding an existing player name keeps the existing profile and pet.
 - Every question has exactly `QuestionGenerator.optionCount = 6` distinct,
   non-negative answer cards.
 - Scoring (`Scoring`): `<1 s` → 3 pts; `1–10 s` → linear 3→1; `>10 s` or wrong →

@@ -86,7 +86,8 @@ void main() {
     expect(russian.coinCount(25), '25 монет');
   });
 
-  test('setPet gives a player a fresh pet with full care', () async {
+  test('setPet gives a player without a pet a fresh pet with full care',
+      () async {
     final service = PlayerService();
     await service.selectOrCreate(
       PlayerProfile(name: 'Ann', languageCode: 'en'),
