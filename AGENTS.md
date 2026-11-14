@@ -130,7 +130,9 @@ Key conventions:
   style index — every fifth costs `budgetPrice = 50`, the rest 100–1000 in tens;
   at least `minimumBudgetStyles = 4` budget styles are always shown.
 - Coins (`Coins.maxForDuration`): 1 min → 20, 2 min → 50, 5 min → 150, linear by
-  score vs. the category's top score.
+  score vs. the category's top score (for a category nobody has played yet: the
+  best score of that challenge length, so new modes cannot farm the full
+  reward). `CoinService.addReward` pays coins and gems in one save.
 - Pets: food −100/day, fun −20/day; feed = 20 coins/+30 food, toy = 100 coins/+50
   fun; hungry/sad below 20.
 
