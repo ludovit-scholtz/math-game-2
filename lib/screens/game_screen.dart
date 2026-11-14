@@ -45,6 +45,10 @@ class _GameScreenState extends State<GameScreen> {
   String _feedback = '';
   bool _feedbackIsNegative = false;
 
+  /// True while the answer that completed a gem streak is being shown, so the
+  /// streak bar can show all dots lit before it starts over.
+  bool _gemJustEarned = false;
+
   @override
   void initState() {
     super.initState();
@@ -90,6 +94,7 @@ class _GameScreenState extends State<GameScreen> {
     setState(() {
       _locked = true;
       _selectedAnswer = value;
+      _gemJustEarned = result.gemEarned;
       if (result.gemEarned) {
         _feedback = strings.gemEarnedFeedback;
         _feedbackIsNegative = false;
@@ -107,7 +112,8 @@ class _GameScreenState extends State<GameScreen> {
       }
     });
 
-    if (result.correct && result.pointsAwarded > 0) {
+    // A gem is a reward, even when the last answer of the streak was slow.
+    if (result.gemEarned || (result.correct && result.pointsAwarded > 0)) {
       unawaited(_audio.playCorrect());
     } else {
       unawaited(_audio.playIncorrect());
@@ -120,6 +126,7 @@ class _GameScreenState extends State<GameScreen> {
       _questionStart = DateTime.now();
       _selectedAnswer = null;
       _locked = false;
+      _gemJustEarned = false;
       _feedback = '';
       _feedbackIsNegative = false;
     });
@@ -197,7 +204,7 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                     const SizedBox(height: 12),
                     _StreakBar(
-                      streak: _controller.streak,
+                      streak: _gemJustEarned ? Gems.streakLength : _controller.streak,
                       gems: _controller.gemsEarned,
                     ),
                     SizedBox(height: verticalGap),
