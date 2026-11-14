@@ -54,6 +54,14 @@ jobs:
             exit 1
           fi
 
+          # The version code no longer follows the tag, so never release a tag
+          # that is older than the newest one (it would replace a newer build).
+          LATEST_TAG="$(git tag --list 'v*' --sort=-v:refname | head -n 1)"
+          if [ "$TAG_NAME" != "$LATEST_TAG" ]; then
+            echo "::error::$TAG_NAME is not the newest version tag ($LATEST_TAG). Release the newest tag instead."
+            exit 1
+          fi
+
           # Google Play accepts every version code only once, and a higher code
           # is what makes testers see an update. A manual run uses the latest
           # tag and a re-run keeps its run number, so the code comes from the
@@ -417,14 +425,22 @@ jobs:
             exit 1
           fi
 
+          # The version code no longer follows the tag, so never release a tag
+          # that is older than the newest one (it would replace a newer build).
+          LATEST_TAG="$(git tag --list 'v*' --sort=-v:refname | head -n 1)"
+          if [ "$TAG_NAME" != "$LATEST_TAG" ]; then
+            echo "::error::$TAG_NAME is not the newest version tag ($LATEST_TAG). Release the newest tag instead."
+            exit 1
+          fi
+
           # The Windows file version (major.minor.patch.build) only allows
           # 16-bit parts (0-65535), so the build number is the run number
           # wrapped into that range.
-          VERSION_CODE=$((GITHUB_RUN_NUMBER % 65535))
+          BUILD_NUMBER=$((GITHUB_RUN_NUMBER % 65536))
 
           echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
           echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
-          echo "version_code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
+          echo "build_number=$BUILD_NUMBER" >> "$GITHUB_OUTPUT"
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -470,7 +486,7 @@ jobs:
         run: >
           flutter build windows --release
           --build-name "${{ steps.release_version.outputs.version_name }}"
-          --build-number "${{ steps.release_version.outputs.version_code }}"
+          --build-number "${{ steps.release_version.outputs.build_number }}"
 
       - name: Zip the Windows build
         shell: pwsh
