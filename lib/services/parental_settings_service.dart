@@ -15,6 +15,16 @@ class ParentalSettingsService {
   static const String _settingsKey = 'practice_settings_v1';
   static const String _onboardingKey = 'onboarding_done_v1';
 
+  /// Saves of one service read and rewrite the whole blob, so they run one after another;
+  /// quick successive changes can never overwrite each other with a stale copy.
+  Future<void> _writes = Future<void>.value();
+
+  Future<void> _serial(Future<void> Function() write) {
+    final next = _writes.catchError((_) {}).then((_) => write());
+    _writes = next;
+    return next;
+  }
+
   /// The stored settings: `{'template': {...}, 'players': {name: {...}}}`.
   Future<Map<String, dynamic>> _loadRaw() async {
     final prefs = await SharedPreferences.getInstance();
@@ -61,31 +71,35 @@ class ParentalSettingsService {
   /// Saves [settings] for [playerName]. With no name they become the
   /// template that players without their own settings use. Saving for one
   /// player never changes what other players get.
-  Future<void> save(PracticeSettings settings, [String? playerName]) async {
-    final data = await _loadRaw();
-    if (playerName == null) {
-      data['template'] = settings.toJson();
-    } else {
-      final players = _playersOf(data);
-      players[playerName] = settings.toJson();
-      data['players'] = players;
-    }
-    await _saveRaw(data);
+  Future<void> save(PracticeSettings settings, [String? playerName]) {
+    return _serial(() async {
+      final data = await _loadRaw();
+      if (playerName == null) {
+        data['template'] = settings.toJson();
+      } else {
+        final players = _playersOf(data);
+        players[playerName] = settings.toJson();
+        data['players'] = players;
+      }
+      await _saveRaw(data);
+    });
   }
 
   /// Saves [settings] for every one of [playerNames] and as the template.
   Future<void> saveForAll(
     PracticeSettings settings,
     Iterable<String> playerNames,
-  ) async {
-    final data = await _loadRaw();
-    final players = _playersOf(data);
-    for (final name in playerNames) {
-      players[name] = settings.toJson();
-    }
-    data['players'] = players;
-    data['template'] = settings.toJson();
-    await _saveRaw(data);
+  ) {
+    return _serial(() async {
+      final data = await _loadRaw();
+      final players = _playersOf(data);
+      for (final name in playerNames) {
+        players[name] = settings.toJson();
+      }
+      data['players'] = players;
+      data['template'] = settings.toJson();
+      await _saveRaw(data);
+    });
   }
 
   /// Whether the first-run setup was completed (or skipped for an existing

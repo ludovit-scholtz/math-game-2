@@ -13,6 +13,7 @@ import 'package:math_game_2/models/practice_settings.dart';
 import 'package:math_game_2/models/score_entry.dart';
 import 'package:math_game_2/screens/home_screen.dart';
 import 'package:math_game_2/screens/parental_control_screen.dart';
+import 'package:math_game_2/screens/parental_gate_dialog.dart';
 import 'package:math_game_2/screens/parental_history_screen.dart';
 import 'package:math_game_2/services/leaderboard_service.dart';
 import 'package:math_game_2/services/parental_settings_service.dart';
@@ -130,6 +131,20 @@ void main() {
         await ParentalSettingsService().load('Ann'),
         PracticeSettings.defaults(),
       );
+    });
+
+    test('quick successive saves for different players all survive', () async {
+      final service = ParentalSettingsService();
+      await Future.wait([
+        service.save(PracticeSettings(range: NumberRange.within5), 'Ann'),
+        service.save(PracticeSettings(range: NumberRange.within10), 'Bob'),
+        service.save(PracticeSettings(range: NumberRange.within20), 'Cy'),
+        service.save(PracticeSettings(range: NumberRange.within1000)),
+      ]);
+      expect((await service.load('Ann')).range, NumberRange.within5);
+      expect((await service.load('Bob')).range, NumberRange.within10);
+      expect((await service.load('Cy')).range, NumberRange.within20);
+      expect((await service.load('Dee')).range, NumberRange.within1000);
     });
 
     test('onboarding flag', () async {
@@ -316,6 +331,56 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('parental-check')));
       await tester.pumpAndSettle();
       expect(find.byType(ParentalControlScreen), findsOneWidget);
+    });
+
+    testWidgets('repeated wrong answers lock the gate for a while', (
+      tester,
+    ) async {
+      ParentalGateLockout.reset();
+      addTearDown(ParentalGateLockout.reset);
+      await tester.pumpWidget(_app(const HomeScreen()));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(Icons.menu_rounded));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Parental control'));
+      await tester.pumpAndSettle();
+
+      for (var i = 0; i < ParentalGateLockout.maxAttempts; i++) {
+        final text = tester
+            .widget<Text>(find.byKey(const ValueKey('parental-expression')))
+            .data!;
+        final m = RegExp(r'2\^(\d+) \+ (\d+) × (\d+)').firstMatch(text)!;
+        final answer = ParentalChallenge(
+          exponent: int.parse(m[1]!),
+          factorA: int.parse(m[2]!),
+          factorB: int.parse(m[3]!),
+        ).answer;
+        await tester.enterText(
+          find.byKey(const ValueKey('parental-answer')),
+          '${(answer + 1) % 1000}',
+        );
+        await tester.tap(find.byKey(const ValueKey('parental-check')));
+        await tester.pumpAndSettle();
+      }
+      // The dialog closed and the gate is locked.
+      expect(find.text('Grown-ups only'), findsNothing);
+      expect(ParentalGateLockout.until, isNotNull);
+
+      await tester.tap(find.byIcon(Icons.menu_rounded));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Parental control'));
+      await tester.pumpAndSettle();
+      expect(find.text('Grown-ups only'), findsNothing);
+
+      // After the lockout it opens again.
+      ParentalGateLockout.until = DateTime.now().subtract(
+        const Duration(seconds: 1),
+      );
+      await tester.tap(find.byIcon(Icons.menu_rounded));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Parental control'));
+      await tester.pumpAndSettle();
+      expect(find.text('Grown-ups only'), findsOneWidget);
     });
 
     testWidgets('cancel keeps the panel closed', (tester) async {

@@ -8,12 +8,37 @@ import '../logic/parental_gate.dart';
 /// Asks a question only a grown-up can answer. Resolves to `true` when it was
 /// answered correctly. A wrong answer shows a fresh question, so the answer
 /// cannot simply be guessed one value after another.
-Future<bool> showParentalGate(BuildContext context, {Random? random}) async {
+Future<bool> showParentalGate(
+  BuildContext context, {
+  Random? random,
+  DateTime Function() now = DateTime.now,
+}) async {
+  // After too many wrong answers the gate stays shut for a while, so the
+  // answer cannot be found by pressing Check over and over.
+  final until = ParentalGateLockout.until;
+  if (until != null && now().isBefore(until)) return false;
   final passed = await showDialog<bool>(
     context: context,
     builder: (_) => ParentalGateDialog(random: random),
   );
   return passed ?? false;
+}
+
+/// Remembers, for the running app, that the gate was locked after repeated
+/// wrong answers.
+class ParentalGateLockout {
+  ParentalGateLockout._();
+
+  /// Wrong answers in a row after which the gate closes and locks.
+  static const int maxAttempts = 5;
+  static const Duration duration = Duration(seconds: 30);
+
+  static DateTime? until;
+
+  static void lock([DateTime? now]) =>
+      until = (now ?? DateTime.now()).add(duration);
+
+  static void reset() => until = null;
 }
 
 class ParentalGateDialog extends StatefulWidget {
@@ -30,6 +55,7 @@ class _ParentalGateDialogState extends State<ParentalGateDialog> {
   final TextEditingController _controller = TextEditingController();
   late ParentalChallenge _challenge;
   bool _wrong = false;
+  int _wrongInARow = 0;
 
   @override
   void initState() {
@@ -46,6 +72,12 @@ class _ParentalGateDialogState extends State<ParentalGateDialog> {
   void _submit() {
     if (_challenge.check(_controller.text)) {
       Navigator.of(context).pop(true);
+      return;
+    }
+    _wrongInARow++;
+    if (_wrongInARow >= ParentalGateLockout.maxAttempts) {
+      ParentalGateLockout.lock();
+      Navigator.of(context).pop(false);
       return;
     }
     setState(() {
