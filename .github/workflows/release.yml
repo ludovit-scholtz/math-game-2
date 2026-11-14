@@ -29,9 +29,14 @@ env:
   ANDROID_PACKAGE_NAME: io.biatec.math_master
 
 jobs:
-  build-signed-aab:
-    name: Build Signed App Bundle
+  resolve-version:
+    name: Resolve release version
     runs-on: ubuntu-latest
+    outputs:
+      tag_name: ${{ steps.resolve.outputs.tag_name }}
+      version_name: ${{ steps.resolve.outputs.version_name }}
+      version_code: ${{ steps.resolve.outputs.version_code }}
+      build_number: ${{ steps.resolve.outputs.build_number }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -39,43 +44,77 @@ jobs:
           fetch-tags: true
 
       - name: Resolve release version from git tag
-        id: release_version
+        id: resolve
         run: |
+          # Only plain vMAJOR.MINOR.PATCH tags count (no pre-release suffixes).
+          LATEST_TAG="$(git tag --list 'v*' | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)"
+          if [ -z "$LATEST_TAG" ]; then
+            echo "::error::No semantic version tag like v1.2.3 found."
+            exit 1
+          fi
+
           if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
             TAG_NAME="${GITHUB_REF_NAME}"
+            if ! [[ "$TAG_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "::error::Release tag must use semantic versioning like v1.2.3. Found: $TAG_NAME"
+              exit 1
+            fi
+            # The version code no longer follows the tag, so never release a tag
+            # that is older than the newest one (it would replace a newer build).
+            if [ "$TAG_NAME" != "$LATEST_TAG" ]; then
+              echo "::error::$TAG_NAME is not the newest version tag ($LATEST_TAG). Release the newest tag instead."
+              exit 1
+            fi
           else
-            TAG_NAME="$(git describe --tags --abbrev=0)"
+            # Manual runs use the newest version tag.
+            TAG_NAME="$LATEST_TAG"
           fi
 
           VERSION_NAME="${TAG_NAME#v}"
 
-          if ! [[ "$VERSION_NAME" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-            echo "::error::Release tag must use semantic versioning like v1.2.3. Found: $TAG_NAME"
-            exit 1
-          fi
-
-          # The version code no longer follows the tag, so never release a tag
-          # that is older than the newest one (it would replace a newer build).
-          LATEST_TAG="$(git tag --list 'v*' --sort=-v:refname | head -n 1)"
-          if [ "$TAG_NAME" != "$LATEST_TAG" ]; then
-            echo "::error::$TAG_NAME is not the newest version tag ($LATEST_TAG). Release the newest tag instead."
-            exit 1
-          fi
-
           # Google Play accepts every version code only once, and a higher code
-          # is what makes testers see an update. A manual run uses the latest
+          # is what makes testers see an update. A manual run uses the newest
           # tag and a re-run keeps its run number, so the code comes from the
           # run, not from the tag: it grows with every run (run number * 10) and
           # with every re-run of a run (attempt). The version *name* carries the
-          # semantic version. Codes start at 10000000, above anything uploaded
-          # before, and stay under Google Play's limit of 2100000000.
+          # semantic version. Codes start at 10000000, above the codes of the
+          # earlier tag-derived scheme (MAJOR*10000 + MINOR*100 + PATCH), and
+          # stay under Google Play's limit of 2100000000.
           if [ "${GITHUB_RUN_ATTEMPT}" -gt 10 ]; then
             echo "::error::More than 10 attempts of one run cannot get a unique version code. Start a new run."
             exit 1
           fi
           VERSION_CODE=$((10000000 + GITHUB_RUN_NUMBER * 10 + GITHUB_RUN_ATTEMPT - 1))
 
-          echo "Using release tag $TAG_NAME"
+          # The Windows file version (major.minor.patch.build) only allows
+          # 16-bit parts (0-65535), so its build number is the run number
+          # wrapped into that range.
+          BUILD_NUMBER=$((GITHUB_RUN_NUMBER % 65536))
+
+          echo "Using release tag $TAG_NAME (version code $VERSION_CODE)"
+          {
+            echo "tag_name=$TAG_NAME"
+            echo "version_name=$VERSION_NAME"
+            echo "version_code=$VERSION_CODE"
+            echo "build_number=$BUILD_NUMBER"
+          } >> "$GITHUB_OUTPUT"
+
+  build-signed-aab:
+    name: Build Signed App Bundle
+    runs-on: ubuntu-latest
+    needs: resolve-version
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Use the resolved release version
+        id: release_version
+        env:
+          VERSION_NAME: ${{ needs.resolve-version.outputs.version_name }}
+          VERSION_CODE: ${{ needs.resolve-version.outputs.version_code }}
+        run: |
           echo "VERSION_NAME=$VERSION_NAME" >> "$GITHUB_ENV"
           echo "VERSION_CODE=$VERSION_CODE" >> "$GITHUB_ENV"
           echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
@@ -399,6 +438,7 @@ jobs:
   build-windows:
     name: Build Windows
     runs-on: windows-latest
+    needs: resolve-version
     # Publishing the zip to the GitHub Release needs write access to contents.
     permissions:
       contents: write
@@ -408,39 +448,19 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Resolve release version from git tag
+      - name: Use the resolved release version
         id: release_version
         shell: bash
+        env:
+          TAG_NAME: ${{ needs.resolve-version.outputs.tag_name }}
+          VERSION_NAME: ${{ needs.resolve-version.outputs.version_name }}
+          BUILD_NUMBER: ${{ needs.resolve-version.outputs.build_number }}
         run: |
-          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
-            TAG_NAME="${GITHUB_REF_NAME}"
-          else
-            TAG_NAME="$(git describe --tags --abbrev=0)"
-          fi
-
-          VERSION_NAME="${TAG_NAME#v}"
-
-          if ! [[ "$VERSION_NAME" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-            echo "::error::Release tag must use semantic versioning like v1.2.3. Found: $TAG_NAME"
-            exit 1
-          fi
-
-          # The version code no longer follows the tag, so never release a tag
-          # that is older than the newest one (it would replace a newer build).
-          LATEST_TAG="$(git tag --list 'v*' --sort=-v:refname | head -n 1)"
-          if [ "$TAG_NAME" != "$LATEST_TAG" ]; then
-            echo "::error::$TAG_NAME is not the newest version tag ($LATEST_TAG). Release the newest tag instead."
-            exit 1
-          fi
-
-          # The Windows file version (major.minor.patch.build) only allows
-          # 16-bit parts (0-65535), so the build number is the run number
-          # wrapped into that range.
-          BUILD_NUMBER=$((GITHUB_RUN_NUMBER % 65536))
-
-          echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
-          echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
-          echo "build_number=$BUILD_NUMBER" >> "$GITHUB_OUTPUT"
+          {
+            echo "tag_name=$TAG_NAME"
+            echo "version_name=$VERSION_NAME"
+            echo "build_number=$BUILD_NUMBER"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2

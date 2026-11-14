@@ -144,6 +144,10 @@ an update when its code is higher. The code therefore comes from the workflow
 run, not from the tag: it grows with every run and every re-run, so manual runs
 and re-runs of the same tag work. (A single run supports at most 10 attempts.)
 
+Because the code no longer follows the tag, the workflow refuses a tag that is
+not the **newest plain `vX.Y.Z` tag** (so an older tag can never replace a newer
+build). Pre-release tags such as `v1.2.0-rc1` are ignored.
+
 When the workflow succeeds, the release is uploaded to **Internal testing** in
 the Google Play Console. The workflow also stores the signed `.aab` as a GitHub
 Actions artifact named like `math-masters-1.0.15-signed-aab`.
@@ -153,8 +157,8 @@ attaches `math-master-windows-x64-1.0.15.zip` to the GitHub Release of the tag
 (manual runs only store it as a workflow artifact).
 
 You can also start the workflow manually from **GitHub > Actions > Release
-(Google Play Internal Testing) > Run workflow**. Manual runs use the latest git
-tag available in the repository.
+(Google Play Internal Testing) > Run workflow**. Manual runs use the newest
+`vX.Y.Z` tag in the repository.
 
 ---
 
