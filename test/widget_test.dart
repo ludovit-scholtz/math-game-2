@@ -1,6 +1,6 @@
 // Smoke test that the app boots and shows the home screen.
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:math_game_2/main.dart';

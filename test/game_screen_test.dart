@@ -1,5 +1,5 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:math_game_2/l10n/app_strings.dart';
 import 'package:math_game_2/models/game_config.dart';
 import 'package:math_game_2/models/operation_type.dart';

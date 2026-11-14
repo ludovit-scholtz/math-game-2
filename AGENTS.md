@@ -64,6 +64,9 @@ lib/
 
 Key conventions:
 
+- **UI imports**: Flutter 3.50 deprecates `package:flutter/material.dart`.
+  Import `package:material_ui/material_ui.dart` (and `cupertino_ui` only for
+  Cupertino localizations) instead.
 - **State management** is plain `StatefulWidget` + `setState`. Screens create
   their services directly (`final _service = PlayerService();`). Don't introduce
   Provider/Riverpod/Bloc or a router unless asked.
