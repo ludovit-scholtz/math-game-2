@@ -147,6 +147,24 @@ class CoinService {
     return _update(playerName, wallet.copyWith(coins: wallet.coins + amount));
   }
 
+  /// Adds the coins and gems earned in one game in a single save, so a game
+  /// can never pay out only half of its reward.
+  Future<CoinWallet> addReward(
+    String playerName, {
+    int coins = 0,
+    int gems = 0,
+  }) async {
+    final wallet = await load(playerName);
+    if (coins <= 0 && gems <= 0) return wallet;
+    return _update(
+      playerName,
+      wallet.copyWith(
+        coins: wallet.coins + (coins > 0 ? coins : 0),
+        gems: wallet.gems + (gems > 0 ? gems : 0),
+      ),
+    );
+  }
+
   /// Adds [amount] gems to [playerName]'s collection.
   Future<CoinWallet> addGems(String playerName, int amount) async {
     if (amount <= 0) return load(playerName);

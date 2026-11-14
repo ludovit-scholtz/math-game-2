@@ -32,6 +32,11 @@ class ParentalSettingsService {
     await prefs.setString(_settingsKey, jsonEncode(data));
   }
 
+  static Map<String, dynamic> _playersOf(Map<String, dynamic> data) =>
+      data['players'] is Map
+      ? Map<String, dynamic>.from(data['players'] as Map)
+      : <String, dynamic>{};
+
   static PracticeSettings? _parse(Object? value) {
     if (value is! Map) return null;
     try {
@@ -61,9 +66,7 @@ class ParentalSettingsService {
     if (playerName == null) {
       data['template'] = settings.toJson();
     } else {
-      final players = data['players'] is Map
-          ? Map<String, dynamic>.from(data['players'] as Map)
-          : <String, dynamic>{};
+      final players = _playersOf(data);
       players[playerName] = settings.toJson();
       data['players'] = players;
     }
@@ -76,9 +79,7 @@ class ParentalSettingsService {
     Iterable<String> playerNames,
   ) async {
     final data = await _loadRaw();
-    final players = data['players'] is Map
-        ? Map<String, dynamic>.from(data['players'] as Map)
-        : <String, dynamic>{};
+    final players = _playersOf(data);
     for (final name in playerNames) {
       players[name] = settings.toJson();
     }

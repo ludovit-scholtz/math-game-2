@@ -144,6 +144,15 @@ void main() {
       },
     );
 
+    test('a game reward adds coins and gems in one save', () async {
+      final service = CoinService();
+      final wallet = await service.addReward('Ann', coins: 15, gems: 2);
+      expect(wallet.coins, 15);
+      expect(wallet.gems, 2);
+      expect((await service.load('Ann')).gems, 2);
+      expect((await service.addReward('Ann')).coins, 15);
+    });
+
     test('selling adds 10 coins per gem', () async {
       final service = CoinService();
       await service.addGems('Ann', 4);

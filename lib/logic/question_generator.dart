@@ -114,26 +114,26 @@ class QuestionGenerator {
   /// rule. Falls back to any valid pair when the rule cannot be met (e.g.
   /// "always cross a ten" within 5).
   (int, int) _addSubPair(OperationType type, PracticeSettings s) {
-    final max = s.range.max;
+    final rangeMax = s.range.max;
     final columns = s.range == NumberRange.within1000 ? 2 : 1;
     var a = 0;
     var b = 0;
     for (var i = 0; i < _maxAttempts; i++) {
-      a = _rng.nextInt(max + 1);
+      a = _rng.nextInt(rangeMax + 1);
       b = type == OperationType.addition
-          ? _rng.nextInt(max - a + 1) // keeps a + b <= max
+          ? _rng.nextInt(rangeMax - a + 1) // keeps a + b <= rangeMax
           : _rng.nextInt(a + 1); // 0..a, so the result is never negative
-      if (s.crossing == CrossingMode.mixed) break;
+      if (s.crossing == CrossingMode.mixed) return (a, b);
       if (_matchesCrossing(type, a, b, s, columns)) return (a, b);
     }
     // Rare for large ranges, but narrow ones (e.g. "always cross" in
     // subtraction within 10) can miss: pick from every valid pair instead.
-    if (max <= 100) {
+    if (rangeMax <= 100) {
       final valid = <(int, int)>[
-        for (var x = 0; x <= max; x++)
+        for (var x = 0; x <= rangeMax; x++)
           for (
             var y = 0;
-            y <= (type == OperationType.addition ? max - x : x);
+            y <= (type == OperationType.addition ? rangeMax - x : x);
             y++
           )
             if (_matchesCrossing(type, x, y, s, columns)) (x, y),
@@ -160,64 +160,64 @@ class QuestionGenerator {
   // ---------------------------------------------------------------------------
 
   Question _drill(Drill drill, PracticeSettings s) {
-    final max = s.range.max;
+    final rangeMax = s.range.max;
     switch (drill) {
       case Drill.plusMinusOne:
         final delta = 1 + _rng.nextInt(2); // 1 or 2
         if (_rng.nextBool()) {
-          final a = _rng.nextInt(max - delta + 1);
-          return _build(OperationType.addition, a, delta, max);
+          final a = _rng.nextInt(rangeMax - delta + 1);
+          return _build(OperationType.addition, a, delta, rangeMax);
         }
-        final a = delta + _rng.nextInt(max - delta + 1);
-        return _build(OperationType.subtraction, a, delta, max);
+        final a = delta + _rng.nextInt(rangeMax - delta + 1);
+        return _build(OperationType.subtraction, a, delta, rangeMax);
       case Drill.doubles:
         if (_rng.nextBool()) {
           // Halves obey the division rule: the quotient stays in 1..10.
-          final half = 1 + _rng.nextInt(min(max ~/ 2, maxDivisionValue));
-          return _build(OperationType.division, 2 * half, 2, max);
+          final half = 1 + _rng.nextInt(min(rangeMax ~/ 2, maxDivisionValue));
+          return _build(OperationType.division, 2 * half, 2, rangeMax);
         }
-        final x = 1 + _rng.nextInt(min(max ~/ 2, 50));
-        return _build(OperationType.addition, x, x, max);
+        final x = 1 + _rng.nextInt(min(rangeMax ~/ 2, 50));
+        return _build(OperationType.addition, x, x, rangeMax);
       case Drill.nearDoubles:
-        final cap = min((max - 1) ~/ 2, 50);
+        final cap = min((rangeMax - 1) ~/ 2, 50);
         final x = 1 + _rng.nextInt(cap);
         return _rng.nextBool()
-            ? _build(OperationType.addition, x, x + 1, max)
-            : _build(OperationType.addition, x + 1, x, max);
+            ? _build(OperationType.addition, x, x + 1, rangeMax)
+            : _build(OperationType.addition, x + 1, x, rangeMax);
       case Drill.pairsToTen:
-        final target = min(10, max);
+        final target = min(10, rangeMax);
         final a = 1 + _rng.nextInt(target - 1);
         return _build(
           OperationType.addition,
           a,
           target - a,
-          max,
+          rangeMax,
           unknown: UnknownPart.operandB,
         );
       case Drill.pairsToHundred:
         // Below 100 there is no hundred to reach: practise pairs to ten.
-        final target = max >= 100 ? 100 : min(10, max);
+        final target = rangeMax >= 100 ? 100 : min(10, rangeMax);
         final a = 1 + _rng.nextInt(target - 1);
         return _build(
           OperationType.addition,
           a,
           target - a,
-          max,
+          rangeMax,
           unknown: UnknownPart.operandB,
         );
       case Drill.bridgeTen:
         // Sums reach 18, so below 20 stay inside the range with pairs to ten.
-        if (max < 20) return _drill(Drill.pairsToTen, s);
+        if (rangeMax < 20) return _drill(Drill.pairsToTen, s);
         if (_rng.nextBool()) {
           final a = 2 + _rng.nextInt(8); // 2..9
-          final low = _larger(2, 11 - a); // a + b must reach 11 or more
+          final low = max(2, 11 - a); // a + b must reach 11 or more
           final b = low + _rng.nextInt(9 - low + 1);
-          return _build(OperationType.addition, a, b, max);
+          return _build(OperationType.addition, a, b, rangeMax);
         }
         final a = 11 + _rng.nextInt(8); // 11..18
         final low = a % 10 + 1; // b must exceed the ones digit
         final b = low + _rng.nextInt(9 - low + 1);
-        return _build(OperationType.subtraction, a, b, max);
+        return _build(OperationType.subtraction, a, b, rangeMax);
       case Drill.missingNumber:
         final type = _rng.nextBool()
             ? OperationType.addition
@@ -226,11 +226,9 @@ class QuestionGenerator {
         final hidden = _rng.nextBool()
             ? UnknownPart.operandA
             : UnknownPart.operandB;
-        return _build(type, pair.$1, pair.$2, max, unknown: hidden);
+        return _build(type, pair.$1, pair.$2, rangeMax, unknown: hidden);
     }
   }
-
-  static int _larger(int a, int b) => a > b ? a : b;
 
   // ---------------------------------------------------------------------------
   // Building the question and its answer cards
@@ -256,7 +254,7 @@ class QuestionGenerator {
       UnknownPart.operandA => a,
       UnknownPart.operandB => b,
     };
-    final cap = _larger(10, 2 * [rangeMax, a, b, answer].reduce(_larger));
+    final cap = max(10, 2 * [rangeMax, a, b, answer].reduce(max));
     final options = _buildOptions(
       type,
       a,

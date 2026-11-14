@@ -18,61 +18,60 @@ class PracticeSettingsForm extends StatelessWidget {
   final PracticeSettings settings;
   final ValueChanged<PracticeSettings> onChanged;
 
-  void _toggleOperation(BuildContext context, OperationType op) {
-    final ops = {...settings.operations};
-    if (ops.contains(op)) {
-      if (ops.length == 1 && settings.drills.isEmpty) {
+  /// Adds or removes [value]. Removing the last one is refused with a hint
+  /// unless [others] (other things that can carry the settings) is non-empty.
+  void _toggle<T>(
+    BuildContext context,
+    Set<T> current,
+    T value,
+    int others,
+    void Function(Set<T>) apply,
+  ) {
+    final next = {...current};
+    if (next.contains(value)) {
+      if (next.length + others <= 1) {
         _keepOne(context);
         return;
       }
-      ops.remove(op);
+      next.remove(value);
     } else {
-      ops.add(op);
+      next.add(value);
     }
-    onChanged(settings.copyWith(operations: ops));
+    apply(next);
   }
 
-  void _toggleDrill(BuildContext context, Drill drill) {
-    final drills = {...settings.drills};
-    if (drills.contains(drill)) {
-      if (drills.length == 1 && settings.operations.isEmpty) {
-        _keepOne(context);
-        return;
-      }
-      drills.remove(drill);
-    } else {
-      drills.add(drill);
-    }
-    onChanged(settings.copyWith(drills: drills));
-  }
+  void _toggleOperation(BuildContext context, OperationType op) => _toggle(
+    context,
+    settings.operations,
+    op,
+    settings.drills.length,
+    (ops) => onChanged(settings.copyWith(operations: ops)),
+  );
 
-  void _toggleTable(BuildContext context, int table) {
-    final tables = {...settings.tables};
-    if (tables.contains(table)) {
-      if (tables.length == 1) {
-        _keepOne(context);
-        return;
-      }
-      tables.remove(table);
-    } else {
-      tables.add(table);
-    }
-    onChanged(settings.copyWith(tables: tables));
-  }
+  void _toggleDrill(BuildContext context, Drill drill) => _toggle(
+    context,
+    settings.drills,
+    drill,
+    settings.operations.length,
+    (drills) => onChanged(settings.copyWith(drills: drills)),
+  );
 
-  void _toggleDuration(BuildContext context, ChallengeDuration duration) {
-    final durations = {...settings.durations};
-    if (durations.contains(duration)) {
-      if (durations.length == 1) {
-        _keepOne(context);
-        return;
-      }
-      durations.remove(duration);
-    } else {
-      durations.add(duration);
-    }
-    onChanged(settings.copyWith(durations: durations));
-  }
+  void _toggleTable(BuildContext context, int table) => _toggle(
+    context,
+    settings.tables,
+    table,
+    0,
+    (tables) => onChanged(settings.copyWith(tables: tables)),
+  );
+
+  void _toggleDuration(BuildContext context, ChallengeDuration duration) =>
+      _toggle(
+        context,
+        settings.durations,
+        duration,
+        0,
+        (durations) => onChanged(settings.copyWith(durations: durations)),
+      );
 
   void _keepOne(BuildContext context) {
     ScaffoldMessenger.of(

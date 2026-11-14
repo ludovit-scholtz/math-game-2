@@ -94,21 +94,26 @@ class _ResultsScreenState extends State<ResultsScreen> {
       final previousTop = previous
           .where((e) => e.gameTypeKey == entry.gameTypeKey)
           .fold<int>(0, (best, e) => e.score > best ? e.score : best);
+      // A category nobody has played yet has no top score. Scale against the
+      // best score of that challenge length instead, so switching modes or
+      // drills cannot be used to collect the full reward again and again.
+      final lengthTop = previous
+          .where((e) => e.duration == config.duration)
+          .fold<int>(0, (best, e) => e.score > best ? e.score : best);
       _coinsEarned = Coins.forScore(
         entry.score,
-        previousTop,
+        previousTop > 0 ? previousTop : lengthTop,
         duration: config.duration,
       );
       _newRecord = entry.score > 0 && entry.score > previousTop;
       entry = entry.copyWith(coinsEarned: _coinsEarned);
 
-      if (_coinsEarned > 0) {
-        await _coinService.addCoins(config.playerName, _coinsEarned);
-      }
-      if (_gemsEarned > 0) {
-        await _coinService.addGems(config.playerName, _gemsEarned);
-      }
-      _coinBalance = (await _coinService.load(config.playerName)).coins;
+      final wallet = await _coinService.addReward(
+        config.playerName,
+        coins: _coinsEarned,
+        gems: _gemsEarned,
+      );
+      _coinBalance = wallet.coins;
       history = await _service.addScore(entry);
     } else {
       history = await _service.load();
