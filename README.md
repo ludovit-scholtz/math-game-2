@@ -6,6 +6,14 @@ numbers **under 100 by default**; parents can choose other ranges and
 school-style exercises in the **parental control** panel. Built with **Flutter**, so the same code base runs on
 **Android, iOS, web and desktop**.
 
+<p>
+  <img src="docs/screenshots/en/play-phone/01-home.png" width="19%" alt="Home screen">
+  <img src="docs/screenshots/en/play-phone/02-game.png" width="19%" alt="A game in progress">
+  <img src="docs/screenshots/en/play-phone/03-results.png" width="19%" alt="Results with coins and gems">
+  <img src="docs/screenshots/en/play-phone/04-pet.png" width="19%" alt="Pet care">
+  <img src="docs/screenshots/en/play-phone/06-parents.png" width="19%" alt="Parental control">
+</p>
+
 ## How to play
 
 1. On the home screen choose your player. Players you've used before are
@@ -145,11 +153,11 @@ flutter build web --release        # Web
 flutter build windows --release    # Windows desktop (needs Visual Studio, Windows only)
 ```
 
-For Windows, generate the platform folder first and (optionally) the icon:
+For Windows, generate the platform folder first and then the icon:
 
 ```bash
 flutter create --platforms=windows --org io.biatec --project-name math_master .
-dart run flutter_launcher_icons -f flutter_launcher_icons-windows.yaml
+dart run flutter_launcher_icons -f tool/icons/windows.yaml
 flutter build windows --release   # -> build/windows/x64/runner/Release/math_master.exe
 ```
 
@@ -158,7 +166,21 @@ on Windows the game works without them.
 
 > The platform folders (`android/`, `ios/`, `web/`, …) are generated with
 > `flutter create .` and are intentionally not committed; the CI pipeline
-> regenerates them before building.
+> regenerates them before building. They start with the Flutter logo as the
+> app icon; `flutter_launcher_icons` replaces it with ours (see
+> [App icons](docs/SCREENSHOTS.md#app-icons)).
+
+## Store screenshots
+
+The screenshots above, and every size Google Play and the App Store ask for,
+are generated from the real app:
+
+```bash
+flutter test tool/screenshots/store_screenshots_test.dart
+```
+
+[docs/SCREENSHOTS.md](docs/SCREENSHOTS.md) lists the sizes, the options and how
+to add a picture.
 
 ## CI/CD
 
@@ -169,7 +191,11 @@ request and:
 2. builds the release **APK** and **App Bundle** and uploads them as artifacts;
 3. builds the **web** version and uploads it as an artifact;
 4. builds the **Windows** desktop app (`flutter build windows`) and uploads the
-   `Release` folder as an artifact.
+   `Release` folder as an artifact;
+5. generates the **store screenshots** and uploads them as the
+   `store-screenshots` artifact.
+
+Every build job also checks that no Flutter template icon is left in the app.
 
 Pushing a `vX.Y.Z` tag also runs the [`Release` workflow](.github/workflows/release.yml),
 which uploads the signed App Bundle to Google Play internal testing and attaches a

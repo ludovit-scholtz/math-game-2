@@ -1,9 +1,0 @@
-# Used only by the Windows build (CI and local) after `flutter create`:
-#   dart run flutter_launcher_icons -f flutter_launcher_icons-windows.yaml
-# Android/iOS icons are configured in pubspec.yaml.
-flutter_launcher_icons:
-  image_path: assets/icons/math_master_icon.png
-  windows:
-    generate: true
-    image_path: assets/icons/math_master_icon.png
-    icon_size: 256

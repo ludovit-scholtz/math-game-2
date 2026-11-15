@@ -42,3 +42,10 @@ app.*.map.json
 **/*.jks
 **/*.keystore
 **/upload-keystore.jks
+
+# Store screenshots are generated (see docs/SCREENSHOTS.md). Only the English
+# phone set and the feature graphic are kept in git, for the documentation.
+/docs/screenshots/*
+!/docs/screenshots/en/
+/docs/screenshots/en/*/
+!/docs/screenshots/en/play-phone/

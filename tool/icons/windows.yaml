@@ -1,0 +1,13 @@
+# Windows launcher icon. Used after `flutter create` by CI and locally:
+#   dart run flutter_launcher_icons -f tool/icons/windows.yaml
+#
+# Keep this file out of the project root: a root file named
+# `flutter_launcher_icons-<name>.yaml` is a "flavor" for flutter_launcher_icons
+# and makes a plain `dart run flutter_launcher_icons` skip the Android/iOS
+# configuration in pubspec.yaml (the app then ships with the Flutter logo).
+flutter_launcher_icons:
+  image_path: assets/icons/math_master_icon.png
+  windows:
+    generate: true
+    image_path: assets/icons/math_master_icon.png
+    icon_size: 256
