@@ -237,9 +237,14 @@ jobs:
           if-no-files-found: error
 
   store-screenshots:
-    name: Store screenshots
+    name: Store screenshots (${{ matrix.locale }})
     runs-on: ubuntu-latest
     needs: analyze-and-test
+    strategy:
+      fail-fast: false
+      matrix:
+        # Every language of the app (tool/screenshots/captions.dart).
+        locale: [cs, de, en, es, fr, ja, ko, ru, sk, tr, zh]
     steps:
       - uses: actions/checkout@v4
 
@@ -253,16 +258,22 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      # A missing glyph would only show up as an empty box in a picture.
+      - name: Check the CJK font subsets
+        run: |
+          pip install fonttools
+          python tool/screenshots/subset_fonts.py --check
+
       # Renders the real screens headlessly in every size the stores ask for
-      # (see docs/SCREENSHOTS.md). Download the artifact to upload them.
+      # (see docs/SCREENSHOTS.md). Download the artifacts to upload them.
       - name: Generate store screenshots
-        run: flutter test tool/screenshots/store_screenshots_test.dart
+        run: python tool/screenshots/generate_all.py --locales ${{ matrix.locale }}
 
       - name: Upload store screenshots
         uses: actions/upload-artifact@v4
         with:
-          name: store-screenshots
-          path: docs/screenshots
+          name: store-screenshots-${{ matrix.locale }}
+          path: docs/screenshots/${{ matrix.locale }}
           if-no-files-found: error
 
   build-windows:

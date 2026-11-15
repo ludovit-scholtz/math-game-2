@@ -39,8 +39,10 @@ import 'package:math_game_2/theme.dart';
 import 'package:math_game_2/widgets/answer_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'captions.dart';
+
 /// Language of the app and the captions: `--dart-define=SCREENSHOT_LOCALE=sk`.
-/// Only languages the bundled Roboto font can draw (Latin, Cyrillic) work.
+/// Any language of the app (`AppStrings.supportedLocales`).
 const String _localeCode = String.fromEnvironment(
   'SCREENSHOT_LOCALE',
   defaultValue: 'en',
@@ -53,8 +55,22 @@ const String _deviceFilter = String.fromEnvironment('SCREENSHOT_DEVICES');
 const String _emojiFamily = 'NotoColorEmoji';
 const String _symbolFamily = 'NotoSansSymbols2';
 
+/// Noto Sans CJK, which draws Japanese, Korean and Chinese text.
+const String _cjkFamily = 'NotoSansCJK';
+
+/// File name prefix of the CJK font of each language that needs one.
+const Map<String, String> _cjkFiles = {
+  'ja': 'NotoSansCJKjp',
+  'ko': 'NotoSansCJKkr',
+  'zh': 'NotoSansCJKsc',
+};
+
 /// Fonts for the characters Roboto does not have.
-const List<String> _fallbackFonts = [_emojiFamily, _symbolFamily];
+final List<String> _fallbackFonts = [
+  if (_cjkFiles.containsKey(_localeCode)) _cjkFamily,
+  _emojiFamily,
+  _symbolFamily,
+];
 const String _player = 'Emma';
 
 /// One store slot: the exact picture size the store wants and the size of the
@@ -105,33 +121,7 @@ final List<_Scene> _scenes = [
   _Scene('progress', const [Color(0xFFF0497A), Color(0xFFB23CFD)], _showHistory),
 ];
 
-/// Caption (headline, second line) for every scene and for the feature
-/// graphic. Languages without an entry use English.
-const Map<String, Map<String, List<String>>> _captions = {
-  'en': {
-    'home': ['Practise + − × ÷', 'Pick what to train and for how long'],
-    'game': ['Beat the clock', 'Fast, correct answers score the most'],
-    'results': ['Earn coins and gems', 'Every game is rewarded'],
-    'pet': ['Care for your pet', 'Coins buy food and toys'],
-    'shop': ['Collect button styles', 'Spend coins in the shop'],
-    'parents': ['Parents set the level', 'Number range, tables and drills'],
-    'progress': ['See the progress', 'Every game with accuracy and speed'],
-    'feature': ['Kids Math Practice', 'Add, subtract, multiply, divide'],
-  },
-  'sk': {
-    'home': ['Precvičuj + − × ÷', 'Vyber si, čo a ako dlho trénovať'],
-    'game': ['Poraz čas', 'Rýchle správne odpovede dávajú najviac bodov'],
-    'results': ['Získaj mince a drahokamy', 'Každá hra je odmenená'],
-    'pet': ['Staraj sa o zvieratko', 'Za mince kúpiš jedlo a hračky'],
-    'shop': ['Zbieraj štýly tlačidiel', 'Mince miň v obchode'],
-    'parents': ['Úroveň nastavia rodičia', 'Rozsah čísel, násobilka a cvičenia'],
-    'progress': ['Sleduj pokrok', 'Každá hra s presnosťou a rýchlosťou'],
-    'feature': ['Matematika pre deti', 'Sčítanie, odčítanie, násobenie, delenie'],
-  },
-};
-
-List<String> _caption(String id) =>
-    (_captions[_localeCode] ?? _captions['en']!)[id] ?? _captions['en']![id]!;
+List<String> _caption(String id) => storeCaptions[_localeCode]![id]!;
 
 Directory get _outputRoot => Directory('docs/screenshots/$_localeCode');
 
@@ -141,6 +131,12 @@ void main() {
       if (_deviceFilter.isEmpty || _deviceFilter.split(',').contains(device.id))
         device,
   ];
+
+  if (!storeCaptions.containsKey(_localeCode)) {
+    throw ArgumentError(
+      'No captions for "$_localeCode" in tool/screenshots/captions.dart.',
+    );
+  }
 
   setUpAll(_loadFonts);
   setUpAll(_muteAudio);
@@ -557,6 +553,13 @@ Future<void> _loadFonts() async {
       sdkFont('roboto-$weight.ttf'),
   ]);
   await load('MaterialIcons', [sdkFont('materialicons-regular.otf')]);
+  final cjk = _cjkFiles[_localeCode];
+  if (cjk != null) {
+    await load(_cjkFamily, [
+      'tool/screenshots/fonts/$cjk-Regular-subset.otf',
+      'tool/screenshots/fonts/$cjk-Bold-subset.otf',
+    ]);
+  }
   await load(_emojiFamily, [
     'tool/screenshots/fonts/NotoColorEmoji-subset.ttf',
   ]);
@@ -565,7 +568,7 @@ Future<void> _loadFonts() async {
   ]);
 }
 
-const TextStyle _captionStyle = TextStyle(
+final TextStyle _captionStyle = TextStyle(
   fontFamily: 'Roboto',
   fontFamilyFallback: _fallbackFonts,
   color: Colors.white,
