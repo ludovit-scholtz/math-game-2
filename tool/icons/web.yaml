@@ -1,0 +1,10 @@
+# Web favicon and PWA icons. Used after `flutter create` by CI and locally:
+#   dart run flutter_launcher_icons -f tool/icons/web.yaml
+# (See windows.yaml for why this file is not in the project root.)
+flutter_launcher_icons:
+  image_path: assets/icons/math_master_icon.png
+  web:
+    generate: true
+    image_path: assets/icons/math_master_icon.png
+    background_color: "#F4F6FF"
+    theme_color: "#5B6CF0"

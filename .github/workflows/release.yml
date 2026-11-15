@@ -160,6 +160,9 @@ jobs:
       - name: Generate platform folders
         run: flutter create --platforms=android,ios,web --org io.biatec --project-name math_master .
 
+      - name: Remember the Flutter template icons
+        run: python tool/check_launcher_icons.py snapshot android ios
+
       - name: Update generated app metadata
         run: |
           python - <<'PY'
@@ -220,6 +223,9 @@ jobs:
 
       - name: Generate launcher icons
         run: dart run flutter_launcher_icons
+
+      - name: Check that no Flutter template icon is left
+        run: python tool/check_launcher_icons.py verify android ios
 
       - name: Decode keystore
         env:
@@ -475,6 +481,10 @@ jobs:
       - name: Generate platform folders
         run: flutter create --platforms=windows --org io.biatec --project-name math_master .
 
+      - name: Remember the Flutter template icons
+        shell: bash
+        run: python tool/check_launcher_icons.py snapshot windows
+
       - name: Apply Windows app metadata
         shell: bash
         run: |
@@ -500,7 +510,11 @@ jobs:
           PY
 
       - name: Generate Windows icon
-        run: dart run flutter_launcher_icons -f flutter_launcher_icons-windows.yaml
+        run: dart run flutter_launcher_icons -f tool/icons/windows.yaml
+
+      - name: Check that no Flutter template icon is left
+        shell: bash
+        run: python tool/check_launcher_icons.py verify windows
 
       - name: Build Windows (release)
         run: >
