@@ -43,6 +43,8 @@ def main():
     if flutter is None:
         sys.exit("error: flutter is not on the PATH")
     chosen = [code.strip() for code in args.locales.split(",") if code.strip()]
+    if not chosen:
+        sys.exit("error: no languages chosen")
     unknown = [code for code in chosen if code not in languages]
     if unknown:
         sys.exit(f"error: no captions for {', '.join(unknown)} (known: {', '.join(languages)})")
@@ -62,8 +64,8 @@ def main():
         result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, encoding="utf-8")
         if result.returncode != 0:
             failed.append(code)
-            print(result.stdout[-3000:])
-            print(result.stderr[-1000:])
+            print(result.stdout)
+            print(result.stderr)
         print(f"{code}: {'ok' if result.returncode == 0 else 'FAILED'} ({time.time() - started:.0f} s)", flush=True)
 
     if failed:

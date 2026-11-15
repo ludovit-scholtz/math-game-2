@@ -12,7 +12,8 @@ script downloads Noto Sans CJK (SIL Open Font License) and keeps only the
 characters of that language's texts (app strings and screenshot captions).
 
 Run it again when the app starts using a new emoji or symbol, or when texts
-of these languages change:
+of these languages change. `--check` only verifies that the committed CJK
+subsets still cover every text (CI runs it):
 
     pip install fonttools
     python tool/screenshots/subset_fonts.py
@@ -52,8 +53,13 @@ CJK_LANGUAGES = {
     "zh": ("SimplifiedChinese", "NotoSansCJKsc"),
 }
 CJK_WEIGHTS = ["Regular", "Bold"]
-# Characters that the platform adds to dates and times (Material localizations).
-CJK_EXTRA = "年月日時分秒午前後上下曜오전오후년월일시분"
+# Characters that the platform adds to dates and times (Material
+# localizations): year, month, day, AM/PM; plus weekday names.
+CJK_EXTRA = {
+    "ja": "年月日時分秒午前後曜火水木金土",
+    "zh": "年月日时分秒上下午星期一二三四五六日",
+    "ko": "오전오후년월일시분요",
+}
 
 # Arrows, technical symbols, dingbats and pictographs.
 SYMBOLS = re.compile("[←-⇿⌀-⏿☀-➿⬀-⯿\U0001f000-\U0001faff]")
@@ -62,15 +68,14 @@ SYMBOLS = re.compile("[←-⇿⌀-⏿☀-➿⬀-⯿\U0001f000-\U0001faff]")
 def language_texts(path, language, indent):
     """The source text of one language's block in a Dart map file."""
     text = path.read_text(encoding="utf-8")
-    starts = [
-        (m.start(), m.group(1))
-        for m in re.finditer(rf"^{indent}'([a-z][a-z])': \{{", text, re.M)
-    ]
-    starts.append((len(text), None))
-    for (begin, code), (end, _) in zip(starts, starts[1:]):
-        if code == language:
-            return text[begin:end]
-    sys.exit(f"error: no '{language}' block in {path}")
+    start = re.search(rf"^{indent}'{language}': \{{", text, re.M)
+    if start is None:
+        sys.exit(f"error: no '{language}' block in {path}")
+    # The block ends at the first line that closes it (same indentation).
+    end = re.compile(rf"^{indent}\}},", re.M).search(text, start.end())
+    if end is None:
+        sys.exit(f"error: the '{language}' block in {path} is not closed")
+    return text[start.start():end.end()]
 
 
 def cjk_characters(language):
@@ -78,7 +83,12 @@ def cjk_characters(language):
     texts += language_texts(
         ROOT / "tool" / "screenshots" / "captions.dart", language, "  "
     )
-    chars = {ch for ch in texts + CJK_EXTRA if 0x2E80 <= ord(ch) < 0x1F000}
+    chars = {
+        ch
+        for ch in texts + CJK_EXTRA[language]
+        # Skip emoji, and the invisible variation selectors that go with them.
+        if 0x2E80 <= ord(ch) < 0x1F000 and not 0xFE00 <= ord(ch) <= 0xFE0F
+    }
     return chars
 
 
@@ -94,6 +104,10 @@ def build_cjk():
                 urllib.request.urlretrieve(f"{CJK_BASE}/{folder}/{name}", cache)
             available = set(TTFont(str(cache)).getBestCmap())
             keep = sorted(wanted & available)
+            missing = sorted(wanted - available)
+            if missing:
+                chars = "".join(chr(cp) for cp in missing)
+                sys.exit(f"error: {name} has no glyph for: {chars}")
             options = subset.Options()
             options.layout_features = ["*"]
             options.notdef_outline = True
@@ -106,7 +120,30 @@ def build_cjk():
             print(f"{out.relative_to(ROOT).as_posix()}: {out.stat().st_size // 1024} kB - {len(keep)} characters")
 
 
+def check_cjk():
+    """Fails when a CJK subset lacks a character its language needs."""
+    failed = False
+    for language, (_, prefix) in CJK_LANGUAGES.items():
+        wanted = {ord(ch) for ch in cjk_characters(language)}
+        for weight in CJK_WEIGHTS:
+            path = FONTS / f"{prefix}-{weight}-subset.otf"
+            if not path.exists():
+                sys.exit(f"error: {path.name} is missing - run subset_fonts.py")
+            available = set(TTFont(str(path)).getBestCmap())
+            missing = sorted(wanted - available)
+            if missing:
+                failed = True
+                chars = "".join(chr(cp) for cp in missing)
+                print(f"error: {path.name} lacks: {chars}")
+    if failed:
+        sys.exit("The CJK subsets are out of date - run python tool/screenshots/subset_fonts.py")
+    print("CJK subsets cover all texts of ja, ko and zh")
+
+
 def main():
+    if "--check" in sys.argv[1:]:
+        check_cjk()
+        return
     build_cjk()
     used = set()
     for path in sorted((ROOT / "lib").rglob("*.dart")):

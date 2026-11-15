@@ -258,6 +258,12 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      # A missing glyph would only show up as an empty box in a picture.
+      - name: Check the CJK font subsets
+        run: |
+          pip install fonttools
+          python tool/screenshots/subset_fonts.py --check
+
       # Renders the real screens headlessly in every size the stores ask for
       # (see docs/SCREENSHOTS.md). Download the artifacts to upload them.
       - name: Generate store screenshots
