@@ -22,23 +22,30 @@ emulator is needed.
 
 ```bash
 flutter pub get
-flutter test tool/screenshots/store_screenshots_test.dart
+python tool/screenshots/generate_all.py     # every language, all sizes
+flutter test tool/screenshots/store_screenshots_test.dart   # English only
 ```
 
-This writes every picture to `docs/screenshots/<language>/<store slot>/`. It
-takes about a minute.
+This writes every picture to `docs/screenshots/<language>/<store slot>/`. One
+language takes about a minute.
+
+The app has 11 languages and all of them are supported: `cs de en es fr ja ko
+ru sk tr zh`. Each store listing language gets pictures with its own captions
+and the app in that language.
 
 | Option | Meaning |
 | --- | --- |
-| `--dart-define=SCREENSHOT_LOCALE=sk` | Language of the app and the captions (default `en`). |
-| `--dart-define=SCREENSHOT_DEVICES=play-phone,ios-iphone-6.9` | Only render these store slots (folder names from the table below). The feature graphic is always rendered. |
-| `--plain-name 02-game` | Only render pictures whose name contains this text. |
+| `generate_all.py --locales sk,de` | Only these languages. |
+| `generate_all.py --devices play-phone,ios-iphone-6.9` | Only these store slots (folder names from the table below). The feature graphic is always rendered. |
+| `--dart-define=SCREENSHOT_LOCALE=sk` | The same for a single language when calling `flutter test` directly (default `en`). |
+| `--plain-name 02-game` | `flutter test` only: render pictures whose name contains this text. |
 
 Only the English phone set and the feature graphic are committed (they are the
-pictures on this page). Everything else in `docs/screenshots/` is git-ignored.
-The **CI workflow** generates the full set on every run: download the
-`store-screenshots` artifact from a run to get all sizes without a local
-Flutter installation.
+pictures on this page); the full set is about 25 MB per language. Everything
+else in `docs/screenshots/` is git-ignored. The **CI workflow** generates every
+language on every run: download the `store-screenshots-<language>` artifacts
+from a run to get all sizes without a local Flutter installation (artifacts are
+kept for 90 days).
 
 ## Sizes
 
@@ -90,14 +97,15 @@ writes files instead of checking behaviour (it is not in `test/`, so a normal
 Things to know:
 
 - **Fonts.** A widget test has no system fonts. The generator loads Roboto and
-  the Material icons from the Flutter SDK, and emoji and symbols from
-  `tool/screenshots/fonts/` (small subsets of Noto Color Emoji and Noto Sans
-  Symbols 2). When the app starts to show a new emoji, rebuild the subsets:
-  `pip install fonttools`, then `python tool/screenshots/subset_fonts.py`.
-- **Languages.** Roboto covers Latin and Cyrillic scripts, so `ja`, `ko` and
-  `zh` screenshots need a font for those scripts first. Captions exist in
-  English and Slovak (`_captions`); other languages use the English captions
-  until theirs are added.
+  the Material icons from the Flutter SDK, and from `tool/screenshots/fonts/`
+  small subsets of Noto Color Emoji, Noto Sans Symbols 2 and (for `ja`, `ko`,
+  `zh`) Noto Sans CJK. Roboto covers the Latin and Cyrillic languages. When the
+  app starts to show a new emoji, or Japanese, Korean or Chinese texts change,
+  rebuild the subsets: `pip install fonttools`, then
+  `python tool/screenshots/subset_fonts.py`.
+- **Captions.** All captions live in `tool/screenshots/captions.dart`. Add a
+  language there (all eight entries) when the app gets a new language, and
+  rebuild the fonts; the generator refuses a language without captions.
 - **Not pixel-identical.** The question in the game picture and the fireworks
   in the results picture are random, and the history shows dates relative to
   today, so these pictures differ slightly between runs.

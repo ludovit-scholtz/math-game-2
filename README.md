@@ -172,11 +172,12 @@ on Windows the game works without them.
 
 ## Store screenshots
 
-The screenshots above, and every size Google Play and the App Store ask for,
-are generated from the real app:
+The screenshots above, and every size Google Play and the App Store ask for
+in all 11 languages, are generated from the real app:
 
 ```bash
-flutter test tool/screenshots/store_screenshots_test.dart
+flutter test tool/screenshots/store_screenshots_test.dart   # English
+python tool/screenshots/generate_all.py                     # every language
 ```
 
 [docs/SCREENSHOTS.md](docs/SCREENSHOTS.md) lists the sizes, the options and how
@@ -192,8 +193,8 @@ request and:
 3. builds the **web** version and uploads it as an artifact;
 4. builds the **Windows** desktop app (`flutter build windows`) and uploads the
    `Release` folder as an artifact;
-5. generates the **store screenshots** and uploads them as the
-   `store-screenshots` artifact.
+5. generates the **store screenshots** in every language and uploads them as
+   the `store-screenshots-<language>` artifacts.
 
 Every build job also checks that no Flutter template icon is left in the app.
 
