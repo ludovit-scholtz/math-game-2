@@ -32,7 +32,7 @@ SOURCES = [
         FONTS / "NotoColorEmoji-subset.ttf",
     ),
     (
-        "https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSansSymbols2/hinted/ttf/NotoSansSymbols2-Regular.ttf",
+        "https://github.com/notofonts/notofonts.github.io/raw/c16b117609abbe4e60b3f2bd4433bdb3d0accb2e/fonts/NotoSansSymbols2/hinted/ttf/NotoSansSymbols2-Regular.ttf",
         "NotoSansSymbols2-Regular.ttf",
         FONTS / "NotoSansSymbols2-subset.ttf",
     ),

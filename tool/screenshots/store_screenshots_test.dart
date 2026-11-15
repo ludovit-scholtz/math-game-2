@@ -517,7 +517,20 @@ Future<void> _loadFonts() async {
       // .../bin/cache/artifacts/engine/<platform>/flutter_tester
       File(Platform.resolvedExecutable).parent.parent.parent.parent.parent
           .parent.path;
-  final sdkFonts = '$flutterRoot/bin/cache/artifacts/material_fonts';
+  // The SDK names these files differently from platform to platform
+  // (Roboto-Regular.ttf, roboto-regular.ttf), so look them up ignoring case.
+  final sdkFontDir = Directory(
+    '$flutterRoot/bin/cache/artifacts/material_fonts',
+  );
+  if (!sdkFontDir.existsSync()) {
+    throw StateError('Flutter SDK fonts not found: ${sdkFontDir.path}');
+  }
+  final sdkFonts = {
+    for (final file in sdkFontDir.listSync().whereType<File>())
+      file.uri.pathSegments.last.toLowerCase(): file.path,
+  };
+  String sdkFont(String name) =>
+      sdkFonts[name] ?? '${sdkFontDir.path}/$name';
   Future<void> load(String family, List<String> files) async {
     final loader = FontLoader(family);
     for (final path in files) {
@@ -541,9 +554,9 @@ Future<void> _loadFonts() async {
       'bold',
       'black',
     ])
-      '$sdkFonts/roboto-$weight.ttf',
+      sdkFont('roboto-$weight.ttf'),
   ]);
-  await load('MaterialIcons', ['$sdkFonts/materialicons-regular.otf']);
+  await load('MaterialIcons', [sdkFont('materialicons-regular.otf')]);
   await load(_emojiFamily, [
     'tool/screenshots/fonts/NotoColorEmoji-subset.ttf',
   ]);

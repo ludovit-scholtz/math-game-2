@@ -12,6 +12,9 @@ those files. This script proves that it did:
 `snapshot` remembers the hash of every template icon. `verify` fails when an
 icon file still has its template hash, when a template icon is gone without a
 replacement, or when Android has no adaptive icon.
+
+Take the snapshot on freshly created platform folders only. It refuses to run
+when our icons were already generated (it would remember them as "template").
 """
 import hashlib
 import json
@@ -50,6 +53,12 @@ def snapshot(platforms):
         files = icon_files(platform)
         if not files:
             sys.exit(f"error: no {platform} icons found - run `flutter create` first")
+        generated = [n for n in REQUIRED_AFTER.get(platform, []) if Path(n).exists()]
+        if generated:
+            sys.exit(
+                f"error: {platform} icons were already generated ({generated[0]}). "
+                f"Delete the {platform}/ folder and run `flutter create` again."
+            )
         data[platform] = {path.as_posix(): digest(path) for path in files}
         print(f"{platform}: remembered {len(files)} template icons")
     SNAPSHOT.parent.mkdir(parents=True, exist_ok=True)
@@ -60,8 +69,9 @@ def verify(platforms):
     if not SNAPSHOT.exists():
         sys.exit("error: no snapshot - run the `snapshot` command after `flutter create`")
     data = json.loads(SNAPSHOT.read_text())
-    problems = []
+    failed = False
     for platform in platforms:
+        problems = []
         template = data.get(platform)
         if not template:
             sys.exit(f"error: no snapshot for {platform}")
@@ -76,9 +86,10 @@ def verify(platforms):
                 problems.append(f"{name}: missing")
         if not problems:
             print(f"{platform}: all {len(template)} icons replaced")
-    if problems:
         for problem in problems:
             print(f"::error::{problem}")
+        failed = failed or bool(problems)
+    if failed:
         sys.exit(
             "error: the app would ship with Flutter template icons. "
             "Check the flutter_launcher_icons configuration."

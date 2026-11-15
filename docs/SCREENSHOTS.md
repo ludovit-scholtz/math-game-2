@@ -31,7 +31,7 @@ takes about a minute.
 | Option | Meaning |
 | --- | --- |
 | `--dart-define=SCREENSHOT_LOCALE=sk` | Language of the app and the captions (default `en`). |
-| `--dart-define=SCREENSHOT_DEVICES=play-phone,ios-iphone-6.9` | Only render these store slots (folder names from the table below). |
+| `--dart-define=SCREENSHOT_DEVICES=play-phone,ios-iphone-6.9` | Only render these store slots (folder names from the table below). The feature graphic is always rendered. |
 | `--plain-name 02-game` | Only render pictures whose name contains this text. |
 
 Only the English phone set and the feature graphic are committed (they are the
@@ -98,8 +98,9 @@ Things to know:
   `zh` screenshots need a font for those scripts first. Captions exist in
   English and Slovak (`_captions`); other languages use the English captions
   until theirs are added.
-- **Not pixel-identical.** The question in the game picture is random and the
-  history shows dates relative to today, so two runs differ slightly.
+- **Not pixel-identical.** The question in the game picture and the fireworks
+  in the results picture are random, and the history shows dates relative to
+  today, so these pictures differ slightly between runs.
 
 ### Add or change a picture
 
@@ -121,12 +122,14 @@ platform folders are created by `flutter create` with the Flutter logo, and
 | Windows | `tool/icons/windows.yaml` | `dart run flutter_launcher_icons -f tool/icons/windows.yaml` |
 
 Android gets an adaptive icon (the picture on a light-blue background), so the
-launcher can cut it into a circle or squircle without a white plate around it.
+launcher shows it without a white plate around it. The picture fills a squircle
+mask; a round mask trims only its corners.
 
 CI proves that no Flutter logo is left before it builds:
 `python tool/check_launcher_icons.py snapshot <platforms>` remembers the
 template icons right after `flutter create`, and `verify <platforms>` fails the
-build if any of them is unchanged after the icons were generated.
+build if any of them is unchanged after the icons were generated. Locally, take
+the snapshot on freshly created platform folders only.
 
 > Never put a file named `flutter_launcher_icons-<name>.yaml` in the project
 > root. The tool treats it as a "flavor" and then ignores the Android/iOS
