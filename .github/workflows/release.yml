@@ -66,13 +66,16 @@ jobs:
               exit 1
             fi
           else
-            # A manual run publishes whatever is checked out under the newest
-            # tag's name, so it is only allowed from main.
+            # A manual run releases what is on main as the NEXT patch version
+            # (newest tag + 1), so testers see a new version name and the
+            # launcher refreshes the app. The tag itself is created by the
+            # Windows job once the Google Play upload has succeeded.
             if [ "${GITHUB_REF}" != "refs/heads/main" ]; then
               echo "::error::Manual runs are only allowed on main (this run is on ${GITHUB_REF})."
               exit 1
             fi
-            TAG_NAME="$LATEST_TAG"
+            IFS=. read -r MAJOR MINOR PATCH <<< "${LATEST_TAG#v}"
+            TAG_NAME="v${MAJOR}.${MINOR}.$((PATCH + 1))"
           fi
 
           VERSION_NAME="${TAG_NAME#v}"
@@ -537,12 +540,12 @@ jobs:
           if-no-files-found: error
 
       - name: Attach the zip to the GitHub Release
-        if: github.ref_type == 'tag'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           TAG_NAME: ${{ steps.release_version.outputs.tag_name }}
         run: |
+          # For a manual run this also creates the new tag, on the built commit.
           gh release view "$TAG_NAME" >/dev/null 2>&1 \
-            || gh release create "$TAG_NAME" --title "Math Master $TAG_NAME" --generate-notes
+            || gh release create "$TAG_NAME" --target "$GITHUB_SHA" --title "Math Master $TAG_NAME" --generate-notes
           gh release upload "$TAG_NAME" "$ZIP_NAME" --clobber

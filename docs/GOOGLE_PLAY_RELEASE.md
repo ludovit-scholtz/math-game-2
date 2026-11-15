@@ -157,11 +157,14 @@ Actions artifact named like `math-masters-1.0.15-signed-aab`.
 
 The same workflow builds the **Windows** app (`flutter build windows`) and
 attaches `math-master-windows-x64-1.0.15.zip` to the GitHub Release of the tag
-(manual runs only store it as a workflow artifact).
+(manual runs also create the release and tag, see below).
 
 You can also start the workflow manually from **GitHub > Actions > Release
-(Google Play Internal Testing + Windows) > Run workflow**. Manual runs use the newest
-`vX.Y.Z` tag in the repository.
+(Google Play Internal Testing + Windows) > Run workflow**. A manual run
+releases `main` as the **next patch version** (newest tag + 1, e.g. `v1.0.20` ->
+`v1.0.21`). Once the Google Play upload has succeeded, the workflow creates that
+tag and GitHub Release and attaches the Windows zip. For a new minor or major
+version push the tag yourself.
 
 ---
 
