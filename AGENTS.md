@@ -16,7 +16,10 @@ styles and care for a pet. Everything is stored **locally on the device**
 Because the audience is young children, keep copy friendly and simple, never
 add ads, tracking, analytics or network calls without explicit approval, and
 keep the privacy policy (`docs/privacy-policy/*.md`) accurate if data handling
-changes.
+changes. The Terms and Conditions linked from the Google Play listing are
+`TERMS.md` in the repository root — keep the file at that path (the store URL
+points to it) and update it, with its "Last updated" date, if the app gains
+purchases, ads, accounts or online features.
 
 ## Commands
 
