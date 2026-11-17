@@ -14,6 +14,12 @@ school-style exercises in the **parental control** panel. Built with **Flutter**
   <img src="docs/screenshots/en/play-phone/06-parents.png" width="19%" alt="Parental control">
 </p>
 
+## Get the app
+
+- **Android:** [install Math Master from Google Play](https://play.google.com/store/apps/details?id=io.biatec.math_master)
+- **Open testing:** you are invited to try new versions early and tell us what
+  you think — [join the open test](https://play.google.com/apps/testing/io.biatec.math_master).
+
 ## How to play
 
 1. On the home screen choose your player. Players you've used before are
