@@ -208,3 +208,10 @@ which uploads the signed App Bundle to Google Play internal testing and attaches
 for AI coding agents (`CLAUDE.md` imports it). Claude Code slash commands for
 common tasks (`/check`, `/add-string`, `/add-language`, `/change-rule`, `/ship`,
 `/release`) live in [`.claude/commands/`](.claude/commands/).
+
+## Legal
+
+- [Terms and Conditions](TERMS.md)
+- [Privacy Policy](docs/privacy-policy/index.md)
+
+© Scholtz & Company, j.s.a. All rights reserved.
