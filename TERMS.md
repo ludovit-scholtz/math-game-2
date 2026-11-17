@@ -4,10 +4,10 @@ Effective date: 17 November 2026
 Last updated: 17 November 2026
 
 These Terms and Conditions (the "Terms") apply specifically to the **Math
-Master** application, published in app stores as **"Kids Math Practice |
-Biatec"** (application ID `io.biatec.math_master`), in every version and on
-every platform on which we make it available, including Android, iOS, Windows
-and the web (the "App").
+Master** application, published on Google Play as **"Kids Math Practice |
+Biatec"** (Android application ID `io.biatec.math_master`), in every version
+and on every platform on which we make it available, including Android, iOS,
+Windows and the web (the "App").
 
 Please read these Terms carefully. By downloading, installing or using the App
 you agree to these Terms. If you do not agree, do not install or use the App.
@@ -30,13 +30,15 @@ means the adult who downloads, installs or uses the App, or who allows a child
 to use it.
 
 2.2 The App is designed for children, but children cannot accept legal terms on
-their own. If you are under 18, or under the age of legal majority where you
-live, you may use the App only with the consent and under the supervision of a
-parent or legal guardian who has read and accepted these Terms on your behalf.
+their own. A person under 18, or under the age of legal majority where they
+live, may use the App only with the consent and under the supervision of a
+parent or legal guardian who has read and accepted these Terms.
 
-2.3 If you are a parent, guardian, teacher or other adult who lets a child use
-the App, you accept these Terms for yourself and on behalf of the child, and you
-are responsible for the child's use of the App and of the device.
+2.3 If you are a parent or legal guardian who lets a child use the App, you
+accept these Terms for yourself and on behalf of the child. If you are a
+teacher or other adult who lets a child use the App, you accept these Terms for
+yourself and confirm that you are entitled to let the child use it. In both
+cases you are responsible for the child's use of the App and of the device.
 
 2.4 If you use the App on behalf of a school, company or other organisation,
 you confirm that you are authorised to accept these Terms on its behalf.
@@ -60,8 +62,8 @@ and are provided for motivation and information only.
 ## 4. Licence to use the App
 
 4.1 Subject to these Terms, we grant you a limited, non-exclusive,
-non-transferable, non-sublicensable and revocable licence to install and use
-the App on devices that you own or control, for personal, family and classroom
+non-transferable and non-sublicensable licence to install and use the App on
+devices that you own or control, for personal, family and classroom
 educational use.
 
 4.2 The App is licensed, not sold. You do not acquire any ownership right in the
@@ -136,7 +138,7 @@ settings and game progress **only on your device**. We do not receive this data
 and we keep no copy of it.
 
 8.2 Because of this, we **cannot restore** lost data. Progress, coins, gems,
-pets, purchased styles, history and settings may be lost if the App is
+pets, unlocked styles, history and settings may be lost if the App is
 uninstalled, its storage is cleared, the browser data is deleted, the device is
 reset, lost, damaged or replaced, or after an App or operating-system update.
 To the extent permitted by law, we are not liable for any such loss.
@@ -183,30 +185,43 @@ accuracy and non-infringement.
 will work without interruption or errors, will be compatible with your device,
 or that defects will be corrected.
 
-11.3 Reminders and notifications sent by the App depend on your device and its
-settings. We do not guarantee that they will be delivered or delivered on time.
+11.3 Pet reminders are local notifications shown by your device (Android and
+iOS only) and depend on the device and its settings. We do not guarantee that
+they will be shown or shown on time.
+
+11.4 If you are a consumer, this section applies only to the extent that the
+mandatory law referred to in section 16 allows, and does not affect the rights
+that such law gives you.
 
 ## 12. Limitation of liability
 
-12.1 To the maximum extent permitted by applicable law, the Developer, its
-directors, employees, contractors and licensors are not liable for:
+12.1 **Scope of what we provide.** The App is a free practice game with the
+features and limits described in sections 3, 7, 8 and 9. We are not responsible
+for damage that results from those limits, from your breach of these Terms,
+from misuse of the App, from third-party products or services, or from events
+beyond our reasonable control.
 
-- any indirect, incidental, special, consequential or punitive damage;
-- any loss of profit, revenue, business, goodwill or opportunity;
-- any loss or corruption of data, including game progress;
-- any damage to a device or other software;
-- any damage caused by your breach of these Terms, by misuse of the App, by
-  third-party products or services, or by events beyond our reasonable control,
+12.2 **If you are a consumer.** We are liable to you for damage that we cause
+by breaching our legal obligations, under the conditions and to the extent
+provided by applicable law. We are not liable for damage that we did not cause,
+that could not reasonably be foreseen as a result of our breach, or that you
+could have avoided by taking reasonable care, for example by installing an
+update we offered or by following these Terms.
 
-whether arising from contract, tort (including negligence) or any other legal
-basis, and even if we were told that such damage was possible.
+12.3 **If you are not a consumer** (for example a company, school or other
+organisation), then to the maximum extent permitted by applicable law:
 
-12.2 To the maximum extent permitted by applicable law, our total liability for
-all claims arising out of or relating to the App or these Terms is limited to
-the amount you paid us for the App in the twelve months before the event giving
-rise to the claim, or EUR 20 if you paid nothing.
+- the Developer, its directors, employees, contractors and licensors are not
+  liable for any indirect, incidental, special, consequential or punitive
+  damage, for any loss of profit, revenue, business, goodwill or opportunity,
+  for any loss or corruption of data, including game progress, or for any
+  damage to a device or other software, whether arising from contract, tort
+  (including negligence) or any other legal basis, and even if we were told
+  that such damage was possible; and
+- our total liability for all claims arising out of or relating to the App or
+  these Terms is limited to EUR 20.
 
-12.3 Nothing in these Terms excludes or limits liability that cannot be
+12.4 Nothing in these Terms excludes or limits liability that cannot be
 excluded or limited under applicable law, in particular liability for damage
 caused intentionally or by gross negligence, for death or personal injury, or
 for fraud, and nothing in these Terms affects the rights you have as a consumer
@@ -229,23 +244,38 @@ remain in force for as long as you use it.
 14.2 You may end this agreement at any time by uninstalling the App and ceasing
 to use it.
 
-14.3 Your licence ends automatically if you breach these Terms. We may also end
-or suspend the licence, or stop providing the App, at any time. After
+14.3 We may end your licence with immediate effect if you seriously or
+repeatedly breach these Terms, in particular section 4.3. We may also end the
+licence for any other reason by giving reasonable notice, for example in the
+store listing, in the release notes or at the address in section 15.2. Our
+right to discontinue the App under section 9.1 is not affected. After
 termination you must stop using the App and delete all copies of it.
 
-14.4 Sections 3.2, 5, 8.2, 10, 11, 12, 13, 15, 16, 17 and 18 continue to apply
-after termination.
+14.4 Sections 3.2, 5, 7, 8.2, 10, 11, 12, 13, 16, 17, 18 and 19 continue to
+apply after termination.
 
 ## 15. Changes to these Terms
 
-15.1 We may change these Terms from time to time, for example when the App, the
-law or app store requirements change. The current version is always published
-at <https://github.com/ludovit-scholtz/math-game-2/blob/main/TERMS.md>, with the
-date of the last update shown at the top.
+15.1 We may change these Terms when this is needed because of a change in the
+App or its features, in the platforms or app stores through which it is
+distributed or in their requirements, in applicable law or its official
+interpretation, in our company or contact details, or to correct errors and
+make the Terms clearer.
 
-15.2 Changes take effect when the updated Terms are published, unless we state
-a later date. If you continue to use the App after that, you accept the updated
-Terms. If you do not agree with them, stop using the App and uninstall it.
+15.2 The current version is always published at
+<https://github.com/ludovit-scholtz/math-game-2/blob/main/TERMS.md>, with the
+date of the last update shown at the top. Earlier versions remain available in
+the history of that page.
+
+15.3 We publish changed Terms at that address at least 30 days before they
+take effect and, where practicable, also mention the change in the store
+listing or release notes. Changes that only correct errors, or that are
+required by law at an earlier date, may take effect sooner. Changes apply only
+to the future.
+
+15.4 If you do not agree with the changed Terms, you may end this agreement at
+any time, at no cost, by uninstalling the App. If you continue to use the App
+after the changed Terms take effect, they apply to you.
 
 ## 16. Consumers
 
@@ -254,10 +284,11 @@ protection laws of your country of habitual residence give you. Nothing in
 these Terms removes or limits those rights, and any provision of these Terms
 applies to you only to the extent that such laws allow.
 
-16.2 If you are not satisfied with how we handled a complaint, you may ask us
-to put it right. If we refuse, or do not reply within 30 days of the day you
-sent your request, a consumer has the right to start alternative dispute
-resolution under Slovak Act No. 391/2015 Coll. before the Slovak Trade
+16.2 If you are a consumer and are not satisfied with how we handled a
+complaint, you may ask us to put it right. If we refuse, or do not reply within
+30 days of the day you sent your request, you have the right to start
+alternative dispute resolution under Slovak Act No. 391/2015 Coll. before the
+Slovak Trade
 Inspection (Slovenská obchodná inšpekcia, <https://www.soi.sk>) or another
 authorised body from the list kept by the Ministry of Economy of the Slovak
 Republic (<https://www.mhsr.sk>).
@@ -272,13 +303,15 @@ or to the App, are governed by the laws of the Slovak Republic, excluding its
 conflict-of-law rules and the United Nations Convention on Contracts for the
 International Sale of Goods.
 
-17.2 The courts of the Slovak Republic have exclusive jurisdiction over such
-disputes.
+17.2 If you are not a consumer, the courts of the Slovak Republic have
+exclusive jurisdiction over such disputes.
 
-17.3 If you are a consumer, sections 17.1 and 17.2 do not deprive you of the
-protection of the mandatory laws of the country where you habitually reside,
-or of any right you have under those laws to bring proceedings before the
-courts of that country.
+17.3 If you are a consumer, section 17.1 does not deprive you of the protection
+of the mandatory laws of the country where you habitually reside. You may bring
+proceedings against us in the courts of the Slovak Republic or in the courts of
+the country where you are domiciled, and we may bring proceedings against you
+only in the courts of the country where you are domiciled, in each case to the
+extent that applicable law gives you these rights.
 
 ## 18. General provisions
 
@@ -294,9 +327,9 @@ anyone else without our prior written consent. We may transfer ours to another
 entity, for example if the App is taken over by another publisher, provided
 that your rights under these Terms are not reduced.
 
-18.4 These Terms, together with the Privacy Policy, are the entire agreement
-between you and us about the App and replace any earlier understanding about
-it.
+18.4 These Terms are the entire agreement between you and us about the use of
+the App and replace any earlier understanding about it. The Privacy Policy is
+an information notice and is not part of this agreement.
 
 18.5 These Terms are written in English. If we provide a translation and it
 differs from the English version, the English version prevails to the extent

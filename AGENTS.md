@@ -19,7 +19,8 @@ keep the privacy policy (`docs/privacy-policy/*.md`) accurate if data handling
 changes. The Terms and Conditions linked from the Google Play listing are
 `TERMS.md` in the repository root — keep the file at that path (the store URL
 points to it) and update it, with its "Last updated" date, if the app gains
-purchases, ads, accounts or online features.
+purchases, ads, accounts or online features, or if its platforms, notifications
+or the company/contact details change.
 
 ## Commands
 
